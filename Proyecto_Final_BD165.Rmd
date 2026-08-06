@@ -1,23 +1,28 @@
 ---
-title: "Proyecto Final — BD-165: Modelos Estadísticos Avanzados de Análisis de Datos"
-subtitle: "[TÍTULO DEL PROYECTO — reemplazar]"
-author:
-  - "Integrante 1 — Nombre completo, Carné"
-  - "Integrante 2 — Nombre completo, Carné"
-  - "Integrante 3 — Nombre completo, Carné"
-  - "Integrante 4 — Nombre completo, Carné"
-  - "Integrante 5 — Nombre completo, Carné"
+title: "Proyecto Final"
+subtitle: "BD-165 · Modelos Estadísticos Avanzados de Análisis de Datos"
+author: "Grupo [N] — Colegio Universitario de Cartago"
 date: "`r format(Sys.Date(), '%d de %B de %Y')`"
 output:
-  html_document:
-    toc: true
-    toc_depth: 3
-    toc_float: true
-    theme: flatly
-    number_sections: true
-    df_print: paged
+  rmdformats::material:
+    highlight: haddock
+    css: styles_proyecto_final.css
+    thumbnails: false
+    lightbox: true
+    self_contained: true
     code_folding: show
+    df_print: paged
+    fig_width: 8
+    fig_height: 5
 ---
+
+<!--
+NOTA DE COMPILACIÓN: este documento usa el paquete `rmdformats` (tema
+`material`). Si RStudio marca error al compilar, instalarlo una sola vez
+con: install.packages("rmdformats")
+El archivo styles_proyecto_final.css debe vivir en la misma carpeta que
+este .Rmd para que el "Knit" lo encuentre.
+-->
 
 <!--
 ============================================================================
@@ -54,6 +59,7 @@ output:
        /datos              -> csv del dataset (o un README.md con el link
                                a la fuente si el archivo es muy grande)
        /Proyecto_Final_BD165.Rmd
+       /styles_proyecto_final.css  -> hoja de estilos institucional
        /docs/index.html    -> salida de rmarkdown::render(), para GitHub Pages
    - Cada quien trabaja en una rama (feature/nombre-seccion) y hace PR
      hacia main. Evitar todos editando el mismo .Rmd al mismo tiempo en
@@ -63,12 +69,31 @@ output:
 
 5. Para compilar: botón "Knit" en RStudio, o en consola:
      rmarkdown::render("Proyecto_Final_BD165.Rmd")
+   Requiere el paquete rmdformats (install.packages("rmdformats")) y que
+   styles_proyecto_final.css esté en la misma carpeta que el .Rmd.
 
 6. Reemplacen TODOS los [placeholders entre corchetes] y borren los
    comentarios HTML (<!-- ... -->) de guía una vez que cada sección esté
    redactada.
 ============================================================================
 -->
+
+## Integrantes del grupo
+
+<!--
+rmdformats::material solo despliega un autor en el panel superior, así
+que la nómina completa del grupo va en esta tabla — es lo que además pide
+la rúbrica de la defensa oral: "todos deben intervenir".
+Completar carné y rol de cada quien.
+-->
+
+| Integrante | Carné | Rol principal en el proyecto |
+|---|---|---|
+| [Nombre completo] | [Carné] | [ej. Recolección y limpieza de datos] |
+| [Nombre completo] | [Carné] | [ej. Técnica 1 — Regresión] |
+| [Nombre completo] | [Carné] | [ej. Técnica 2 — K-medias] |
+| [Nombre completo] | [Carné] | [ej. Técnica 3 — Series de tiempo] |
+| [Nombre completo] | [Carné] | [ej. Redacción, discusión y video] |
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -126,7 +151,7 @@ Dataset [Dataset]. UCI Machine Learning Repository. https://doi.org/...`]
 
 ```{r cargar-datos}
 # Ajustar el nombre de archivo/ruta según lo acordado en /datos del repo
-datos <- read.csv("datos/NOMBRE_DEL_ARCHIVO.csv")
+datos <- read.csv("Data/ai_student_impact_dataset.csv")
 
 dim(datos)      # observaciones x variables
 str(datos)
@@ -188,37 +213,49 @@ las tres técnicas — por ejemplo si se va a hacer clustering?]
 
 ## Técnica 1 — [Nombre de la técnica, ej. Regresión Lineal Múltiple]
 
+<div class="justificacion">
 **Justificación:** [¿Por qué es apropiada para la pregunta de análisis?
 ¿Qué tipo de variable dependiente/independientes lo requieren?]
+</div>
 
 ```{r tecnica-1}
 # Código de la Técnica 1
 
 ```
 
+<div class="interpretacion">
 [Interpretación de los resultados de la Técnica 1.]
+</div>
 
 ## Técnica 2 — [Nombre de la técnica, ej. K-medias]
 
+<div class="justificacion">
 **Justificación:** [...]
+</div>
 
 ```{r tecnica-2}
 # Código de la Técnica 2
 
 ```
 
+<div class="interpretacion">
 [Interpretación de los resultados de la Técnica 2.]
+</div>
 
 ## Técnica 3 — [Nombre de la técnica, ej. Series de Tiempo / Holt-Winters]
 
+<div class="justificacion">
 **Justificación:** [...]
+</div>
 
 ```{r tecnica-3}
 # Código de la Técnica 3
 
 ```
 
+<div class="interpretacion">
 [Interpretación de los resultados de la Técnica 3.]
+</div>
 
 # Resultados
 

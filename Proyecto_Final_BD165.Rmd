@@ -2,98 +2,55 @@
 title: "Proyecto Final"
 subtitle: "BD-165 · Modelos Estadísticos Avanzados de Análisis de Datos"
 author: "Grupo [N] — Colegio Universitario de Cartago"
-date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+date: "`r paste(format(Sys.Date(), '%d de'), c('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre')[as.integer(format(Sys.Date(), '%m'))], format(Sys.Date(), 'de %Y'))`"
 output:
-  rmdformats::material:
-    highlight: haddock
+  html_document:
     css: styles_proyecto_final.css
-    thumbnails: false
-    lightbox: true
+    highlight: haddock
     self_contained: true
     code_folding: show
     df_print: paged
     fig_width: 8
     fig_height: 5
+    toc: false
+lang: es
 ---
-
-<!--
-NOTA DE COMPILACIÓN: este documento usa el paquete `rmdformats` (tema
-`material`). Si RStudio marca error al compilar, instalarlo una sola vez
-con: install.packages("rmdformats")
-El archivo styles_proyecto_final.css debe vivir en la misma carpeta que
-este .Rmd para que el "Knit" lo encuentre.
--->
 
 <!--
 ============================================================================
  GUÍA RÁPIDA PARA EL GRUPO — leer antes de escribir
 ============================================================================
-1. Este .Rmd es la plantilla oficial del proyecto. Todos trabajamos SOBRE
-   este mismo archivo (o sobre ramas del repo) para que el documento final
-   tenga un formato consistente, sin importar quién escribió cada sección.
+1. Esta es la plantilla oficial. Todos trabajamos SOBRE este archivo (o
+   sobre ramas del repo) para que el formato final sea consistente.
 
-2. Estructura obligatoria (según el enunciado del proyecto, sección 5.1):
-     1. Introducción
-     2. Descripción de la base de datos
-     3. Exploración y preparación de los datos
-     4. Modelos aplicados (LAS TRES TÉCNICAS, cada una JUSTIFICADA)
-     5. Resultados
-     6. Discusión
-     7. Conclusiones
-   No borren ni reordenen estos encabezados de nivel 1 (#).
+2. ESTRUCTURA DE ESTE DOCUMENTO:
+     - Portada (con logo, título, integrantes).
+     - Introducción general (contexto del proyecto completo).
+     - Una PESTAÑA (encabezado #) por cada conjunto de datos (CSV), y dentro
+       de cada una: introducción, descripción, extracción, EDA, modelos,
+       resultados y discusión. Cada uno de esos subtítulos también aparece
+       como salto directo en el menú de la izquierda (subpestaña).
+     - Una pestaña final de "Conclusión general" que integra los tres análisis.
+     - Referencias.
 
-3. Reglas de oro:
-   - Cada técnica necesita un párrafo explícito de POR QUÉ es apropiada
-     para la pregunta de análisis (se penaliza en la rúbrica si falta).
-   - Todo bloque de código debe ser reproducible: no usar setwd() con
-     rutas locales; el .csv del dataset debe vivir en /datos dentro del
-     repositorio (o cargarse desde una URL pública).
-   - No dejar bloques de código sin su interpretación en prosa inmediatamente
-     después (así se hizo en todos los laboratorios del curso — sigan ese
-     estilo: salida -> interpretación en 2-4 líneas).
+3. REGLAS DE ORO (rúbrica del enunciado, sección 6):
+   - Cada técnica necesita un párrafo de JUSTIFICACIÓN (por qué es apropiada
+     para la pregunta). Si falta, se penaliza.
+   - Cada salida de código va seguida de su interpretación en 2-4 líneas.
+   - Todo debe ser reproducible: el .csv vive en /Data dentro del repositorio
+     (no usar rutas locales ni setwd()).
 
-4. Flujo de trabajo sugerido en GitHub:
-   - Repositorio PÚBLICO (requisito del punto 5.1 y del criterio de
-     rúbrica "Publicación en GitHub y reproducibilidad").
-   - Estructura de carpetas:
-       /datos              -> csv del dataset (o un README.md con el link
-                               a la fuente si el archivo es muy grande)
-       /Proyecto_Final_BD165.Rmd
-       /styles_proyecto_final.css  -> hoja de estilos institucional
-       /docs/index.html    -> salida de rmarkdown::render(), para GitHub Pages
-   - Cada quien trabaja en una rama (feature/nombre-seccion) y hace PR
-     hacia main. Evitar todos editando el mismo .Rmd al mismo tiempo en
-     main para no pisarse cambios.
-   - Para publicar el HTML con GitHub Pages: Settings -> Pages -> Source:
-     rama main, carpeta /docs.
+4. CÓMO COMPLETAR: reemplacen los [placeholders entre corchetes] y escriban
+   su código R dentro de los bloques ```{r ...}``` que están VACÍOS a
+   propósito. No borren la estructura de encabezados ni los {#id} que
+   acompañan a cada subtítulo (## ...) — esos id son los que usa el menú
+   de la izquierda para saltar directo a esa sección.
 
-5. Para compilar: botón "Knit" en RStudio, o en consola:
-     rmarkdown::render("Proyecto_Final_BD165.Rmd")
-   Requiere el paquete rmdformats (install.packages("rmdformats")) y que
-   styles_proyecto_final.css esté en la misma carpeta que el .Rmd.
-
-6. Reemplacen TODOS los [placeholders entre corchetes] y borren los
-   comentarios HTML (<!-- ... -->) de guía una vez que cada sección esté
-   redactada.
+5. Para compilar: botón "Knit" en RStudio. Solo necesita el paquete
+   "rmarkdown" (ya viene con RStudio, no hay que instalar nada extra) y que
+   estén en la misma carpeta: styles_proyecto_final.css  y  logo.png
 ============================================================================
 -->
-
-## Integrantes del grupo
-
-<!--
-rmdformats::material solo despliega un autor en el panel superior, así
-que la nómina completa del grupo va en esta tabla — es lo que además pide
-la rúbrica de la defensa oral: "todos deben intervenir".
-Completar carné y rol de cada quien.
--->
-
-| Integrante | Carné | Rol principal en el proyecto |
-|---|---|---|
-| [Nombre completo] | [Carné] | [ej. Recolección y limpieza de datos] |
-| [Nombre completo] | [Carné] | [ej. Técnica 1 — Regresión] |
-| [Nombre completo] | [Carné] | [ej. Técnica 2 — K-medias] |
-| [Nombre completo] | [Carné] | [ej. Técnica 3 — Series de tiempo] |
-| [Nombre completo] | [Carné] | [ej. Redacción, discusión y video] |
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -105,120 +62,178 @@ knitr::opts_chunk$set(
   fig.height = 5
 )
 
-# ---- Paquetes usados en el curso (descomentar/agregar según la técnica) ----
+# ---- Paquetes usados en el curso (código base — no borrar) ----
 library(dplyr)
 library(ggplot2)
-library(GGally)       # ggpairs() para matrices de dispersión/correlación
+library(GGally)        # ggpairs() para matrices de dispersión/correlación
 library(psych)         # KMO(), cortest.bartlett(), análisis factorial
 library(factoextra)    # fviz_nbclust(), fviz_cluster()
-library(car)            # vif(), leveneTest()
-library(gvlma)          # verificación global de supuestos de regresión
-library(forecast)       # ses(), holt(), hw(), accuracy(), autoplot() [series de tiempo]
+library(car)           # vif(), leveneTest()
+library(gvlma)         # verificación global de supuestos de regresión
+library(forecast)      # ses(), holt(), hw(), accuracy() [series de tiempo]
 
 # Paleta institucional reutilizada de los laboratorios del curso
-col_navy <- "#1F497D"
+col_navy <- "#16324F"
 col_teal <- "#38761D"
 ```
 
-# Introducción
+<!-- ============================================================================
+ PORTADA — página propia, independiente del menú/contenido de abajo
+============================================================================ -->
+<div class="portada-page">
 
-<!--
-Contexto + objetivos + LA PREGUNTA DE ANÁLISIS que el proyecto busca
-responder. 1-2 párrafos. Ejemplo de estructura:
-  - ¿Qué problema u organización motiva el análisis?
-  - ¿Qué se quiere predecir, segmentar o comparar?
-  - ¿Por qué estas variables/este dataset son relevantes para esa pregunta?
--->
-
-[Redactar introducción. Ejemplo de pregunta de análisis: "¿Qué variables
-climáticas explican mejor la demanda horaria de bicicletas compartidas en
-Seúl, y es posible identificar perfiles de días con demanda similar para
-apoyar la planificación de flota?"]
-
-# Descripción de la base de datos
-
-<!--
-Fuente (con cita completa y enlace), número de observaciones, número y
-tipo de variables, unidad de medida de cada variable relevante, y por qué
-el dataset es de acceso libre y legal.
--->
-
-**Fuente:** [Nombre del dataset, autor(es), repositorio (Kaggle/UCI/otro),
-año, enlace, y cita formal — ej. formato UCI: `Autor (Año). Nombre del
-Dataset [Dataset]. UCI Machine Learning Repository. https://doi.org/...`]
-
-**Licencia / acceso:** [ej. CC BY 4.0 — de acceso público y libre]
-
-```{r cargar-datos}
-# Ajustar el nombre de archivo/ruta según lo acordado en /datos del repo
-datos <- read.csv("Data/ai_student_impact_dataset.csv")
-
-dim(datos)      # observaciones x variables
-str(datos)
-summary(datos)
-```
-
-[Describir en prosa: cuántas observaciones y variables tiene, cuáles son
-numéricas y cuáles categóricas, y qué representa cada una en el contexto
-del problema.]
-
-# Exploración y preparación de los datos
-
-<!--
-Limpieza (duplicados, tipos de dato mal cargados), valores faltantes,
-outliers, escalado/estandarización si aplica, matriz de correlaciones.
-Sigan el estilo de los laboratorios: cada salida con su interpretación.
--->
-
-## Valores faltantes y tipos de dato
-
-```{r limpieza}
-colSums(is.na(datos))
-
-# Conversión de variables categóricas a factor, ej.:
-# datos$variable_categorica <- as.factor(datos$variable_categorica)
-```
-
-[Interpretación: ¿hay datos faltantes? ¿qué se hizo con ellos? ¿qué
-columnas se convirtieron a factor y por qué?]
-
-## Análisis exploratorio (distribución y correlaciones)
-
-```{r eda}
-# Histogramas / distribución de las variables numéricas clave
-# (ver Laboratorio 1 como referencia de estilo)
-
-# Matriz de correlaciones
-num_vars <- datos %>% select(where(is.numeric))
-round(cor(num_vars), 3)
-```
-
-[Interpretación: ¿qué variables están más correlacionadas con la variable
-de interés? ¿hay señales de multicolinealidad que deban tratarse más
-adelante? ¿se necesita estandarizar (scale()) antes de aplicar alguna de
-las tres técnicas — por ejemplo si se va a hacer clustering?]
-
-# Modelos aplicados
-
-<!--
-====================================================================
- ESTA ES LA SECCIÓN MÁS IMPORTANTE DE LA RÚBRICA (5/5 puntos).
- Cada técnica va en su propia sub-sección con este orden fijo:
-   1) Justificación (por qué esta técnica y no otra)
-   2) Código y salida
-   3) Interpretación de la salida
- NO se puede aplicar una técnica sin su párrafo de justificación.
-====================================================================
--->
-
-## Técnica 1 — [Nombre de la técnica, ej. Regresión Lineal Múltiple]
-
-<div class="justificacion">
-**Justificación:** [¿Por qué es apropiada para la pregunta de análisis?
-¿Qué tipo de variable dependiente/independientes lo requieren?]
+<div class="portada">
+<img src="logo.png" class="logo-cuc" alt="Colegio Universitario de Cartago">
+<p class="portada-kicker">Colegio Universitario de Cartago</p>
+<p class="portada-titulo">Proyecto Final</p>
+<p class="portada-subtitulo">BD-165 · Modelos Estadísticos Avanzados de Análisis de Datos</p>
+<hr class="portada-rule">
+<p class="portada-meta">Diplomado en Big Data · Escuela de Ciencias de la Computación<br>
+Prof. David Martínez Salazar</p>
 </div>
 
-```{r tecnica-1}
+<p class="portada-h">Integrantes del grupo</p>
+
+<div class="portada-integrantes">
+
+| Integrante | 
+|---|
+| Desmond Bermudez Rodriguez |
+| Nubia Elena Brenes Valerín |
+| Pablo Marin Castillo |
+| Wedell Orozco González |
+| Kendall Solano Solís |
+
+</div>
+
+<p class="portada-scroll">Desplácese para ver el contenido ↓</p>
+
+</div>
+<!-- / .portada-page -->
+
+<!-- ============================================================================
+ A partir de aquí: menú lateral fijo (siempre visible, sin JavaScript de temas
+ externos) + contenido. Cada pestaña principal (dataset) muestra debajo, en el
+ menú, un salto directo a cada uno de sus subtítulos (Introducción, EDA, etc.)
+============================================================================ -->
+<button id="sidebarToggle" class="sidebar-toggle" aria-label="Abrir/cerrar menú" onclick="document.getElementById('appLayout').classList.toggle('sidebar-open')">☰ Contenido</button>
+
+<div class="app-layout" id="appLayout">
+
+<nav id="sidebar" class="sidebar-nav">
+<p class="sidebar-titulo">Proyecto Final</p>
+<p class="sidebar-subtitulo">BD-165 · Modelos Estadísticos Avanzados</p>
+<p class="sidebar-label">Contenido</p>
+<ul>
+<li><a href="#introduccion-general">1 · Introducción general</a></li>
+<li>
+<a href="#seoulbikedata">2 · SeoulBikeData</a>
+<ul class="sidebar-sub">
+<li><a href="#s1-intro">Introducción</a></li>
+<li><a href="#s1-descripcion">Descripción</a></li>
+<li><a href="#s1-extraccion">Extracción</a></li>
+<li><a href="#s1-eda">EDA</a></li>
+<li><a href="#s1-modelos">Modelos</a></li>
+<li><a href="#s1-resultados">Resultados</a></li>
+<li><a href="#s1-discusion">Discusión</a></li>
+</ul>
+</li>
+<li>
+<a href="#ai-student-impact-dataset">3 · ai_student_impact_dataset</a>
+<ul class="sidebar-sub">
+<li><a href="#s2-intro">Introducción</a></li>
+<li><a href="#s2-descripcion">Descripción</a></li>
+<li><a href="#s2-extraccion">Extracción</a></li>
+<li><a href="#s2-eda">EDA</a></li>
+<li><a href="#s2-modelos">Modelos</a></li>
+<li><a href="#s2-resultados">Resultados</a></li>
+<li><a href="#s2-discusion">Discusión</a></li>
+</ul>
+</li>
+<li>
+<a href="#mental-health-burnout-dataset">4 · mental_health_burnout_prediction_dataset</a>
+<ul class="sidebar-sub">
+<li><a href="#s3-intro">Introducción</a></li>
+<li><a href="#s3-descripcion">Descripción</a></li>
+<li><a href="#s3-extraccion">Extracción</a></li>
+<li><a href="#s3-eda">EDA</a></li>
+<li><a href="#s3-modelos">Modelos</a></li>
+<li><a href="#s3-resultados">Resultados</a></li>
+<li><a href="#s3-discusion">Discusión</a></li>
+</ul>
+</li>
+<li><a href="#conclusion-general">5 · Conclusión general</a></li>
+<li><a href="#referencias">Referencias</a></li>
+</ul>
+</nav>
+
+<div class="main-content">
+
+<!-- ============================================================================
+ INTRODUCCIÓN GENERAL — contexto del proyecto completo (los tres datasets)
+============================================================================ -->
+# Introducción general {#introduccion-general}
+
+[Contexto general del proyecto: qué problema(s) se aborda(n), por qué se
+eligieron estos tres conjuntos de datos, y cómo se relacionan entre sí.]
+
+[Objetivo general del proyecto.]
+
+[Breve resumen de cada conjunto de datos (una o dos líneas por cada uno) y
+de las técnicas/familias de modelos que se aplicarán en cada pestaña.]
+
+<!-- ============================================================================
+ PESTAÑA 2 — Conjunto de datos: SeoulBikeData.csv
+ Responsable: [nombre del compañero/a]
+============================================================================ -->
+# SeoulBikeData {#seoulbikedata}
+
+## Introducción y pregunta de análisis {#s1-intro}
+
+[Contexto del conjunto de datos y la pregunta que se busca responder. Ej.:
+"¿Qué variables climáticas explican mejor la demanda horaria de bicicletas
+compartidas en Seúl, y es posible identificar perfiles de días con demanda
+similar?"]
+
+## Descripción de la base de datos {#s1-descripcion}
+
+**Fuente:** [autor(es), repositorio (Kaggle/UCI/otro), año, enlace y cita formal.]
+
+**Licencia / acceso:** [ej. CC BY 4.0 — de acceso público y libre.]
+
+[Número de observaciones y variables; cuáles son numéricas y cuáles
+categóricas, y qué representa cada una en el contexto del problema.]
+
+## Extracción y preparación de los datos {#s1-extraccion}
+
+```{r s1-carga}
+# Extracción y limpieza — Data/SeoulBikeData.csv
+# (carga, tipos de dato, duplicados, valores faltantes, escalado si aplica)
+
+```
+
+[Interpretación: ¿hubo faltantes/duplicados?, ¿qué se convirtió a factor?,
+¿se estandarizó (scale) antes de alguna técnica?]
+
+## Exploración de los datos (EDA) {#s1-eda}
+
+```{r s1-eda}
+# Análisis exploratorio: distribuciones, correlaciones, gráficos
+
+```
+
+[Interpretación: variables más correlacionadas con la variable de interés,
+señales de multicolinealidad, hallazgos relevantes para elegir las técnicas.]
+
+## Modelos aplicados {#s1-modelos}
+
+### Técnica 1 — [nombre de la técnica]
+
+<div class="justificacion">
+[¿Por qué esta técnica es apropiada para la pregunta de análisis?]
+</div>
+
+```{r s1-t1}
 # Código de la Técnica 1
 
 ```
@@ -227,13 +242,13 @@ las tres técnicas — por ejemplo si se va a hacer clustering?]
 [Interpretación de los resultados de la Técnica 1.]
 </div>
 
-## Técnica 2 — [Nombre de la técnica, ej. K-medias]
+### Técnica 2 — [nombre de la técnica]
 
 <div class="justificacion">
-**Justificación:** [...]
+[Justificación de la Técnica 2.]
 </div>
 
-```{r tecnica-2}
+```{r s1-t2}
 # Código de la Técnica 2
 
 ```
@@ -242,13 +257,13 @@ las tres técnicas — por ejemplo si se va a hacer clustering?]
 [Interpretación de los resultados de la Técnica 2.]
 </div>
 
-## Técnica 3 — [Nombre de la técnica, ej. Series de Tiempo / Holt-Winters]
+### Técnica 3 — [nombre de la técnica]
 
 <div class="justificacion">
-**Justificación:** [...]
+[Justificación de la Técnica 3.]
 </div>
 
-```{r tecnica-3}
+```{r s1-t3}
 # Código de la Técnica 3
 
 ```
@@ -257,52 +272,258 @@ las tres técnicas — por ejemplo si se va a hacer clustering?]
 [Interpretación de los resultados de la Técnica 3.]
 </div>
 
-# Resultados
+## Resultados {#s1-resultados}
+
+[Síntesis de los resultados de las tres técnicas para este conjunto de datos,
+con gráficos o tablas de apoyo.]
+
+## Discusión {#s1-discusion}
+
+[Significado de los resultados en el contexto del problema y limitaciones del
+análisis (tamaño de muestra, sesgos, supuestos no cumplidos, alcance).]
+
+<!-- ============================================================================
+ PESTAÑA 3 — Conjunto de datos: ai_student_impact_dataset.csv
+ Responsable: [nombre del compañero/a]
+============================================================================ -->
+# ai_student_impact_dataset {#ai-student-impact-dataset}
+
+## Introducción y pregunta de análisis {#s2-intro}
+
+[Contexto del conjunto de datos y la pregunta de análisis.]
+
+## Descripción de la base de datos {#s2-descripcion}
+
+**Fuente:** [autor(es), repositorio, año, enlace y cita formal.]
+
+**Licencia / acceso:** [ej. CC BY 4.0.]
+
+[Número de observaciones y variables; tipo y significado de cada una.]
+
+## Extracción y preparación de los datos {#s2-extraccion}
+
+```{r s2-carga}
+# Extracción y limpieza — Data/ai_student_impact_dataset.csv
+
+```
+
+[Interpretación de la limpieza y preparación.]
+
+## Exploración de los datos (EDA) {#s2-eda}
+
+```{r s2-eda}
+# Análisis exploratorio: distribuciones, correlaciones, gráficos
+
+```
+
+[Interpretación del EDA.]
+
+## Modelos aplicados {#s2-modelos}
+
+### Técnica 1 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 1.]
+</div>
+
+```{r s2-t1}
+# Código de la Técnica 1
+
+```
+
+<div class="interpretacion">
+[Interpretación de los resultados de la Técnica 1.]
+</div>
+
+### Técnica 2 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 2.]
+</div>
+
+```{r s2-t2}
+# Código de la Técnica 2
+
+```
+
+<div class="interpretacion">
+[Interpretación de los resultados de la Técnica 2.]
+</div>
+
+### Técnica 3 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 3.]
+</div>
+
+```{r s2-t3}
+# Código de la Técnica 3
+
+```
+
+<div class="interpretacion">
+[Interpretación de los resultados de la Técnica 3.]
+</div>
+
+## Resultados {#s2-resultados}
+
+[Síntesis de los resultados de las tres técnicas para este conjunto de datos.]
+
+## Discusión {#s2-discusion}
+
+[Significado de los resultados y limitaciones del análisis.]
+
+<!-- ============================================================================
+ PESTAÑA 4 — Conjunto de datos: mental_health_burnout_prediction_dataset.csv
+ Responsable: [nombre del compañero/a]
+============================================================================ -->
+# mental_health_burnout_prediction_dataset {#mental-health-burnout-dataset}
+
+## Introducción y pregunta de análisis {#s3-intro}
+
+[Contexto del conjunto de datos y la pregunta de análisis.]
+
+## Descripción de la base de datos {#s3-descripcion}
+
+**Fuente:** [autor(es), repositorio, año, enlace y cita formal.]
+
+**Licencia / acceso:** [ej. CC BY 4.0.]
+
+[Número de observaciones y variables; tipo y significado de cada una.]
+
+## Extracción y preparación de los datos {#s3-extraccion}
+
+```{r s3-carga}
+# Extracción y limpieza — Data/mental_health_burnout_prediction_dataset.csv
+
+```
+
+[Interpretación de la limpieza y preparación.]
+
+## Exploración de los datos (EDA) {#s3-eda}
+
+```{r s3-eda}
+# Análisis exploratorio: distribuciones, correlaciones, gráficos
+
+```
+
+[Interpretación del EDA.]
+
+## Modelos aplicados {#s3-modelos}
+
+### Técnica 1 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 1.]
+</div>
+
+```{r s3-t1}
+# Código de la Técnica 1
+
+```
+
+<div class="interpretacion">
+[Interpretación de los resultados de la Técnica 1.]
+</div>
+
+### Técnica 2 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 2.]
+</div>
+
+```{r s3-t2}
+# Código de la Técnica 2
+
+```
+
+<div class="interpretacion">
+[Interpretación de los resultados de la Técnica 2.]
+</div>
+
+### Técnica 3 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 3.]
+</div>
+
+```{r s3-t3}
+# Código de la Técnica 3
+
+```
+
+<div class="interpretacion">
+[Interpretación de los resultados de la Técnica 3.]
+</div>
+
+## Resultados {#s3-resultados}
+
+[Síntesis de los resultados de las tres técnicas para este conjunto de datos.]
+
+## Discusión {#s3-discusion}
+
+[Significado de los resultados y limitaciones del análisis.]
+
+<!-- ============================================================================
+ CONCLUSIÓN GENERAL
+============================================================================ -->
+# Conclusión general {#conclusion-general}
+
+[Conclusión que integra los hallazgos de los tres conjuntos de datos y
+responde, de forma conjunta, a las preguntas de análisis planteadas. Conecten
+los resultados de las técnicas aplicadas en cada pestaña y cierren con las
+principales lecciones del proyecto.]
+
+# Referencias {.unnumbered #referencias}
+
+- [Cita del conjunto de datos 1 — SeoulBikeData]
+- [Cita del conjunto de datos 2 — ai_student_impact_dataset]
+- [Cita del conjunto de datos 3 — mental_health_burnout_prediction_dataset]
+- [Paquetes de R o fuentes teóricas citadas]
+
+</div>
+<!-- / .main-content -->
+
+</div>
+<!-- / .app-layout -->
+
+<script>
+// Resalta en el menú lateral la sección visible mientras se hace scroll.
+// JS simple y autocontenido: no depende de librerías externas ni de temas.
+// Funciona igual para las pestañas principales (h1) y para los saltos a
+// subtítulos (h2) porque ambos son simplemente enlaces "#id" en el menú.
+(function () {
+  var enlaces = document.querySelectorAll('#sidebar a[href^="#"]');
+  var secciones = Array.prototype.map.call(enlaces, function (a) {
+    return document.getElementById(a.getAttribute('href').slice(1));
+  });
+  function marcarActivo() {
+    var pos = window.scrollY + 120;
+    var actual = secciones[0];
+    secciones.forEach(function (sec) {
+      if (sec && sec.offsetTop <= pos) actual = sec;
+    });
+    enlaces.forEach(function (a) {
+      a.parentElement.classList.toggle('active', actual && a.getAttribute('href') === '#' + actual.id);
+    });
+  }
+  window.addEventListener('scroll', marcarActivo, { passive: true });
+  window.addEventListener('resize', marcarActivo);
+  marcarActivo();
+
+  // En pantallas angostas: cerrar el menú al elegir una pestaña
+  enlaces.forEach(function (a) {
+    a.addEventListener('click', function () {
+      document.getElementById('appLayout').classList.remove('sidebar-open');
+    });
+  });
+})();
+</script>
 
 <!--
-Síntesis integrada de las tres técnicas: gráficos finales, tablas
-comparativas, hallazgos principales. No repetir el código ya mostrado
-arriba — esta sección es la lectura conjunta de lo que arrojaron las
-tres técnicas.
--->
-
-[Redactar síntesis de resultados con gráficos/tablas de apoyo si hace
-falta.]
-
-# Discusión
-
-<!--
-Significado de los resultados en el contexto del problema planteado en
-la introducción, y LIMITACIONES del análisis (tamaño de muestra, sesgos
-del dataset, supuestos que no se cumplieron del todo, alcance temporal
-o geográfico de los datos, etc.). Este criterio pesa 3 puntos en la
-rúbrica y penaliza si no hay autocrítica.
--->
-
-[Redactar discusión crítica.]
-
-# Conclusiones
-
-<!--
-3-5 oraciones que respondan directamente la pregunta de análisis de la
-introducción, conectando los tres resultados.
--->
-
-[Redactar conclusiones.]
-
-# Referencias
-
-- [Cita del dataset]
-- [Cualquier paquete de R con función poco común, o fuente teórica citada]
-
----
-
-<!--
-Recordatorios de entrega (no borrar hasta después del 14 de agosto 2026):
-  - Documento técnico (15%): Markdown -> HTML, repo público de GitHub,
-    con código y datos (o enlace a la fuente) — viernes 14 de agosto, 8:00 a.m.
-  - Defensa oral grupal (10%): viernes 14 de agosto, todos deben intervenir.
-  - Video individual en YouTube (5%): viernes 14 de agosto, 12:00 m.d.
-    (si alguien no lo entrega a tiempo, pierde también el derecho a la
-    defensa oral).
+Recordatorios de entrega (enunciado, sección 5):
+  - Documento técnico (15 %): Markdown -> HTML, repo público de GitHub, con
+    código y datos (o enlace) — viernes 14 de agosto de 2026, 8:00 a.m.
+  - Defensa oral grupal (10 %): viernes 14 de agosto de 2026; todos intervienen.
+  - Video grupal en YouTube (5 %): viernes 14 de agosto de 2026, 12:00 m. d.
 -->

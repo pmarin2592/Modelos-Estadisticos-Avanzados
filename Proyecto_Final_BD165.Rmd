@@ -126,42 +126,9 @@ Prof. David Martínez Salazar</p>
 <p class="sidebar-label">Contenido</p>
 <ul>
 <li><a href="#introduccion-general">1 · Introducción general</a></li>
-<li>
-<a href="#seoulbikedata">2 · SeoulBikeData</a>
-<ul class="sidebar-sub">
-<li><a href="#s1-intro">Introducción</a></li>
-<li><a href="#s1-descripcion">Descripción</a></li>
-<li><a href="#s1-extraccion">Extracción</a></li>
-<li><a href="#s1-eda">EDA</a></li>
-<li><a href="#s1-modelos">Modelos</a></li>
-<li><a href="#s1-resultados">Resultados</a></li>
-<li><a href="#s1-discusion">Discusión</a></li>
-</ul>
-</li>
-<li>
-<a href="#ai-student-impact-dataset">3 · ai_student_impact_dataset</a>
-<ul class="sidebar-sub">
-<li><a href="#s2-intro">Introducción</a></li>
-<li><a href="#s2-descripcion">Descripción</a></li>
-<li><a href="#s2-extraccion">Extracción</a></li>
-<li><a href="#s2-eda">EDA</a></li>
-<li><a href="#s2-modelos">Modelos</a></li>
-<li><a href="#s2-resultados">Resultados</a></li>
-<li><a href="#s2-discusion">Discusión</a></li>
-</ul>
-</li>
-<li>
-<a href="#mental-health-burnout-dataset">4 · mental_health_burnout_prediction_dataset</a>
-<ul class="sidebar-sub">
-<li><a href="#s3-intro">Introducción</a></li>
-<li><a href="#s3-descripcion">Descripción</a></li>
-<li><a href="#s3-extraccion">Extracción</a></li>
-<li><a href="#s3-eda">EDA</a></li>
-<li><a href="#s3-modelos">Modelos</a></li>
-<li><a href="#s3-resultados">Resultados</a></li>
-<li><a href="#s3-discusion">Discusión</a></li>
-</ul>
-</li>
+<li><a href="#seoulbikedata">2 · SeoulBikeData</a></li>
+<li><a href="#ai-student-impact-dataset">3 · ai_student_impact_dataset</a></li>
+<li><a href="#mental-health-burnout-dataset">4 · mental_health_burnout_prediction_dataset</a></li>
 <li><a href="#conclusion-general">5 · Conclusión general</a></li>
 <li><a href="#referencias">Referencias</a></li>
 </ul>
@@ -186,7 +153,7 @@ de las técnicas/familias de modelos que se aplicarán en cada pestaña.]
  PESTAÑA 2 — Conjunto de datos: SeoulBikeData.csv
  Responsable: [nombre del compañero/a]
 ============================================================================ -->
-# SeoulBikeData {#seoulbikedata}
+# SeoulBikeData {#seoulbikedata .tabset .tabset-fade .tabset-pills}
 
 ## Introducción y pregunta de análisis {#s1-intro}
 
@@ -286,7 +253,7 @@ análisis (tamaño de muestra, sesgos, supuestos no cumplidos, alcance).]
  PESTAÑA 3 — Conjunto de datos: ai_student_impact_dataset.csv
  Responsable: [nombre del compañero/a]
 ============================================================================ -->
-# ai_student_impact_dataset {#ai-student-impact-dataset}
+# ai_student_impact_dataset {#ai-student-impact-dataset .tabset .tabset-fade .tabset-pills}
 
 ## Introducción y pregunta de análisis {#s2-intro}
 
@@ -377,7 +344,7 @@ análisis (tamaño de muestra, sesgos, supuestos no cumplidos, alcance).]
  PESTAÑA 4 — Conjunto de datos: mental_health_burnout_prediction_dataset.csv
  Responsable: [nombre del compañero/a]
 ============================================================================ -->
-# mental_health_burnout_prediction_dataset {#mental-health-burnout-dataset}
+# mental_health_burnout_prediction_dataset {#mental-health-burnout-dataset .tabset .tabset-fade .tabset-pills}
 
 ## Introducción y pregunta de análisis {#s3-intro}
 
@@ -488,35 +455,81 @@ principales lecciones del proyecto.]
 <!-- / .app-layout -->
 
 <script>
-// Resalta en el menú lateral la sección visible mientras se hace scroll.
-// JS simple y autocontenido: no depende de librerías externas ni de temas.
-// Funciona igual para las pestañas principales (h1) y para los saltos a
-// subtítulos (h2) porque ambos son simplemente enlaces "#id" en el menú.
+// ============================================================================
+// Navegación por "páginas": cada pestaña principal (h1: Introducción general,
+// cada dataset, Conclusión, Referencias) se muestra de a una, como si fueran
+// páginas independientes — igual que el menú lateral de rmdformats::material.
+// Dentro de cada dataset, los subtítulos (Introducción, EDA, Modelos, etc.)
+// ya vienen convertidos en botones tipo pestaña (pills) por el propio pandoc,
+// gracias a la clase {.tabset .tabset-fade .tabset-pills} en su encabezado —
+// no se agregó ninguna librería nueva, solo se usa lo que pandoc/Bootstrap ya
+// incluye en el documento.
+// ============================================================================
 (function () {
-  var enlaces = document.querySelectorAll('#sidebar a[href^="#"]');
-  var secciones = Array.prototype.map.call(enlaces, function (a) {
-    return document.getElementById(a.getAttribute('href').slice(1));
-  });
-  function marcarActivo() {
-    var pos = window.scrollY + 120;
-    var actual = secciones[0];
-    secciones.forEach(function (sec) {
-      if (sec && sec.offsetTop <= pos) actual = sec;
-    });
-    enlaces.forEach(function (a) {
-      a.parentElement.classList.toggle('active', actual && a.getAttribute('href') === '#' + actual.id);
-    });
-  }
-  window.addEventListener('scroll', marcarActivo, { passive: true });
-  window.addEventListener('resize', marcarActivo);
-  marcarActivo();
+  var sidebar = document.getElementById('sidebar');
+  var appLayout = document.getElementById('appLayout');
 
-  // En pantallas angostas: cerrar el menú al elegir una pestaña
+  // Todas las "páginas" = secciones de nivel 1 dentro del contenido principal
+  var paginas = {};
+  var listaIds = [];
+  document.querySelectorAll('.main-content > .section.level1, .main-content > section.level1')
+    .forEach(function (sec) {
+      if (sec.id) { paginas[sec.id] = sec; listaIds.push(sec.id); }
+    });
+
+  function mostrarPagina(id) {
+    if (!paginas[id]) return;
+    listaIds.forEach(function (pid) {
+      paginas[pid].style.display = (pid === id) ? '' : 'none';
+    });
+    // Resalta en el menú SOLO la pestaña principal activa (como una "página")
+    sidebar.querySelectorAll(':scope > ul > li').forEach(function (li) {
+      var a = li.querySelector(':scope > a');
+      li.classList.toggle('active', !!a && a.getAttribute('href') === '#' + id);
+    });
+    // No usar scrollTo(0,0): eso sube hasta la portada, que está ANTES del
+    // menú en el documento. En su lugar nos quedamos al tope del propio
+    // layout (menú + contenido), justo debajo de la portada.
+    var topLayout = appLayout.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({ top: topLayout, left: 0, behavior: 'auto' });
+  }
+
+  // Enlaces del menú lateral (principales y subtítulos)
+  var enlaces = sidebar.querySelectorAll('a[href^="#"]');
   enlaces.forEach(function (a) {
-    a.addEventListener('click', function () {
-      document.getElementById('appLayout').classList.remove('sidebar-open');
+    a.addEventListener('click', function (evt) {
+      var id = a.getAttribute('href').slice(1);
+      evt.preventDefault();
+
+      if (paginas[id]) {
+        // Es una pestaña principal: cambiar de "página"
+        mostrarPagina(id);
+      } else {
+        // Es un subtítulo (ahora es una pestaña/tab dentro de su página):
+        // 1) mostrar la página a la que pertenece, 2) activar esa pestaña
+        var destino = document.getElementById(id);
+        if (!destino) return;
+        var paginaPadre = destino.closest('.section.level1, section.level1');
+        if (paginaPadre && paginas[paginaPadre.id]) mostrarPagina(paginaPadre.id);
+
+        var botonTab = document.querySelector('a[data-toggle="tab"][href="#' + id + '"]');
+        if (botonTab && window.jQuery) {
+          window.jQuery(botonTab).tab('show');
+        } else if (destino) {
+          destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      // En pantallas angostas: cerrar el menú al elegir una opción
+      appLayout.classList.remove('sidebar-open');
     });
   });
+
+  // Página inicial: la que indique el hash de la URL, o la primera disponible
+  var inicial = listaIds[0];
+  var hash = window.location.hash.slice(1);
+  if (hash && paginas[hash]) inicial = hash;
+  if (inicial) mostrarPagina(inicial);
 })();
 </script>
 

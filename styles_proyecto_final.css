@@ -249,10 +249,11 @@ h4 { font-size: 1.02rem; color: var(--tinta) !important; }
   height: 100vh;
   overflow-y: auto;
   background: linear-gradient(180deg, var(--marino) 0%, var(--marino-osc) 100%);
-  color: #DCE7F1;
+  color: #DCE7F1 !important;
   padding: 1.6rem 0 2rem;
   box-shadow: var(--sombra-m);
   z-index: 30;
+  -webkit-font-smoothing: auto;
 }
 .sidebar-titulo {
   color: #FFFFFF !important;
@@ -395,7 +396,7 @@ h4 { font-size: 1.02rem; color: var(--tinta) !important; }
 .table th, table th {
   background: var(--marino) !important;
   color: #FFFFFF !important;
-  text-align: left;
+  text-align: right !important;
   font-family: var(--fuente-texto);
   font-weight: 600;
   letter-spacing: 0.2px;

@@ -14,8 +14,12 @@ output:
     fig_height: 5
     toc: false
 lang: es
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
+```{=html}
 <!--
 ============================================================================
  GUÍA RÁPIDA PARA EL GRUPO — leer antes de escribir
@@ -51,6 +55,7 @@ lang: es
    estén en la misma carpeta: styles_proyecto_final.css  y  logo.png
 ============================================================================
 -->
+```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -78,68 +83,134 @@ col_navy <- "#16324F"
 col_teal <- "#38761D"
 ```
 
+```{=html}
 <!-- ============================================================================
  PORTADA — página propia, independiente del menú/contenido de abajo
 ============================================================================ -->
-<div class="portada-page">
+```
 
-<div class="portada">
-<img src="logo.png" class="logo-cuc" alt="Colegio Universitario de Cartago">
-<p class="portada-kicker">Colegio Universitario de Cartago</p>
-<p class="portada-titulo">Proyecto Final</p>
-<p class="portada-subtitulo">BD-165 · Modelos Estadísticos Avanzados de Análisis de Datos</p>
+::::::::::::::::::::::::: portada-page
+:::::::::::::::::::::::: portada
+<img src="logo.png" alt="Colegio Universitario de Cartago" class="logo-cuc"/>
+
+<p class="portada-kicker">
+
+Colegio Universitario de Cartago
+
+</p>
+
+<p class="portada-titulo">
+
+Proyecto Final
+
+</p>
+
+<p class="portada-subtitulo">
+
+BD-165 · Modelos Estadísticos Avanzados de Análisis de Datos
+
+</p>
+
 <hr class="portada-rule">
-<p class="portada-meta">Diplomado en Big Data · Escuela de Ciencias de la Computación<br>
-Prof. David Martínez Salazar</p>
+
+<p class="portada-meta">
+
+Diplomado en Big Data · Escuela de Ciencias de la Computación<br> Prof.
+David Martínez Salazar
+
+</p>
+
 </div>
 
-<p class="portada-h">Integrantes del grupo</p>
+<p class="portada-h">
 
-<div class="portada-integrantes">
+Integrantes del grupo
 
-| Integrante | 
-|---|
+</p>
+
+::: portada-integrantes
+| Integrante                 |
+|----------------------------|
 | Desmond Bermudez Rodriguez |
 | Nubia Elena Brenes Valerín |
-| Pablo Marin Castillo |
-| Wedell Orozco González |
-| Kendall Solano Solís |
+| Pablo Marin Castillo       |
+| Wedell Orozco González     |
+| Kendall Solano Solís       |
+:::
+
+<p class="portada-scroll">
+
+Desplácese para ver el contenido ↓
+
+</p>
 
 </div>
 
-<p class="portada-scroll">Desplácese para ver el contenido ↓</p>
-
-</div>
 <!-- / .portada-page -->
 
+```{=html}
 <!-- ============================================================================
  A partir de aquí: menú lateral fijo (siempre visible, sin JavaScript de temas
  externos) + contenido. Cada pestaña principal (dataset) muestra debajo, en el
  menú, un salto directo a cada uno de sus subtítulos (Introducción, EDA, etc.)
 ============================================================================ -->
-<button id="sidebarToggle" class="sidebar-toggle" aria-label="Abrir/cerrar menú" onclick="document.getElementById('appLayout').classList.toggle('sidebar-open')">☰ Contenido</button>
+```
 
-<div class="app-layout" id="appLayout">
+<button id="sidebarToggle" class="sidebar-toggle" aria-label="Abrir/cerrar menú" onclick="document.getElementById(&#39;appLayout&#39;).classList.toggle(&#39;sidebar-open&#39;)">
 
+☰ Contenido
+
+</button>
+
+:::::::::::::::::::::: {#appLayout .app-layout}
 <nav id="sidebar" class="sidebar-nav">
-<p class="sidebar-titulo">Proyecto Final</p>
-<p class="sidebar-subtitulo">BD-165 · Modelos Estadísticos Avanzados</p>
-<p class="sidebar-label">Contenido</p>
+
+<p class="sidebar-titulo">
+
+Proyecto Final
+
+</p>
+
+<p class="sidebar-subtitulo">
+
+BD-165 · Modelos Estadísticos Avanzados
+
+</p>
+
+<p class="sidebar-label">
+
+Contenido
+
+</p>
+
 <ul>
+
 <li><a href="#introduccion-general">1 · Introducción general</a></li>
+
 <li><a href="#seoulbikedata">2 · SeoulBikeData</a></li>
-<li><a href="#ai-student-impact-dataset">3 · ai_student_impact_dataset</a></li>
-<li><a href="#mental-health-burnout-dataset">4 · mental_health_burnout_prediction_dataset</a></li>
+
+<li><a href="#ai-student-impact-dataset">3 ·
+ai_student_impact_dataset</a></li>
+
+<li><a href="#mental-health-burnout-dataset">4 ·
+mental_health_burnout_prediction_dataset</a></li>
+
 <li><a href="#conclusion-general">5 · Conclusión general</a></li>
+
 <li><a href="#referencias">Referencias</a></li>
+
 </ul>
+
 </nav>
 
-<div class="main-content">
 
+::::::::::::::::::::: main-content
+```{=html}
 <!-- ============================================================================
  INTRODUCCIÓN GENERAL — contexto del proyecto completo (los tres datasets)
 ============================================================================ -->
+```
+
 # Introducción general {#introduccion-general}
 
 [Contexto general del proyecto: qué problema(s) se aborda(n), por qué se
@@ -147,40 +218,43 @@ eligieron estos tres conjuntos de datos, y cómo se relacionan entre sí.]
 
 [Objetivo general del proyecto.]
 
-[Breve resumen de cada conjunto de datos (una o dos líneas por cada uno) y
-de las técnicas/familias de modelos que se aplicarán en cada pestaña.]
+[Breve resumen de cada conjunto de datos (una o dos líneas por cada uno)
+y de las técnicas/familias de modelos que se aplicarán en cada pestaña.]
 
+```{=html}
 <!-- ============================================================================
  PESTAÑA 2 — Conjunto de datos: SeoulBikeData.csv
  Responsable: [nombre del compañero/a]
 ============================================================================ -->
+```
+
 # SeoulBikeData {#seoulbikedata .tabset .tabset-fade .tabset-pills}
 
 ## Introducción y pregunta de análisis {#s1-intro}
 
-Seúl opera un sistema de bicicletas compartidas y registró, durante un año
-completo (diciembre 2017 – noviembre 2018), la cantidad de bicicletas
-rentadas cada hora junto con las condiciones climáticas de ese momento.
-Para la operación del sistema es clave anticipar la demanda con el fin de
-redistribuir la flota entre estaciones y evitar tanto faltantes como
-sobreoferta de bicicletas.
+Seúl opera un sistema de bicicletas compartidas y registró, durante un
+año completo (diciembre 2017 – noviembre 2018), la cantidad de
+bicicletas rentadas cada hora junto con las condiciones climáticas de
+ese momento. Para la operación del sistema es clave anticipar la demanda
+con el fin de redistribuir la flota entre estaciones y evitar tanto
+faltantes como sobreoferta de bicicletas.
 
 **Pregunta de análisis:** ¿qué variables climáticas explican mejor la
-demanda horaria de bicicletas compartidas en Seúl, es posible identificar
-perfiles de días con demanda similar según el clima, y qué tan bien se
-puede pronosticar la demanda diaria a corto plazo a partir de su
-comportamiento histórico?
+demanda horaria de bicicletas compartidas en Seúl, es posible
+identificar perfiles de días con demanda similar según el clima, y qué
+tan bien se puede pronosticar la demanda diaria a corto plazo a partir
+de su comportamiento histórico?
 
 ## Descripción de la base de datos {#s1-descripcion}
 
 **Fuente:** Sathishkumar V E, Jangwoo Park y Yongyun Cho (2020). *Seoul
 Bike Sharing Demand* [Dataset]. UCI Machine Learning Repository.
-https://doi.org/10.24432/C5F62R — también disponible en Kaggle como
+<https://doi.org/10.24432/C5F62R> — también disponible en Kaggle como
 `saurabhshahane/seoul-bike-sharing-demand-prediction`.
 
-Cita de los autores originales (Mendeley Data): V E, Sathishkumar (2020),
-"Seoul Bike Sharing Demand Prediction", Mendeley Data, V2,
-doi: 10.17632/zbdtzxcxvg.2
+Cita de los autores originales (Mendeley Data): V E, Sathishkumar
+(2020), "Seoul Bike Sharing Demand Prediction", Mendeley Data, V2, doi:
+10.17632/zbdtzxcxvg.2
 
 **Licencia / acceso:** CC BY 4.0 — de acceso público y libre, con cita
 obligatoria a los autores.
@@ -189,7 +263,7 @@ El conjunto contiene **8,760 observaciones** (una por cada hora de 365
 días) y **14 variables**:
 
 | Variable original | Variable en este documento | Significado | Tipo |
-|---|---|---|---|
+|------------------|------------------|------------------|------------------|
 | Date | Fecha | Fecha del registro | Fecha |
 | Rented Bike Count | Bicis_Rentadas | Bicicletas rentadas en esa hora — **variable objetivo** | Numérica |
 | Hour | Hora | Hora del día (0-23) | Numérica |
@@ -248,13 +322,13 @@ datos_bici_func <- subset(datos_bici, Dia_Funcional == "Yes")
 nrow(datos_bici_func)
 ```
 
-[Interpretación: el conjunto tiene 8,760 observaciones y 14 variables, sin
-valores faltantes ni filas duplicadas. `Estacion`, `Feriado` y
-`Dia_Funcional` se convirtieron a factor por ser categóricas. Se excluyeron
-las horas con `Dia_Funcional == "No"` (sistema cerrado) para que la variable
-objetivo refleje demanda real; el escalado (`scale()`) de las variables
-climáticas se hace más adelante, específicamente para la Técnica 2
-(K-medias), que sí lo requiere.]
+Interpretación: el conjunto tiene 8,760 observaciones y 14 variables,
+sin valores faltantes ni filas duplicadas. `Estacion`, `Feriado` y
+`Dia_Funcional` se convirtieron a factor por ser categóricas. Se
+excluyeron las horas con `Dia_Funcional == "No"` (sistema cerrado) para
+que la variable objetivo refleje demanda real; el escalado (`scale()`)
+de las variables climáticas se hace más adelante, específicamente para
+la Técnica 2 (K-medias), que sí lo requiere.
 
 ## Exploración de los datos (EDA) {#s1-eda}
 
@@ -295,31 +369,33 @@ ggplot(datos_bici_func, aes(x = factor(Hora), y = Bicis_Rentadas)) +
   theme_minimal()
 ```
 
-[Interpretación: `Bicis_Rentadas` muestra una distribución sesgada a la
+Interpretación: `Bicis_Rentadas` muestra una distribución sesgada a la
 derecha (muchas horas de demanda baja y pocas horas pico), mientras que
 `Temperatura` se ve más simétrica por cubrir un año completo con las
 cuatro estaciones. En la matriz de correlaciones, `Temperatura` y
-`Punto_Rocio` salen muy correlacionadas entre sí (ambas miden condiciones
-térmicas parecidas) — señal de multicolinealidad que se trata en la
-Técnica 1. `Bicis_Rentadas` correlaciona positivo con `Temperatura` y
-negativo con `Humedad`, `Lluvia` y `Nieve`: a mejor clima, más demanda. El
-boxplot por estación muestra mayor demanda en los meses cálidos y menor en
-invierno, y el boxplot por hora deja ver los picos típicos de un patrón de
-transporte (entrada y salida laboral) más que puramente recreativo.]
+`Punto_Rocio` salen muy correlacionadas entre sí (ambas miden
+condiciones térmicas parecidas) — señal de multicolinealidad que se
+trata en la Técnica 1. `Bicis_Rentadas` correlaciona positivo con
+`Temperatura` y negativo con `Humedad`, `Lluvia` y `Nieve`: a mejor
+clima, más demanda. El boxplot por estación muestra mayor demanda en los
+meses cálidos y menor en invierno, y el boxplot por hora deja ver los
+picos típicos de un patrón de transporte (entrada y salida laboral) más
+que puramente recreativo.
 
 ## Modelos aplicados {#s1-modelos}
 
 ### Técnica 1 — Regresión Lineal Múltiple
 
-<div class="justificacion">
+::: justificacion
 La pregunta de análisis requiere **cuantificar** cómo cada variable
-climática (temperatura, humedad, viento, lluvia, etc.) afecta la cantidad
-de bicicletas rentadas por hora — una variable dependiente numérica
-continua. La Regresión Lineal Múltiple permite estimar el efecto
-individual de cada predictor manteniendo los demás constantes e
-identificar cuáles son estadísticamente significativos, igual que se hizo
-en el Laboratorio 3 del curso con las ventas de la cadena minorista.
-</div>
+climática (temperatura, humedad, viento, lluvia, etc.) afecta la
+cantidad de bicicletas rentadas por hora — una variable dependiente
+numérica continua. La Regresión Lineal Múltiple permite estimar el
+efecto individual de cada predictor manteniendo los demás constantes e
+identificar cuáles son estadísticamente significativos, igual que se
+hizo en el Laboratorio 3 del curso con las ventas de la cadena
+minorista.
+:::
 
 ```{r s1-t1}
 modelo_bici_completo <- lm(Bicis_Rentadas ~ Temperatura + Humedad +
@@ -354,30 +430,49 @@ nueva_hora <- data.frame(Temperatura = 20, Humedad = 50,
 predict(modelo_bici_final, newdata = nueva_hora, interval = "prediction")
 ```
 
-<div class="interpretacion">
-[Completar con los valores reales que arroje la corrida: R² ajustado del
-modelo final, cuáles predictores resultaron significativos (p < 0.05) y
-con qué signo — se espera que `Temperatura` y `Radiacion_Solar` empujen la
-demanda hacia arriba, y `Lluvia`/`Nieve` la reduzcan fuertemente —, si el
-VIF confirmó la multicolinealidad entre `Temperatura` y `Punto_Rocio`, y
-qué tan razonable resulta la predicción de ejemplo frente al rango real de
-`Bicis_Rentadas` observado en el EDA. Revisar también los cuatro gráficos
-de diagnóstico: es esperable algo de heterocedasticidad, porque la
-relación clima-demanda rara vez es perfectamente lineal — mencionarlo
-también en la Discusión de esta pestaña.]
-</div>
+::: interpretacion
+El modelo completo (con las 8 variables climáticas) obtuvo un R²
+ajustado de 0.432 (F = 805.7, p \< 2.2e-16). El VIF confirmó la
+multicolinealidad esperada: Temperatura (VIF = 87.15) y Punto_Rocio (VIF
+= 116.22) están muy por encima del umbral de 5-10, mientras que el resto
+de variables tiene VIF menor a 2. Al descartar Punto_Rocio, el modelo
+final prácticamente no pierde poder explicativo (R² ajustado pasa de
+0.4320 a 0.4321) y además mejora tanto en AIC (128,700.1 → 128,698.1)
+como en BIC (128,770.5 → 128,761.5) a pesar de tener un parámetro menos
+— confirma que Punto_Rocio era redundante frente a Temperatura.
+
+En el modelo final, todos los predictores resultaron significativos (p
+\< 0.001) excepto Visibilidad (p = 0.82). Los coeficientes muestran que
+cada grado adicional de temperatura suma en promedio 36.6 bicicletas
+rentadas por hora, mientras que cada mm de lluvia resta 53.4 y cada
+punto porcentual de humedad resta 10.7 — todos en la dirección esperada.
+Llama la atención que Radiacion_Solar resultó negativa (-118.5): más
+radiación se asocia con menos demanda, probablemente porque la radiación
+más alta ocurre a mediodía, cuando la gente está en horario laboral y no
+rentando bicicletas — un efecto que un modelo lineal simple no separa
+bien de la hora del día. Algo similar ocurre con Nieve, que salió
+positiva (+37.3) en lugar de negativa; es un coeficiente poco confiable
+porque hay muy pocas horas con nieve en el registro.
+
+Con un R² ajustado de apenas 0.432, el clima por sí solo explica menos
+de la mitad de la variación horaria en la demanda — el ejemplo de
+predicción (20°C, 50% humedad, sin lluvia ni nieve) estimó 991
+bicicletas, pero con un intervalo de predicción al 95% muy amplio (42 a
+1,940), reflejo de que factores no climáticos (hora del día, día de la
+semana, feriados) pesan bastante y no están en este modelo.
+:::
 
 ### Técnica 2 — K-medias
 
-<div class="justificacion">
-Más allá de cuantificar el efecto de cada variable por separado, interesa
-identificar **perfiles completos de día** (combinaciones típicas de
-clima) para apoyar la logística de redistribución de bicicletas. K-medias
-agrupa observaciones según la similitud conjunta de varias variables
-numéricas sin necesitar una variable dependiente, igual que se hizo con
-los jugadores de fútbol y con los usuarios de StreamCR en los
-laboratorios de conglomerados del curso.
-</div>
+::: justificacion
+Más allá de cuantificar el efecto de cada variable por separado,
+interesa identificar **perfiles completos de día** (combinaciones
+típicas de clima) para apoyar la logística de redistribución de
+bicicletas. K-medias agrupa observaciones según la similitud conjunta de
+varias variables numéricas sin necesitar una variable dependiente, igual
+que se hizo con los jugadores de fútbol y con los usuarios de StreamCR
+en los laboratorios de conglomerados del curso.
+:::
 
 ```{r s1-t2}
 # Se agrega la información a nivel de DÍA (no de hora), porque el interés
@@ -437,20 +532,45 @@ fviz_cluster(modelo_km_bici,
              main = "Conglomerados de días según perfil climático")
 ```
 
-<div class="interpretacion">
-[Completar con las medias reales de cada grupo: nombrar cada uno según su
-perfil (ej. "días cálidos y soleados de alta demanda", "días fríos y secos
-de baja demanda", "días de lluvia/nieve de demanda mínima"), en qué k se
-formó el codo, qué tan bien coincide cada grupo con una estación del año
-real según la tabla de validación cruzada, y qué tan claramente separados
-se ven los grupos en el gráfico de conglomerados.]
-</div>
+::: interpretacion
+Con k = 4 (según el método del codo), se formaron grupos de 88, 9, 166 y
+90 días, con un between_SS/total_SS de 49.3% — una separación moderada,
+más baja que el 90% obtenido en el laboratorio de jugadores de fútbol,
+algo esperable porque el clima cambia de forma gradual y no en
+categorías discretas como las posiciones deportivas.
+
+Perfilando cada grupo por sus medias:
+
+Grupo 3 (166 días) — "días cálidos y soleados de alta demanda":
+temperatura promedio 20.7°C, la radiación solar más alta (0.83 MJ/m²) y
+prácticamente sin lluvia ni nieve. Es el grupo con mayor demanda (25,428
+bicicletas/día en promedio) y coincide sobre todo con primavera y verano
+(72 días de verano, 50 de primavera, 0 de invierno). Grupo 4 (90 días) —
+"días fríos, secos y ventosos de baja demanda": la temperatura más baja
+(-1.1°C), la humedad más baja (44%) y el viento más fuerte. Demanda de
+8,330 bicicletas/día. Casi todo invierno (65 de 90 días). Grupo 1 (88
+días) — "días templados y lluviosos": temperatura moderada (13.3°C) pero
+la mayor lluvia acumulada (12.6 mm) y humedad alta (74.5%). Demanda
+intermedia (13,109/día), repartido en las cuatro estaciones casi por
+igual. Grupo 2 (9 días) — "días de nevada intensa": un grupo pequeño y
+muy distintivo, con 51.6 cm de nieve acumulada en promedio (muy por
+encima de cualquier otro grupo) y temperatura cercana a 0°C. Es el grupo
+de menor demanda (5,336/día) y ocurre casi exclusivamente en invierno (7
+de 9 días).
+
+La tabla cruzada contra Estacion confirma que el clima por sí solo
+"redescubre" un patrón estacional razonable (el Grupo 3 domina en
+verano/primavera, el Grupo 4 y el Grupo 2 dominan en invierno), aunque
+con más mezcla entre estaciones que en el caso de las posiciones de
+fútbol — lógico, porque las fronteras climáticas son continuas, no
+discretas.
+:::
 
 ### Técnica 3 — Series de Tiempo (Holt-Winters)
 
-<div class="justificacion">
-La operación también necesita **pronosticar** cuántas bicicletas se van a
-rentar en los próximos días para planificar mantenimiento y
+::: justificacion
+La operación también necesita **pronosticar** cuántas bicicletas se van
+a rentar en los próximos días para planificar mantenimiento y
 redistribución, no solo explicar el pasado. La demanda diaria total
 muestra tendencia (crece hacia el verano) y un patrón que se repite cada
 semana (más o menos uso entre semana vs. fin de semana), por lo que un
@@ -461,12 +581,12 @@ tiempo del curso.
 **Nota sobre la frecuencia elegida:** a diferencia del laboratorio de
 ventas mensuales (que usó `frequency = 12` con dos años de datos), aquí
 solo se cuenta con **un año** de datos diarios. Usar `frequency = 12`
-dejaría un solo ciclo completo, insuficiente para que Holt-Winters estime
-esa estacionalidad de forma confiable. En cambio, con datos diarios sí hay
-de sobra — **52 semanas completas** — por lo que se usa `frequency = 7`
-para capturar la estacionalidad **semanal**, que además tiene más sentido
-operativo (patrón entre semana vs. fin de semana).
-</div>
+dejaría un solo ciclo completo, insuficiente para que Holt-Winters
+estime esa estacionalidad de forma confiable. En cambio, con datos
+diarios sí hay de sobra — **52 semanas completas** — por lo que se usa
+`frequency = 7` para capturar la estacionalidad **semanal**, que además
+tiene más sentido operativo (patrón entre semana vs. fin de semana).
+:::
 
 ```{r s1-t3}
 serie_bici <- ts(diario_bici$Total_Bicis, frequency = 7)
@@ -491,43 +611,52 @@ cat("Modelo Holt\n");         accuracy(ajuste_holt_bici)
 cat("Modelo Holt-Winters\n"); accuracy(ajuste_hw_bici)
 ```
 
-<div class="interpretacion">
-[Completar con los valores reales de RMSE, MAE y MAPE de los tres modelos
-— se espera que Holt-Winters obtenga el menor error por ser el único que
-incorpora la estacionalidad semanal, igual que ocurrió con Holt-Winters
-frente a SES/Holt en el laboratorio de ventas del curso. Comentar también
-si el panel `trend` de la descomposición muestra el ascenso hacia el
-verano boreal y la caída hacia el invierno, si el panel `seasonal` repite
-el mismo patrón cada 7 días, y qué tan bien el pronóstico capta
-visualmente los picos y valles semanales al compararlo con la serie
-histórica.]
-</div>
+::: interpretacion
+Comparando las métricas de error sobre el conjunto de entrenamiento:
+
+| Modelo       | RMSE   | MAE    | MAPE   |
+|--------------|--------|--------|--------|
+| SES          | 5666.6 | 3912.2 | 44.58% |
+| Holt         | 5703.3 | 3883.8 | 44.30% |
+| Holt-Winters | 5619.3 | 3838.7 | 42.80% |
+
+Holt-Winters obtuvo el menor error en las tres métricas, confirmando que
+la estacionalidad semanal sí aporta algo de poder predictivo. Sin
+embargo, la mejora es mucho más modesta que la observada en el
+laboratorio de ventas (ahí Holt-Winters bajaba el MAPE de \~3% a \~1.1%;
+aquí solo baja de \~44.6% a \~42.8%). Un MAPE cercano al 43% indica que
+la demanda diaria de bicicletas tiene mucha variabilidad día a día que
+ni la tendencia ni el patrón semanal logran capturar — coherente con el
+R² modesto obtenido en la regresión, que ya había mostrado que el clima
+(y por extensión el calendario) no explica toda la historia.
+:::
 
 ## Resultados {#s1-resultados}
 
-[Síntesis integrada de las tres técnicas para este conjunto de datos:
-retomar qué variables climáticas resultaron más influyentes en la
-regresión, qué perfiles de día identificó el K-medias y qué tan preciso
-resultó el pronóstico de Holt-Winters. Apoyar con los gráficos o tablas
-más representativos ya generados arriba — no repetir código nuevo aquí.]
+Las tres técnicas cuentan una historia consistente: el clima influye
+claramente en la demanda de bicicletas en Seúl (temperatura y lluvia
+como los factores más fuertes), pero está lejos de explicarla por
+completo. La regresión deja sin explicar cerca del 57% de la varianza
+horaria; el K-medias logra separar los días en cuatro perfiles
+climáticos razonables pero con una calidad de agrupamiento moderada
+(49.3%); y el pronóstico de Holt-Winters, aunque el mejor de los tres
+modelos de suavización, arrastra un error relativamente alto (MAPE ≈
+43%). En conjunto, esto sugiere que factores no climáticos —hora del
+día, día de la semana, feriados, eventos puntuales— tienen un peso
+considerable en la demanda, algo que ya se insinuaba en el boxplot por
+hora del EDA.
 
 ## Discusión {#s1-discusion}
 
-[Significado de los resultados en el contexto de la pregunta de análisis
-planteada, y limitaciones propias de este conjunto de datos. Puntos a
-considerar: los datos son de una sola ciudad (Seúl) y un solo año
-(dic. 2017 – nov. 2018), por lo que las conclusiones no necesariamente se
-generalizan a otras ciudades o a años con clima atípico; la regresión
-asume relaciones lineales que probablemente simplifican de más una
-relación clima-demanda que en la realidad tiene umbrales (ej. debajo de
-cierta temperatura casi nadie renta, sin importar cuánto más baje); el
-pronóstico de Holt-Winters solo captura el patrón semanal, no eventos
-puntuales como festivales o cierres por mantenimiento.]
+El hallazgo más relevante es que el clima, aunque significativo, no es suficiente por sí solo: un R² ajustado de 0.432 deja claro que un modelo de producción necesitaría incorporar variables de calendario (hora, día de la semana, feriado) para mejorar sustancialmente la predicción. Dos coeficientes de la regresión resultaron contraintuitivos (Radiacion_Solar negativa y Nieve positiva), lo que probablemente refleja que el modelo lineal aditivo no captura bien la interacción entre radiación solar y hora del día, ni tiene suficientes observaciones con nieve para estimar ese efecto con confianza — una limitación de asumir relaciones puramente lineales. El agrupamiento de K-medias, con un 49.3% de varianza explicada entre grupos, es notablemente más débil que el 90% obtenido en el laboratorio de fútbol, coherente con la naturaleza continua (no categórica) del clima. Finalmente, el pronóstico de Holt-Winters, con un MAPE de ~43%, es mucho menos preciso que el de ventas mensuales del laboratorio del curso, lo que indica que la demanda diaria de bicicletas está sujeta a más ruido día a día (eventos puntuales, cambios abruptos de clima) que un modelo de tendencia + estacionalidad semanal no puede anticipar. Por último, los datos corresponden a una sola ciudad y un solo año (dic. 2017 – nov. 2018), por lo que estas conclusiones no necesariamente se generalizan a otras ciudades o a años con clima atípico.
 
+```{=html}
 <!-- ============================================================================
  PESTAÑA 3 — Conjunto de datos: ai_student_impact_dataset.csv
  Responsable: [nombre del compañero/a]
 ============================================================================ -->
+```
+
 # ai_student_impact_dataset {#ai-student-impact-dataset .tabset .tabset-fade .tabset-pills}
 
 ## Introducción y pregunta de análisis {#s2-intro}
@@ -564,61 +693,65 @@ puntuales como festivales o cierres por mantenimiento.]
 
 ### Técnica 1 — [nombre de la técnica]
 
-<div class="justificacion">
+::: justificacion
 [Justificación de la Técnica 1.]
-</div>
+:::
 
 ```{r s2-t1}
 # Código de la Técnica 1
 
 ```
 
-<div class="interpretacion">
+::: interpretacion
 [Interpretación de los resultados de la Técnica 1.]
-</div>
+:::
 
 ### Técnica 2 — [nombre de la técnica]
 
-<div class="justificacion">
+::: justificacion
 [Justificación de la Técnica 2.]
-</div>
+:::
 
 ```{r s2-t2}
 # Código de la Técnica 2
 
 ```
 
-<div class="interpretacion">
+::: interpretacion
 [Interpretación de los resultados de la Técnica 2.]
-</div>
+:::
 
 ### Técnica 3 — [nombre de la técnica]
 
-<div class="justificacion">
+::: justificacion
 [Justificación de la Técnica 3.]
-</div>
+:::
 
 ```{r s2-t3}
 # Código de la Técnica 3
 
 ```
 
-<div class="interpretacion">
+::: interpretacion
 [Interpretación de los resultados de la Técnica 3.]
-</div>
+:::
 
 ## Resultados {#s2-resultados}
 
-[Síntesis de los resultados de las tres técnicas para este conjunto de datos.]
+[Síntesis de los resultados de las tres técnicas para este conjunto de
+datos.]
 
 ## Discusión {#s2-discusion}
 
 [Significado de los resultados y limitaciones del análisis.]
 
+```{=html}
 <!-- ============================================================================
  PESTAÑA 4 — Conjunto de datos: mental_health_burnout_prediction_dataset.csv
  Responsable: [nombre del compañero/a]
 ============================================================================ -->
+```
+
 # mental_health_burnout_prediction_dataset {#mental-health-burnout-dataset .tabset .tabset-fade .tabset-pills}
 
 ## Introducción y pregunta de análisis {#s3-intro}
@@ -655,82 +788,88 @@ puntuales como festivales o cierres por mantenimiento.]
 
 ### Técnica 1 — [nombre de la técnica]
 
-<div class="justificacion">
+::: justificacion
 [Justificación de la Técnica 1.]
-</div>
+:::
 
 ```{r s3-t1}
 # Código de la Técnica 1
 
 ```
 
-<div class="interpretacion">
+::: interpretacion
 [Interpretación de los resultados de la Técnica 1.]
-</div>
+:::
 
 ### Técnica 2 — [nombre de la técnica]
 
-<div class="justificacion">
+::: justificacion
 [Justificación de la Técnica 2.]
-</div>
+:::
 
 ```{r s3-t2}
 # Código de la Técnica 2
 
 ```
 
-<div class="interpretacion">
+::: interpretacion
 [Interpretación de los resultados de la Técnica 2.]
-</div>
+:::
 
 ### Técnica 3 — [nombre de la técnica]
 
-<div class="justificacion">
+::: justificacion
 [Justificación de la Técnica 3.]
-</div>
+:::
 
 ```{r s3-t3}
 # Código de la Técnica 3
 
 ```
 
-<div class="interpretacion">
+::: interpretacion
 [Interpretación de los resultados de la Técnica 3.]
-</div>
+:::
 
 ## Resultados {#s3-resultados}
 
-[Síntesis de los resultados de las tres técnicas para este conjunto de datos.]
+[Síntesis de los resultados de las tres técnicas para este conjunto de
+datos.]
 
 ## Discusión {#s3-discusion}
 
 [Significado de los resultados y limitaciones del análisis.]
 
+```{=html}
 <!-- ============================================================================
  CONCLUSIÓN GENERAL
 ============================================================================ -->
+```
+
 # Conclusión general {#conclusion-general}
 
 [Conclusión que integra los hallazgos de los tres conjuntos de datos y
-responde, de forma conjunta, a las preguntas de análisis planteadas. Conecten
-los resultados de las técnicas aplicadas en cada pestaña y cierren con las
-principales lecciones del proyecto.]
+responde, de forma conjunta, a las preguntas de análisis planteadas.
+Conecten los resultados de las técnicas aplicadas en cada pestaña y
+cierren con las principales lecciones del proyecto.]
 
-# Referencias {.unnumbered #referencias}
+# Referencias {#referencias .unnumbered}
 
-- Sathishkumar V E, Jangwoo Park y Yongyun Cho (2020). *Seoul Bike Sharing
-  Demand* [Dataset]. UCI Machine Learning Repository.
-  https://doi.org/10.24432/C5F62R — SeoulBikeData
+- Sathishkumar V E, Jangwoo Park y Yongyun Cho (2020). *Seoul Bike
+  Sharing Demand* [Dataset]. UCI Machine Learning Repository.
+  <https://doi.org/10.24432/C5F62R> — SeoulBikeData
 - [Cita del conjunto de datos 2 — ai_student_impact_dataset]
-- [Cita del conjunto de datos 3 — mental_health_burnout_prediction_dataset]
+- [Cita del conjunto de datos 3 —
+  mental_health_burnout_prediction_dataset]
 - [Paquetes de R o fuentes teóricas citadas]
+:::::::::::::::::::::
 
-</div>
 <!-- / .main-content -->
+::::::::::::::::::::::
 
-</div>
 <!-- / .app-layout -->
 
+```{=html}
 <script>
 // ============================================================================
 // Navegación por "páginas": cada pestaña principal (h1: Introducción general,
@@ -809,7 +948,9 @@ principales lecciones del proyecto.]
   if (inicial) mostrarPagina(inicial);
 })();
 </script>
+```
 
+```{=html}
 <!--
 Recordatorios de entrega (enunciado, sección 5):
   - Documento técnico (15 %): Markdown -> HTML, repo público de GitHub, con
@@ -817,3 +958,10 @@ Recordatorios de entrega (enunciado, sección 5):
   - Defensa oral grupal (10 %): viernes 14 de agosto de 2026; todos intervienen.
   - Video grupal en YouTube (5 %): viernes 14 de agosto de 2026, 12:00 m. d.
 -->
+```
+
+::::::::::::::::::::::::
+
+:::::::::::::::::::::::::
+::::::::::::::::::::::::
+:::::::::::::::::::::::::

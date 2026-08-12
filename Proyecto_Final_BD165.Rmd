@@ -1,7 +1,7 @@
-﻿---
+---
 title: "Proyecto Final"
-subtitle: "BD-165 Â· Modelos EstadÃ­sticos Avanzados de AnÃ¡lisis de Datos"
-author: "Grupo [N] â€” Colegio Universitario de Cartago"
+subtitle: "BD-165 · Modelos Estadísticos Avanzados de Análisis de Datos"
+author: "Grupo [N] — Colegio Universitario de Cartago"
 date: "`r paste(format(Sys.Date(), '%d de'), c('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre')[as.integer(format(Sys.Date(), '%m'))], format(Sys.Date(), 'de %Y'))`"
 output:
   html_document:
@@ -22,37 +22,37 @@ editor_options:
 ```{=html}
 <!--
 ============================================================================
- GUÃA RÃPIDA PARA EL GRUPO â€” leer antes de escribir
+ GUÍA RÁPIDA PARA EL GRUPO — leer antes de escribir
 ============================================================================
 1. Esta es la plantilla oficial. Todos trabajamos SOBRE este archivo (o
    sobre ramas del repo) para que el formato final sea consistente.
 
 2. ESTRUCTURA DE ESTE DOCUMENTO:
-     - Portada (con logo, tÃ­tulo, integrantes).
-     - IntroducciÃ³n general (contexto del proyecto completo).
-     - Una PESTAÃ‘A (encabezado #) por cada conjunto de datos (CSV), y dentro
-       de cada una: introducciÃ³n, descripciÃ³n, extracciÃ³n, EDA, modelos,
-       resultados y discusiÃ³n. Cada uno de esos subtÃ­tulos tambiÃ©n aparece
-       como salto directo en el menÃº de la izquierda (subpestaÃ±a).
-     - Una pestaÃ±a final de "ConclusiÃ³n general" que integra los tres anÃ¡lisis.
+     - Portada (con logo, título, integrantes).
+     - Introducción general (contexto del proyecto completo).
+     - Una PESTAÑA (encabezado #) por cada conjunto de datos (CSV), y dentro
+       de cada una: introducción, descripción, extracción, EDA, modelos,
+       resultados y discusión. Cada uno de esos subtítulos también aparece
+       como salto directo en el menú de la izquierda (subpestaña).
+     - Una pestaña final de "Conclusión general" que integra los tres análisis.
      - Referencias.
 
-3. REGLAS DE ORO (rÃºbrica del enunciado, secciÃ³n 6):
-   - Cada tÃ©cnica necesita un pÃ¡rrafo de JUSTIFICACIÃ“N (por quÃ© es apropiada
+3. REGLAS DE ORO (rúbrica del enunciado, sección 6):
+   - Cada técnica necesita un párrafo de JUSTIFICACIÓN (por qué es apropiada
      para la pregunta). Si falta, se penaliza.
-   - Cada salida de cÃ³digo va seguida de su interpretaciÃ³n en 2-4 lÃ­neas.
+   - Cada salida de código va seguida de su interpretación en 2-4 líneas.
    - Todo debe ser reproducible: el .csv vive en /Data dentro del repositorio
      (no usar rutas locales ni setwd()).
 
-4. CÃ“MO COMPLETAR: reemplacen los [placeholders entre corchetes] y escriban
-   su cÃ³digo R dentro de los bloques ```{r ...}``` que estÃ¡n VACÃOS a
-   propÃ³sito. No borren la estructura de encabezados ni los {#id} que
-   acompaÃ±an a cada subtÃ­tulo (## ...) â€” esos id son los que usa el menÃº
-   de la izquierda para saltar directo a esa secciÃ³n.
+4. CÓMO COMPLETAR: reemplacen los [placeholders entre corchetes] y escriban
+   su código R dentro de los bloques ```{r ...}``` que están VACÍOS a
+   propósito. No borren la estructura de encabezados ni los {#id} que
+   acompañan a cada subtítulo (## ...) — esos id son los que usa el menú
+   de la izquierda para saltar directo a esa sección.
 
-5. Para compilar: botÃ³n "Knit" en RStudio. Solo necesita el paquete
+5. Para compilar: botón "Knit" en RStudio. Solo necesita el paquete
    "rmarkdown" (ya viene con RStudio, no hay que instalar nada extra) y que
-   estÃ©n en la misma carpeta: styles_proyecto_final.css  y  logo.png
+   estén en la misma carpeta: styles_proyecto_final.css  y  logo.png
 ============================================================================
 -->
 ```
@@ -67,16 +67,19 @@ knitr::opts_chunk$set(
   fig.height = 5
 )
 
-# ---- Paquetes usados en el curso (cÃ³digo base â€” no borrar) ----
+# ---- Paquetes usados en el curso (código base — no borrar) ----
 library(dplyr)
-library(lubridate)     # manejo de fechas â€” usado en la pestaÃ±a SeoulBikeData
+library(tidyr)         # pivot_longer() — usado en la pestaña mental_health_burnout
+library(lubridate)     # manejo de fechas — usado en la pestaña SeoulBikeData
 library(ggplot2)
-library(GGally)        # ggpairs() para matrices de dispersiÃ³n/correlaciÃ³n
-library(psych)         # KMO(), cortest.bartlett(), anÃ¡lisis factorial
+library(GGally)        # ggpairs() para matrices de dispersión/correlación
+library(psych)         # KMO(), cortest.bartlett(), análisis factorial
 library(factoextra)    # fviz_nbclust(), fviz_cluster()
 library(car)           # vif(), leveneTest()
-library(gvlma)         # verificaciÃ³n global de supuestos de regresiÃ³n
+library(gvlma)         # verificación global de supuestos de regresión
 library(forecast)      # ses(), holt(), hw(), accuracy() [series de tiempo]
+library(mice)          # imputación MICE — usado en la pestaña mental_health_burnout
+library(corrplot)      # corrplot() — usado en la pestaña mental_health_burnout
 
 # Paleta institucional reutilizada de los laboratorios del curso
 col_navy <- "#16324F"
@@ -85,7 +88,7 @@ col_teal <- "#38761D"
 
 ```{=html}
 <!-- ============================================================================
- PORTADA â€” pÃ¡gina propia, independiente del menÃº/contenido de abajo
+ PORTADA — página propia, independiente del menú/contenido de abajo
 ============================================================================ -->
 ```
 
@@ -107,7 +110,7 @@ Proyecto Final
 
 <p class="portada-subtitulo">
 
-BD-165 Â· Modelos EstadÃ­sticos Avanzados de AnÃ¡lisis de Datos
+BD-165 · Modelos Estadísticos Avanzados de Análisis de Datos
 
 </p>
 
@@ -115,8 +118,8 @@ BD-165 Â· Modelos EstadÃ­sticos Avanzados de AnÃ¡lisis de Datos
 
 <p class="portada-meta">
 
-Diplomado en Big Data Â· Escuela de Ciencias de la ComputaciÃ³n<br> Prof.
-David MartÃ­nez Salazar
+Diplomado en Big Data · Escuela de Ciencias de la Computación<br> Prof.
+David Martínez Salazar
 
 </p>
 
@@ -132,15 +135,15 @@ Integrantes del grupo
 | Integrante                 |
 |----------------------------|
 | Desmond Bermudez Rodriguez |
-| Nubia Elena Brenes ValerÃ­n |
+| Nubia Elena Brenes Valerín |
 | Pablo Marin Castillo       |
-| Wedell Orozco GonzÃ¡lez     |
-| Kendall Solano SolÃ­s       |
+| Wedell Orozco González     |
+| Kendall Solano Solís       |
 :::
 
 <p class="portada-scroll">
 
-DesplÃ¡cese para ver el contenido â†“
+Desplácese para ver el contenido ↓
 
 </p>
 
@@ -150,15 +153,15 @@ DesplÃ¡cese para ver el contenido â†“
 
 ```{=html}
 <!-- ============================================================================
- A partir de aquÃ­: menÃº lateral fijo (siempre visible, sin JavaScript de temas
- externos) + contenido. Cada pestaÃ±a principal (dataset) muestra debajo, en el
- menÃº, un salto directo a cada uno de sus subtÃ­tulos (IntroducciÃ³n, EDA, etc.)
+ A partir de aquí: menú lateral fijo (siempre visible, sin JavaScript de temas
+ externos) + contenido. Cada pestaña principal (dataset) muestra debajo, en el
+ menú, un salto directo a cada uno de sus subtítulos (Introducción, EDA, etc.)
 ============================================================================ -->
 ```
 
-<button id="sidebarToggle" class="sidebar-toggle" aria-label="Abrir/cerrar menÃº" onclick="document.getElementById(&#39;appLayout&#39;).classList.toggle(&#39;sidebar-open&#39;)">
+<button id="sidebarToggle" class="sidebar-toggle" aria-label="Abrir/cerrar menú" onclick="document.getElementById(&#39;appLayout&#39;).classList.toggle(&#39;sidebar-open&#39;)">
 
-â˜° Contenido
+☰ Contenido
 
 </button>
 
@@ -173,7 +176,7 @@ Proyecto Final
 
 <p class="sidebar-subtitulo">
 
-BD-165 Â· Modelos EstadÃ­sticos Avanzados
+BD-165 · Modelos Estadísticos Avanzados
 
 </p>
 
@@ -185,17 +188,17 @@ Contenido
 
 <ul>
 
-<li><a href="#introduccion-general">1 Â· IntroducciÃ³n general</a></li>
+<li><a href="#introduccion-general">1 · Introducción general</a></li>
 
-<li><a href="#seoulbikedata">2 Â· SeoulBikeData</a></li>
+<li><a href="#seoulbikedata">2 · SeoulBikeData</a></li>
 
-<li><a href="#ai-student-impact-dataset">3 Â·
+<li><a href="#ai-student-impact-dataset">3 ·
 ai_student_impact_dataset</a></li>
 
-<li><a href="#mental-health-burnout-dataset">4 Â·
+<li><a href="#mental-health-burnout-dataset">4 ·
 mental_health_burnout_prediction_dataset</a></li>
 
-<li><a href="#conclusion-general">5 Â· ConclusiÃ³n general</a></li>
+<li><a href="#conclusion-general">5 · Conclusión general</a></li>
 
 <li><a href="#referencias">Referencias</a></li>
 
@@ -207,91 +210,91 @@ mental_health_burnout_prediction_dataset</a></li>
 ::::::::::::::::::::: main-content
 ```{=html}
 <!-- ============================================================================
- INTRODUCCIÃ“N GENERAL â€” contexto del proyecto completo (los tres datasets)
+ INTRODUCCIÓN GENERAL — contexto del proyecto completo (los tres datasets)
 ============================================================================ -->
 ```
 
-# IntroducciÃ³n general {#introduccion-general}
+# Introducción general {#introduccion-general}
 
-[Contexto general del proyecto: quÃ© problema(s) se aborda(n), por quÃ© se
-eligieron estos tres conjuntos de datos, y cÃ³mo se relacionan entre sÃ­.]
+[Contexto general del proyecto: qué problema(s) se aborda(n), por qué se
+eligieron estos tres conjuntos de datos, y cómo se relacionan entre sí.]
 
 [Objetivo general del proyecto.]
 
-[Breve resumen de cada conjunto de datos (una o dos lÃ­neas por cada uno)
-y de las tÃ©cnicas/familias de modelos que se aplicarÃ¡n en cada pestaÃ±a.]
+[Breve resumen de cada conjunto de datos (una o dos líneas por cada uno)
+y de las técnicas/familias de modelos que se aplicarán en cada pestaña.]
 
 ```{=html}
 <!-- ============================================================================
- PESTAÃ‘A 2 â€” Conjunto de datos: SeoulBikeData.csv
- Responsable: [nombre del compaÃ±ero/a]
+ PESTAÑA 2 — Conjunto de datos: SeoulBikeData.csv
+ Responsable: [nombre del compañero/a]
 ============================================================================ -->
 ```
 
 # SeoulBikeData {#seoulbikedata .tabset .tabset-fade .tabset-pills}
 
-## IntroducciÃ³n y pregunta de anÃ¡lisis {#s1-intro}
+## Introducción y pregunta de análisis {#s1-intro}
 
-SeÃºl opera un sistema de bicicletas compartidas y registrÃ³, durante un
-aÃ±o completo (diciembre 2017 â€“ noviembre 2018), la cantidad de
-bicicletas rentadas cada hora junto con las condiciones climÃ¡ticas de
-ese momento. Para la operaciÃ³n del sistema es clave anticipar la demanda
+Seúl opera un sistema de bicicletas compartidas y registró, durante un
+año completo (diciembre 2017 – noviembre 2018), la cantidad de
+bicicletas rentadas cada hora junto con las condiciones climáticas de
+ese momento. Para la operación del sistema es clave anticipar la demanda
 con el fin de redistribuir la flota entre estaciones y evitar tanto
 faltantes como sobreoferta de bicicletas.
 
-**Pregunta de anÃ¡lisis:** Â¿quÃ© variables climÃ¡ticas explican mejor la
-demanda horaria de bicicletas compartidas en SeÃºl, es posible
-identificar perfiles de dÃ­as con demanda similar segÃºn el clima, y quÃ©
+**Pregunta de análisis:** ¿qué variables climáticas explican mejor la
+demanda horaria de bicicletas compartidas en Seúl, es posible
+identificar perfiles de días con demanda similar según el clima, y qué
 tan bien se puede pronosticar la demanda diaria a corto plazo a partir
-de su comportamiento histÃ³rico?
+de su comportamiento histórico?
 
-## DescripciÃ³n de la base de datos {#s1-descripcion}
+## Descripción de la base de datos {#s1-descripcion}
 
 **Fuente:** Sathishkumar V E, Jangwoo Park y Yongyun Cho (2020). *Seoul
 Bike Sharing Demand* [Dataset]. UCI Machine Learning Repository.
-<https://doi.org/10.24432/C5F62R> â€” tambiÃ©n disponible en Kaggle como
+<https://doi.org/10.24432/C5F62R> — también disponible en Kaggle como
 `saurabhshahane/seoul-bike-sharing-demand-prediction`.
 
 Cita de los autores originales (Mendeley Data): V E, Sathishkumar
 (2020), "Seoul Bike Sharing Demand Prediction", Mendeley Data, V2, doi:
 10.17632/zbdtzxcxvg.2
 
-**Licencia / acceso:** CC BY 4.0 â€” de acceso pÃºblico y libre, con cita
+**Licencia / acceso:** CC BY 4.0 — de acceso público y libre, con cita
 obligatoria a los autores.
 
 El conjunto contiene **8,760 observaciones** (una por cada hora de 365
-dÃ­as) y **14 variables**:
+días) y **14 variables**:
 
 | Variable original | Variable en este documento | Significado | Tipo |
 |------------------|------------------|------------------|------------------|
 | Date | Fecha | Fecha del registro | Fecha |
-| Rented Bike Count | Bicis_Rentadas | Bicicletas rentadas en esa hora â€” **variable objetivo** | NumÃ©rica |
-| Hour | Hora | Hora del dÃ­a (0-23) | NumÃ©rica |
-| Temperature(Â°C) | Temperatura | Temperatura | NumÃ©rica |
-| Humidity(%) | Humedad | Humedad relativa | NumÃ©rica |
-| Wind speed (m/s) | Velocidad_Viento | Velocidad del viento | NumÃ©rica |
-| Visibility (10m) | Visibilidad | Visibilidad | NumÃ©rica |
-| Dew point temperature(Â°C) | Punto_Rocio | Punto de rocÃ­o | NumÃ©rica |
-| Solar Radiation (MJ/m2) | Radiacion_Solar | RadiaciÃ³n solar | NumÃ©rica |
-| Rainfall(mm) | Lluvia | Lluvia acumulada | NumÃ©rica |
-| Snowfall (cm) | Nieve | Nieve acumulada | NumÃ©rica |
-| Seasons | Estacion | EstaciÃ³n del aÃ±o | CategÃ³rica |
-| Holiday | Feriado | Feriado / No feriado | CategÃ³rica |
-| Functioning Day | Dia_Funcional | Si el sistema operaba esa hora (Yes/No) | CategÃ³rica |
+| Rented Bike Count | Bicis_Rentadas | Bicicletas rentadas en esa hora — **variable objetivo** | Numérica |
+| Hour | Hora | Hora del día (0-23) | Numérica |
+| Temperature(°C) | Temperatura | Temperatura | Numérica |
+| Humidity(%) | Humedad | Humedad relativa | Numérica |
+| Wind speed (m/s) | Velocidad_Viento | Velocidad del viento | Numérica |
+| Visibility (10m) | Visibilidad | Visibilidad | Numérica |
+| Dew point temperature(°C) | Punto_Rocio | Punto de rocío | Numérica |
+| Solar Radiation (MJ/m2) | Radiacion_Solar | Radiación solar | Numérica |
+| Rainfall(mm) | Lluvia | Lluvia acumulada | Numérica |
+| Snowfall (cm) | Nieve | Nieve acumulada | Numérica |
+| Seasons | Estacion | Estación del año | Categórica |
+| Holiday | Feriado | Feriado / No feriado | Categórica |
+| Functioning Day | Dia_Funcional | Si el sistema operaba esa hora (Yes/No) | Categórica |
 
-## ExtracciÃ³n y preparaciÃ³n de los datos {#s1-extraccion}
+## Extracción y preparación de los datos {#s1-extraccion}
 
 ```{r s1-carga}
-# El archivo original trae el sÃ­mbolo de grados (Â°) en los encabezados y
-# viene en codificaciÃ³n Latin-1/Windows-1252, no en UTF-8. Si se lee con
-# read.csv() normal, R puede truncar el nombre de columna en el sÃ­mbolo Â°
-# o marcar error â€” por eso se indica fileEncoding = "latin1".
+# El archivo original trae el símbolo de grados (°) en los encabezados y
+# viene en codificación Latin-1/Windows-1252, no en UTF-8. Si se lee con
+# read.csv() normal, R puede truncar el nombre de columna en el símbolo °
+# o marcar error — por eso se indica fileEncoding = "latin1".
 datos_bici <- read.csv("Data/SeoulBikeData.csv",
                         fileEncoding = "latin1",
                         stringsAsFactors = FALSE)
 
-# Los nombres originales traen espacios, unidades y parÃ©ntesis
-# (ej. "Temperature(Â°C)"), lo que obliga a usar backticks todo el tiempo.
+# Los nombres originales traen espacios, unidades y paréntesis
+# (ej. "Temperature(°C)"), lo que obliga a usar backticks todo el tiempo.
 # Se renombran a nombres cortos, en el MISMO ORDEN en que vienen en el csv:
 colnames(datos_bici) <- c("Fecha", "Bicis_Rentadas", "Hora", "Temperatura",
                            "Humedad", "Velocidad_Viento", "Visibilidad",
@@ -315,84 +318,84 @@ datos_bici$Dia_Funcional <- as.factor(datos_bici$Dia_Funcional)
 table(datos_bici$Dia_Funcional)
 
 # Se descartan las horas en que el sistema estaba cerrado: en esas horas
-# Bicis_Rentadas es 0 por definiciÃ³n (el servicio no operaba), no porque
-# el clima haya sido malo. Dejarlas adentro sesgarÃ­a la regresiÃ³n y el
+# Bicis_Rentadas es 0 por definición (el servicio no operaba), no porque
+# el clima haya sido malo. Dejarlas adentro sesgaría la regresión y el
 # clustering con ceros que no representan demanda real.
 datos_bici_func <- subset(datos_bici, Dia_Funcional == "Yes")
 nrow(datos_bici_func)
 ```
 
-InterpretaciÃ³n: el conjunto tiene 8,760 observaciones y 14 variables,
+Interpretación: el conjunto tiene 8,760 observaciones y 14 variables,
 sin valores faltantes ni filas duplicadas. `Estacion`, `Feriado` y
-`Dia_Funcional` se convirtieron a factor por ser categÃ³ricas. Se
+`Dia_Funcional` se convirtieron a factor por ser categóricas. Se
 excluyeron las horas con `Dia_Funcional == "No"` (sistema cerrado) para
 que la variable objetivo refleje demanda real; el escalado (`scale()`)
-de las variables climÃ¡ticas se hace mÃ¡s adelante, especÃ­ficamente para
-la TÃ©cnica 2 (K-medias), que sÃ­ lo requiere.
+de las variables climáticas se hace más adelante, específicamente para
+la Técnica 2 (K-medias), que sí lo requiere.
 
-## ExploraciÃ³n de los datos (EDA) {#s1-eda}
+## Exploración de los datos (EDA) {#s1-eda}
 
 ```{r s1-eda}
-# DistribuciÃ³n de la variable objetivo
+# Distribución de la variable objetivo
 ggplot(datos_bici_func, aes(x = Bicis_Rentadas)) +
   geom_histogram(bins = 30, fill = col_navy, color = "white") +
-  labs(title = "DistribuciÃ³n de bicicletas rentadas por hora",
+  labs(title = "Distribución de bicicletas rentadas por hora",
        x = "Bicicletas rentadas", y = "Frecuencia") +
   theme_minimal()
 
-# DistribuciÃ³n de la temperatura
+# Distribución de la temperatura
 ggplot(datos_bici_func, aes(x = Temperatura)) +
   geom_histogram(bins = 30, fill = col_teal, color = "white") +
-  labs(title = "DistribuciÃ³n de la temperatura", x = "Temperatura (Â°C)",
+  labs(title = "Distribución de la temperatura", x = "Temperatura (°C)",
        y = "Frecuencia") +
   theme_minimal()
 
-# Matriz de correlaciones entre variables numÃ©ricas
+# Matriz de correlaciones entre variables numéricas
 num_vars_bici <- datos_bici_func %>%
   select(Bicis_Rentadas, Temperatura, Humedad, Velocidad_Viento,
          Visibilidad, Punto_Rocio, Radiacion_Solar, Lluvia, Nieve)
 
 round(cor(num_vars_bici), 3)
 
-# Demanda por estaciÃ³n del aÃ±o y por hora del dÃ­a
+# Demanda por estación del año y por hora del día
 ggplot(datos_bici_func, aes(x = Estacion, y = Bicis_Rentadas, fill = Estacion)) +
   geom_boxplot(alpha = 0.7) +
-  labs(title = "Demanda de bicicletas por estaciÃ³n del aÃ±o",
-       x = "EstaciÃ³n", y = "Bicicletas rentadas") +
+  labs(title = "Demanda de bicicletas por estación del año",
+       x = "Estación", y = "Bicicletas rentadas") +
   theme_minimal() +
   theme(legend.position = "none")
 
 ggplot(datos_bici_func, aes(x = factor(Hora), y = Bicis_Rentadas)) +
   geom_boxplot(fill = col_navy, alpha = 0.6, outlier.size = 0.5) +
-  labs(title = "Demanda de bicicletas por hora del dÃ­a",
+  labs(title = "Demanda de bicicletas por hora del día",
        x = "Hora", y = "Bicicletas rentadas") +
   theme_minimal()
 ```
 
-InterpretaciÃ³n: `Bicis_Rentadas` muestra una distribuciÃ³n sesgada a la
+Interpretación: `Bicis_Rentadas` muestra una distribución sesgada a la
 derecha (muchas horas de demanda baja y pocas horas pico), mientras que
-`Temperatura` se ve mÃ¡s simÃ©trica por cubrir un aÃ±o completo con las
+`Temperatura` se ve más simétrica por cubrir un año completo con las
 cuatro estaciones. En la matriz de correlaciones, `Temperatura` y
-`Punto_Rocio` salen muy correlacionadas entre sÃ­ (ambas miden
-condiciones tÃ©rmicas parecidas) â€” seÃ±al de multicolinealidad que se
-trata en la TÃ©cnica 1. `Bicis_Rentadas` correlaciona positivo con
+`Punto_Rocio` salen muy correlacionadas entre sí (ambas miden
+condiciones térmicas parecidas) — señal de multicolinealidad que se
+trata en la Técnica 1. `Bicis_Rentadas` correlaciona positivo con
 `Temperatura` y negativo con `Humedad`, `Lluvia` y `Nieve`: a mejor
-clima, mÃ¡s demanda. El boxplot por estaciÃ³n muestra mayor demanda en los
-meses cÃ¡lidos y menor en invierno, y el boxplot por hora deja ver los
-picos tÃ­picos de un patrÃ³n de transporte (entrada y salida laboral) mÃ¡s
+clima, más demanda. El boxplot por estación muestra mayor demanda en los
+meses cálidos y menor en invierno, y el boxplot por hora deja ver los
+picos típicos de un patrón de transporte (entrada y salida laboral) más
 que puramente recreativo.
 
 ## Modelos aplicados {#s1-modelos}
 
-### TÃ©cnica 1 â€” RegresiÃ³n Lineal MÃºltiple
+### Técnica 1 — Regresión Lineal Múltiple
 
 ::: justificacion
-La pregunta de anÃ¡lisis requiere **cuantificar** cÃ³mo cada variable
-climÃ¡tica (temperatura, humedad, viento, lluvia, etc.) afecta la
-cantidad de bicicletas rentadas por hora â€” una variable dependiente
-numÃ©rica continua. La RegresiÃ³n Lineal MÃºltiple permite estimar el
-efecto individual de cada predictor manteniendo los demÃ¡s constantes e
-identificar cuÃ¡les son estadÃ­sticamente significativos, igual que se
+La pregunta de análisis requiere **cuantificar** cómo cada variable
+climática (temperatura, humedad, viento, lluvia, etc.) afecta la
+cantidad de bicicletas rentadas por hora — una variable dependiente
+numérica continua. La Regresión Lineal Múltiple permite estimar el
+efecto individual de cada predictor manteniendo los demás constantes e
+identificar cuáles son estadísticamente significativos, igual que se
 hizo en el Laboratorio 3 del curso con las ventas de la cadena
 minorista.
 :::
@@ -406,9 +409,9 @@ summary(modelo_bici_completo)
 car::vif(modelo_bici_completo)
 
 # Temperatura y Punto_Rocio se comportan como variables redundantes entre
-# sÃ­ (igual que gasto_publicidad/trafico_web en el Laboratorio 3): se
-# conserva Temperatura, por ser la variable climÃ¡tica de referencia y mÃ¡s
-# fÃ¡cil de interpretar, y se descarta Punto_Rocio.
+# sí (igual que gasto_publicidad/trafico_web en el Laboratorio 3): se
+# conserva Temperatura, por ser la variable climática de referencia y más
+# fácil de interpretar, y se descarta Punto_Rocio.
 modelo_bici_final <- lm(Bicis_Rentadas ~ Temperatura + Humedad +
                            Velocidad_Viento + Visibilidad +
                            Radiacion_Solar + Lluvia + Nieve,
@@ -423,7 +426,7 @@ par(mfrow = c(2, 2))
 plot(modelo_bici_final, col = col_navy, pch = 19, cex = 0.5)
 par(mfrow = c(1, 1))
 
-# Ejemplo de predicciÃ³n: un dÃ­a templado, soleado y sin lluvia ni nieve
+# Ejemplo de predicción: un día templado, soleado y sin lluvia ni nieve
 nueva_hora <- data.frame(Temperatura = 20, Humedad = 50,
                           Velocidad_Viento = 2, Visibilidad = 1800,
                           Radiacion_Solar = 1.5, Lluvia = 0, Nieve = 0)
@@ -431,52 +434,52 @@ predict(modelo_bici_final, newdata = nueva_hora, interval = "prediction")
 ```
 
 ::: interpretacion
-El modelo completo (con las 8 variables climÃ¡ticas) obtuvo un RÂ²
-ajustado de 0.432 (F = 805.7, p \< 2.2e-16). El VIF confirmÃ³ la
+El modelo completo (con las 8 variables climáticas) obtuvo un R²
+ajustado de 0.432 (F = 805.7, p \< 2.2e-16). El VIF confirmó la
 multicolinealidad esperada: Temperatura (VIF = 87.15) y Punto_Rocio (VIF
-= 116.22) estÃ¡n muy por encima del umbral de 5-10, mientras que el resto
+= 116.22) están muy por encima del umbral de 5-10, mientras que el resto
 de variables tiene VIF menor a 2. Al descartar Punto_Rocio, el modelo
-final prÃ¡cticamente no pierde poder explicativo (RÂ² ajustado pasa de
-0.4320 a 0.4321) y ademÃ¡s mejora tanto en AIC (128,700.1 â†’ 128,698.1)
-como en BIC (128,770.5 â†’ 128,761.5) a pesar de tener un parÃ¡metro menos
-â€” confirma que Punto_Rocio era redundante frente a Temperatura.
+final prácticamente no pierde poder explicativo (R² ajustado pasa de
+0.4320 a 0.4321) y además mejora tanto en AIC (128,700.1 → 128,698.1)
+como en BIC (128,770.5 → 128,761.5) a pesar de tener un parámetro menos
+— confirma que Punto_Rocio era redundante frente a Temperatura.
 
 En el modelo final, todos los predictores resultaron significativos (p
 \< 0.001) excepto Visibilidad (p = 0.82). Los coeficientes muestran que
 cada grado adicional de temperatura suma en promedio 36.6 bicicletas
 rentadas por hora, mientras que cada mm de lluvia resta 53.4 y cada
-punto porcentual de humedad resta 10.7 â€” todos en la direcciÃ³n esperada.
-Llama la atenciÃ³n que Radiacion_Solar resultÃ³ negativa (-118.5): mÃ¡s
-radiaciÃ³n se asocia con menos demanda, probablemente porque la radiaciÃ³n
-mÃ¡s alta ocurre a mediodÃ­a, cuando la gente estÃ¡ en horario laboral y no
-rentando bicicletas â€” un efecto que un modelo lineal simple no separa
-bien de la hora del dÃ­a. Algo similar ocurre con Nieve, que saliÃ³
+punto porcentual de humedad resta 10.7 — todos en la dirección esperada.
+Llama la atención que Radiacion_Solar resultó negativa (-118.5): más
+radiación se asocia con menos demanda, probablemente porque la radiación
+más alta ocurre a mediodía, cuando la gente está en horario laboral y no
+rentando bicicletas — un efecto que un modelo lineal simple no separa
+bien de la hora del día. Algo similar ocurre con Nieve, que salió
 positiva (+37.3) en lugar de negativa; es un coeficiente poco confiable
 porque hay muy pocas horas con nieve en el registro.
 
-Con un RÂ² ajustado de apenas 0.432, el clima por sÃ­ solo explica menos
-de la mitad de la variaciÃ³n horaria en la demanda â€” el ejemplo de
-predicciÃ³n (20Â°C, 50% humedad, sin lluvia ni nieve) estimÃ³ 991
-bicicletas, pero con un intervalo de predicciÃ³n al 95% muy amplio (42 a
-1,940), reflejo de que factores no climÃ¡ticos (hora del dÃ­a, dÃ­a de la
-semana, feriados) pesan bastante y no estÃ¡n en este modelo.
+Con un R² ajustado de apenas 0.432, el clima por sí solo explica menos
+de la mitad de la variación horaria en la demanda — el ejemplo de
+predicción (20°C, 50% humedad, sin lluvia ni nieve) estimó 991
+bicicletas, pero con un intervalo de predicción al 95% muy amplio (42 a
+1,940), reflejo de que factores no climáticos (hora del día, día de la
+semana, feriados) pesan bastante y no están en este modelo.
 :::
 
-### TÃ©cnica 2 â€” K-medias
+### Técnica 2 — K-medias
 
 ::: justificacion
-MÃ¡s allÃ¡ de cuantificar el efecto de cada variable por separado,
-interesa identificar **perfiles completos de dÃ­a** (combinaciones
-tÃ­picas de clima) para apoyar la logÃ­stica de redistribuciÃ³n de
-bicicletas. K-medias agrupa observaciones segÃºn la similitud conjunta de
-varias variables numÃ©ricas sin necesitar una variable dependiente, igual
-que se hizo con los jugadores de fÃºtbol y con los usuarios de StreamCR
+Más allá de cuantificar el efecto de cada variable por separado,
+interesa identificar **perfiles completos de día** (combinaciones
+típicas de clima) para apoyar la logística de redistribución de
+bicicletas. K-medias agrupa observaciones según la similitud conjunta de
+varias variables numéricas sin necesitar una variable dependiente, igual
+que se hizo con los jugadores de fútbol y con los usuarios de StreamCR
 en los laboratorios de conglomerados del curso.
 :::
 
 ```{r s1-t2}
-# Se agrega la informaciÃ³n a nivel de DÃA (no de hora), porque el interÃ©s
-# operativo es "quÃ© tipo de dÃ­a es este", no "quÃ© tipo de hora es esta".
+# Se agrega la información a nivel de DÍA (no de hora), porque el interés
+# operativo es "qué tipo de día es este", no "qué tipo de hora es esta".
 diario_bici <- datos_bici_func %>%
   group_by(Fecha) %>%
   summarise(
@@ -493,7 +496,7 @@ diario_bici <- datos_bici_func %>%
   ) %>%
   arrange(Fecha)
 
-nrow(diario_bici)  # deberÃ­a rondar los 350-365 dÃ­as
+nrow(diario_bici)  # debería rondar los 350-365 días
 
 vars_clima <- diario_bici %>%
   select(Temp_prom, Humedad_prom, Viento_prom, Visibilidad_prom,
@@ -508,7 +511,7 @@ fviz_nbclust(vars_clima_z, kmeans, method = "wss")
 ```
 
 ```{r s1-t2b}
-# Ajustar 'centers' al valor de k identificado en el grÃ¡fico del codo
+# Ajustar 'centers' al valor de k identificado en el gráfico del codo
 set.seed(123)
 modelo_km_bici <- kmeans(vars_clima_z, centers = 4, nstart = 25)
 modelo_km_bici
@@ -520,8 +523,8 @@ aggregate(cbind(Total_Bicis, Temp_prom, Humedad_prom, Viento_prom,
                  Visibilidad_prom, Radiacion_prom, Lluvia_total,
                  Nieve_total) ~ Grupo, data = diario_bici, FUN = mean)
 
-# ValidaciÃ³n cruzada contra la estaciÃ³n real (Estacion NO se usÃ³ para
-# formar los grupos, solo clima), igual que en el laboratorio de fÃºtbol
+# Validación cruzada contra la estación real (Estacion NO se usó para
+# formar los grupos, solo clima), igual que en el laboratorio de fútbol
 table(diario_bici$Grupo, diario_bici$Estacion)
 
 fviz_cluster(modelo_km_bici,
@@ -529,70 +532,70 @@ fviz_cluster(modelo_km_bici,
              palette = c("#1F497D", "#C55A11", "#38761D", "#C0392B"),
              ellipse.type = "convex",
              ggtheme = theme_minimal(),
-             main = "Conglomerados de dÃ­as segÃºn perfil climÃ¡tico")
+             main = "Conglomerados de días según perfil climático")
 ```
 
 ::: interpretacion
-Con k = 4 (segÃºn el mÃ©todo del codo), se formaron grupos de 88, 9, 166 y
-90 dÃ­as, con un between_SS/total_SS de 49.3% â€” una separaciÃ³n moderada,
-mÃ¡s baja que el 90% obtenido en el laboratorio de jugadores de fÃºtbol,
+Con k = 4 (según el método del codo), se formaron grupos de 88, 9, 166 y
+90 días, con un between_SS/total_SS de 49.3% — una separación moderada,
+más baja que el 90% obtenido en el laboratorio de jugadores de fútbol,
 algo esperable porque el clima cambia de forma gradual y no en
-categorÃ­as discretas como las posiciones deportivas.
+categorías discretas como las posiciones deportivas.
 
 Perfilando cada grupo por sus medias:
 
-Grupo 3 (166 dÃ­as) â€” "dÃ­as cÃ¡lidos y soleados de alta demanda":
-temperatura promedio 20.7Â°C, la radiaciÃ³n solar mÃ¡s alta (0.83 MJ/mÂ²) y
-prÃ¡cticamente sin lluvia ni nieve. Es el grupo con mayor demanda (25,428
-bicicletas/dÃ­a en promedio) y coincide sobre todo con primavera y verano
-(72 dÃ­as de verano, 50 de primavera, 0 de invierno). Grupo 4 (90 dÃ­as) â€”
-"dÃ­as frÃ­os, secos y ventosos de baja demanda": la temperatura mÃ¡s baja
-(-1.1Â°C), la humedad mÃ¡s baja (44%) y el viento mÃ¡s fuerte. Demanda de
-8,330 bicicletas/dÃ­a. Casi todo invierno (65 de 90 dÃ­as). Grupo 1 (88
-dÃ­as) â€” "dÃ­as templados y lluviosos": temperatura moderada (13.3Â°C) pero
+Grupo 3 (166 días) — "días cálidos y soleados de alta demanda":
+temperatura promedio 20.7°C, la radiación solar más alta (0.83 MJ/m²) y
+prácticamente sin lluvia ni nieve. Es el grupo con mayor demanda (25,428
+bicicletas/día en promedio) y coincide sobre todo con primavera y verano
+(72 días de verano, 50 de primavera, 0 de invierno). Grupo 4 (90 días) —
+"días fríos, secos y ventosos de baja demanda": la temperatura más baja
+(-1.1°C), la humedad más baja (44%) y el viento más fuerte. Demanda de
+8,330 bicicletas/día. Casi todo invierno (65 de 90 días). Grupo 1 (88
+días) — "días templados y lluviosos": temperatura moderada (13.3°C) pero
 la mayor lluvia acumulada (12.6 mm) y humedad alta (74.5%). Demanda
-intermedia (13,109/dÃ­a), repartido en las cuatro estaciones casi por
-igual. Grupo 2 (9 dÃ­as) â€” "dÃ­as de nevada intensa": un grupo pequeÃ±o y
+intermedia (13,109/día), repartido en las cuatro estaciones casi por
+igual. Grupo 2 (9 días) — "días de nevada intensa": un grupo pequeño y
 muy distintivo, con 51.6 cm de nieve acumulada en promedio (muy por
-encima de cualquier otro grupo) y temperatura cercana a 0Â°C. Es el grupo
-de menor demanda (5,336/dÃ­a) y ocurre casi exclusivamente en invierno (7
-de 9 dÃ­as).
+encima de cualquier otro grupo) y temperatura cercana a 0°C. Es el grupo
+de menor demanda (5,336/día) y ocurre casi exclusivamente en invierno (7
+de 9 días).
 
-La tabla cruzada contra Estacion confirma que el clima por sÃ­ solo
-"redescubre" un patrÃ³n estacional razonable (el Grupo 3 domina en
+La tabla cruzada contra Estacion confirma que el clima por sí solo
+"redescubre" un patrón estacional razonable (el Grupo 3 domina en
 verano/primavera, el Grupo 4 y el Grupo 2 dominan en invierno), aunque
-con mÃ¡s mezcla entre estaciones que en el caso de las posiciones de
-fÃºtbol â€” lÃ³gico, porque las fronteras climÃ¡ticas son continuas, no
+con más mezcla entre estaciones que en el caso de las posiciones de
+fútbol — lógico, porque las fronteras climáticas son continuas, no
 discretas.
 :::
 
-### TÃ©cnica 3 â€” Series de Tiempo (Holt-Winters)
+### Técnica 3 — Series de Tiempo (Holt-Winters)
 
 ::: justificacion
-La operaciÃ³n tambiÃ©n necesita **pronosticar** cuÃ¡ntas bicicletas se van
-a rentar en los prÃ³ximos dÃ­as para planificar mantenimiento y
-redistribuciÃ³n, no solo explicar el pasado. La demanda diaria total
-muestra tendencia (crece hacia el verano) y un patrÃ³n que se repite cada
-semana (mÃ¡s o menos uso entre semana vs. fin de semana), por lo que un
-modelo de suavizaciÃ³n exponencial con componente estacional
+La operación también necesita **pronosticar** cuántas bicicletas se van
+a rentar en los próximos días para planificar mantenimiento y
+redistribución, no solo explicar el pasado. La demanda diaria total
+muestra tendencia (crece hacia el verano) y un patrón que se repite cada
+semana (más o menos uso entre semana vs. fin de semana), por lo que un
+modelo de suavización exponencial con componente estacional
 (Holt-Winters) es apropiado, igual que en el laboratorio de series de
 tiempo del curso.
 
 **Nota sobre la frecuencia elegida:** a diferencia del laboratorio de
-ventas mensuales (que usÃ³ `frequency = 12` con dos aÃ±os de datos), aquÃ­
-solo se cuenta con **un aÃ±o** de datos diarios. Usar `frequency = 12`
-dejarÃ­a un solo ciclo completo, insuficiente para que Holt-Winters
+ventas mensuales (que usó `frequency = 12` con dos años de datos), aquí
+solo se cuenta con **un año** de datos diarios. Usar `frequency = 12`
+dejaría un solo ciclo completo, insuficiente para que Holt-Winters
 estime esa estacionalidad de forma confiable. En cambio, con datos
-diarios sÃ­ hay de sobra â€” **52 semanas completas** â€” por lo que se usa
-`frequency = 7` para capturar la estacionalidad **semanal**, que ademÃ¡s
-tiene mÃ¡s sentido operativo (patrÃ³n entre semana vs. fin de semana).
+diarios sí hay de sobra — **52 semanas completas** — por lo que se usa
+`frequency = 7` para capturar la estacionalidad **semanal**, que además
+tiene más sentido operativo (patrón entre semana vs. fin de semana).
 :::
 
 ```{r s1-t3}
 serie_bici <- ts(diario_bici$Total_Bicis, frequency = 7)
 
 plot(serie_bici,
-     main = "Bicicletas rentadas por dÃ­a â€” SeÃºl",
+     main = "Bicicletas rentadas por día — Seúl",
      ylab = "Bicicletas rentadas", xlab = "Semana")
 
 desc_bici <- decompose(serie_bici, type = "additive")
@@ -603,7 +606,7 @@ ajuste_holt_bici <- holt(serie_bici, h = 14)
 ajuste_hw_bici   <- hw(serie_bici, seasonal = "additive", h = 14)
 
 autoplot(ajuste_hw_bici) +
-  labs(title = "PronÃ³stico Holt-Winters â€” demanda diaria de bicicletas",
+  labs(title = "Pronóstico Holt-Winters — demanda diaria de bicicletas",
        x = "Semana", y = "Bicicletas rentadas")
 
 cat("Modelo SES\n");          accuracy(ajuste_ses_bici)
@@ -612,7 +615,7 @@ cat("Modelo Holt-Winters\n"); accuracy(ajuste_hw_bici)
 ```
 
 ::: interpretacion
-Comparando las mÃ©tricas de error sobre el conjunto de entrenamiento:
+Comparando las métricas de error sobre el conjunto de entrenamiento:
 
 | Modelo       | RMSE   | MAE    | MAPE   |
 |--------------|--------|--------|--------|
@@ -620,249 +623,709 @@ Comparando las mÃ©tricas de error sobre el conjunto de entrenamiento:
 | Holt         | 5703.3 | 3883.8 | 44.30% |
 | Holt-Winters | 5619.3 | 3838.7 | 42.80% |
 
-Holt-Winters obtuvo el menor error en las tres mÃ©tricas, confirmando que
-la estacionalidad semanal sÃ­ aporta algo de poder predictivo. Sin
-embargo, la mejora es mucho mÃ¡s modesta que la observada en el
-laboratorio de ventas (ahÃ­ Holt-Winters bajaba el MAPE de \~3% a \~1.1%;
-aquÃ­ solo baja de \~44.6% a \~42.8%). Un MAPE cercano al 43% indica que
-la demanda diaria de bicicletas tiene mucha variabilidad dÃ­a a dÃ­a que
-ni la tendencia ni el patrÃ³n semanal logran capturar â€” coherente con el
-RÂ² modesto obtenido en la regresiÃ³n, que ya habÃ­a mostrado que el clima
-(y por extensiÃ³n el calendario) no explica toda la historia.
+Holt-Winters obtuvo el menor error en las tres métricas, confirmando que
+la estacionalidad semanal sí aporta algo de poder predictivo. Sin
+embargo, la mejora es mucho más modesta que la observada en el
+laboratorio de ventas (ahí Holt-Winters bajaba el MAPE de \~3% a \~1.1%;
+aquí solo baja de \~44.6% a \~42.8%). Un MAPE cercano al 43% indica que
+la demanda diaria de bicicletas tiene mucha variabilidad día a día que
+ni la tendencia ni el patrón semanal logran capturar — coherente con el
+R² modesto obtenido en la regresión, que ya había mostrado que el clima
+(y por extensión el calendario) no explica toda la historia.
 :::
 
 ## Resultados {#s1-resultados}
 
-Las tres tÃ©cnicas cuentan una historia consistente: el clima influye
-claramente en la demanda de bicicletas en SeÃºl (temperatura y lluvia
-como los factores mÃ¡s fuertes), pero estÃ¡ lejos de explicarla por
-completo. La regresiÃ³n deja sin explicar cerca del 57% de la varianza
-horaria; el K-medias logra separar los dÃ­as en cuatro perfiles
-climÃ¡ticos razonables pero con una calidad de agrupamiento moderada
-(49.3%); y el pronÃ³stico de Holt-Winters, aunque el mejor de los tres
-modelos de suavizaciÃ³n, arrastra un error relativamente alto (MAPE â‰ˆ
-43%). En conjunto, esto sugiere que factores no climÃ¡ticos â€”hora del
-dÃ­a, dÃ­a de la semana, feriados, eventos puntualesâ€” tienen un peso
+Las tres técnicas cuentan una historia consistente: el clima influye
+claramente en la demanda de bicicletas en Seúl (temperatura y lluvia
+como los factores más fuertes), pero está lejos de explicarla por
+completo. La regresión deja sin explicar cerca del 57% de la varianza
+horaria; el K-medias logra separar los días en cuatro perfiles
+climáticos razonables pero con una calidad de agrupamiento moderada
+(49.3%); y el pronóstico de Holt-Winters, aunque el mejor de los tres
+modelos de suavización, arrastra un error relativamente alto (MAPE ≈
+43%). En conjunto, esto sugiere que factores no climáticos —hora del
+día, día de la semana, feriados, eventos puntuales— tienen un peso
 considerable en la demanda, algo que ya se insinuaba en el boxplot por
 hora del EDA.
 
-## DiscusiÃ³n {#s1-discusion}
+## Discusión {#s1-discusion}
 
-El hallazgo mÃ¡s relevante es que el clima, aunque significativo, no es suficiente por sÃ­ solo: un RÂ² ajustado de 0.432 deja claro que un modelo de producciÃ³n necesitarÃ­a incorporar variables de calendario (hora, dÃ­a de la semana, feriado) para mejorar sustancialmente la predicciÃ³n. Dos coeficientes de la regresiÃ³n resultaron contraintuitivos (Radiacion_Solar negativa y Nieve positiva), lo que probablemente refleja que el modelo lineal aditivo no captura bien la interacciÃ³n entre radiaciÃ³n solar y hora del dÃ­a, ni tiene suficientes observaciones con nieve para estimar ese efecto con confianza â€” una limitaciÃ³n de asumir relaciones puramente lineales. El agrupamiento de K-medias, con un 49.3% de varianza explicada entre grupos, es notablemente mÃ¡s dÃ©bil que el 90% obtenido en el laboratorio de fÃºtbol, coherente con la naturaleza continua (no categÃ³rica) del clima. Finalmente, el pronÃ³stico de Holt-Winters, con un MAPE de ~43%, es mucho menos preciso que el de ventas mensuales del laboratorio del curso, lo que indica que la demanda diaria de bicicletas estÃ¡ sujeta a mÃ¡s ruido dÃ­a a dÃ­a (eventos puntuales, cambios abruptos de clima) que un modelo de tendencia + estacionalidad semanal no puede anticipar. Por Ãºltimo, los datos corresponden a una sola ciudad y un solo aÃ±o (dic. 2017 â€“ nov. 2018), por lo que estas conclusiones no necesariamente se generalizan a otras ciudades o a aÃ±os con clima atÃ­pico.
+El hallazgo más relevante es que el clima, aunque significativo, no es suficiente por sí solo: un R² ajustado de 0.432 deja claro que un modelo de producción necesitaría incorporar variables de calendario (hora, día de la semana, feriado) para mejorar sustancialmente la predicción. Dos coeficientes de la regresión resultaron contraintuitivos (Radiacion_Solar negativa y Nieve positiva), lo que probablemente refleja que el modelo lineal aditivo no captura bien la interacción entre radiación solar y hora del día, ni tiene suficientes observaciones con nieve para estimar ese efecto con confianza — una limitación de asumir relaciones puramente lineales. El agrupamiento de K-medias, con un 49.3% de varianza explicada entre grupos, es notablemente más débil que el 90% obtenido en el laboratorio de fútbol, coherente con la naturaleza continua (no categórica) del clima. Finalmente, el pronóstico de Holt-Winters, con un MAPE de ~43%, es mucho menos preciso que el de ventas mensuales del laboratorio del curso, lo que indica que la demanda diaria de bicicletas está sujeta a más ruido día a día (eventos puntuales, cambios abruptos de clima) que un modelo de tendencia + estacionalidad semanal no puede anticipar. Por último, los datos corresponden a una sola ciudad y un solo año (dic. 2017 – nov. 2018), por lo que estas conclusiones no necesariamente se generalizan a otras ciudades o a años con clima atípico.
 
 ```{=html}
 <!-- ============================================================================
- PESTAÃ‘A 3 â€” Conjunto de datos: ai_student_impact_dataset.csv
- Responsable: [nombre del compaÃ±ero/a]
+ PESTAÑA 3 — Conjunto de datos: ai_student_impact_dataset.csv
+ Responsable: [nombre del compañero/a]
 ============================================================================ -->
 ```
 
 # ai_student_impact_dataset {#ai-student-impact-dataset .tabset .tabset-fade .tabset-pills}
 
-## IntroducciÃ³n y pregunta de anÃ¡lisis {#s2-intro}
+## Introducción y pregunta de análisis {#s2-intro}
 
-[Contexto del conjunto de datos y la pregunta de anÃ¡lisis.]
+[Contexto del conjunto de datos y la pregunta de análisis.]
 
-## DescripciÃ³n de la base de datos {#s2-descripcion}
+## Descripción de la base de datos {#s2-descripcion}
 
-**Fuente:** [autor(es), repositorio, aÃ±o, enlace y cita formal.]
+**Fuente:** [autor(es), repositorio, año, enlace y cita formal.]
 
 **Licencia / acceso:** [ej. CC BY 4.0.]
 
-[NÃºmero de observaciones y variables; tipo y significado de cada una.]
+[Número de observaciones y variables; tipo y significado de cada una.]
 
-## ExtracciÃ³n y preparaciÃ³n de los datos {#s2-extraccion}
+## Extracción y preparación de los datos {#s2-extraccion}
 
 ```{r s2-carga}
-# ExtracciÃ³n y limpieza â€” Data/ai_student_impact_dataset.csv
+# Extracción y limpieza — Data/ai_student_impact_dataset.csv
 
 ```
 
-[InterpretaciÃ³n de la limpieza y preparaciÃ³n.]
+[Interpretación de la limpieza y preparación.]
 
-## ExploraciÃ³n de los datos (EDA) {#s2-eda}
+## Exploración de los datos (EDA) {#s2-eda}
 
 ```{r s2-eda}
-# AnÃ¡lisis exploratorio: distribuciones, correlaciones, grÃ¡ficos
+# Análisis exploratorio: distribuciones, correlaciones, gráficos
 
 ```
 
-[InterpretaciÃ³n del EDA.]
+[Interpretación del EDA.]
 
 ## Modelos aplicados {#s2-modelos}
 
-### TÃ©cnica 1 â€” [nombre de la tÃ©cnica]
+### Técnica 1 — [nombre de la técnica]
 
 ::: justificacion
-[JustificaciÃ³n de la TÃ©cnica 1.]
+[Justificación de la Técnica 1.]
 :::
 
 ```{r s2-t1}
-# CÃ³digo de la TÃ©cnica 1
+# Código de la Técnica 1
 
 ```
 
 ::: interpretacion
-[InterpretaciÃ³n de los resultados de la TÃ©cnica 1.]
+[Interpretación de los resultados de la Técnica 1.]
 :::
 
-### TÃ©cnica 2 â€” [nombre de la tÃ©cnica]
+### Técnica 2 — [nombre de la técnica]
 
 ::: justificacion
-[JustificaciÃ³n de la TÃ©cnica 2.]
+[Justificación de la Técnica 2.]
 :::
 
 ```{r s2-t2}
-# CÃ³digo de la TÃ©cnica 2
+# Código de la Técnica 2
 
 ```
 
 ::: interpretacion
-[InterpretaciÃ³n de los resultados de la TÃ©cnica 2.]
+[Interpretación de los resultados de la Técnica 2.]
 :::
 
-### TÃ©cnica 3 â€” [nombre de la tÃ©cnica]
+### Técnica 3 — [nombre de la técnica]
 
 ::: justificacion
-[JustificaciÃ³n de la TÃ©cnica 3.]
+[Justificación de la Técnica 3.]
 :::
 
 ```{r s2-t3}
-# CÃ³digo de la TÃ©cnica 3
+# Código de la Técnica 3
 
 ```
 
 ::: interpretacion
-[InterpretaciÃ³n de los resultados de la TÃ©cnica 3.]
+[Interpretación de los resultados de la Técnica 3.]
 :::
 
 ## Resultados {#s2-resultados}
 
-[SÃ­ntesis de los resultados de las tres tÃ©cnicas para este conjunto de
+[Síntesis de los resultados de las tres técnicas para este conjunto de
 datos.]
 
-## DiscusiÃ³n {#s2-discusion}
+## Discusión {#s2-discusion}
 
-[Significado de los resultados y limitaciones del anÃ¡lisis.]
+[Significado de los resultados y limitaciones del análisis.]
 
 ```{=html}
 <!-- ============================================================================
- PESTAÃ‘A 4 â€” Conjunto de datos: mental_health_burnout_prediction_dataset.csv
- Responsable: [nombre del compaÃ±ero/a]
+ PESTAÑA 4 — Conjunto de datos: mental_health_burnout_prediction_dataset.csv
+ Responsable: [nombre del compañero/a]
 ============================================================================ -->
 ```
 
 # mental_health_burnout_prediction_dataset {#mental-health-burnout-dataset .tabset .tabset-fade .tabset-pills}
 
-## IntroducciÃ³n y pregunta de anÃ¡lisis {#s3-intro}
+## Introducción y pregunta de análisis {#s3-intro}
 
-[Contexto del conjunto de datos y la pregunta de anÃ¡lisis.]
+En los entornos laborales y tecnológicos actuales, la sobrecarga
+digital y las exigencias continuas de rendimiento se han consolidado
+como factores críticos en la aparición del síndrome de agotamiento
+profesional (*burnout*). El estudio cuantitativo de estos indicadores
+permite a las organizaciones diseñar estrategias preventivas basadas en
+datos para mitigar el estrés digital.
 
-## DescripciÃ³n de la base de datos {#s3-descripcion}
+**Pregunta de análisis:** ¿de qué manera interactúan la carga de
+trabajo semanal, la exposición a pantallas y el equilibrio vida-trabajo
+en la determinación del perfil sintomático del colaborador (ansiedad,
+depresión y agotamiento), es posible segmentar niveles de riesgo
+laboral a partir de esas variables, y qué tanto explican estos factores
+—frente a otros no medidos— la variación observada en el agotamiento?
 
-**Fuente:** [autor(es), repositorio, aÃ±o, enlace y cita formal.]
+## Descripción de la base de datos {#s3-descripcion}
 
-**Licencia / acceso:** [ej. CC BY 4.0.]
+**Fuente:** Fatima, M. (2026). *Mental Health & Burnout Prediction
+Dataset* [Dataset]. Repositorio Kaggle.
 
-[NÃºmero de observaciones y variables; tipo y significado de cada una.]
+**Licencia / acceso:** Open Data / Community Data License Agreement
+(CC BY 4.0) — de acceso público y libre.
 
-## ExtracciÃ³n y preparaciÃ³n de los datos {#s3-extraccion}
+El conjunto contiene **50,000 observaciones** (una por colaborador) y
+**40 variables**. La tabla siguiente resume las variables efectivamente
+usadas en el análisis:
+
+| Variable original | Variable en este documento | Significado | Tipo |
+|------------------|------------------|------------------|------------------|
+| Age | Edad | Edad del colaborador | Numérica |
+| Employment_Status | Situacion_Laboral | Situación laboral (Employed / Self-Employed / Student / Unemployed) | Categórica |
+| Remote_Work | Modalidad_Trabajo | Modalidad de trabajo (presencial / remoto / híbrido) | Categórica |
+| Work_Hours_Per_Week | Horas_Trabajo_Semana | Horas trabajadas por semana | Numérica |
+| Screen_Time_Hours | Horas_Pantalla | Horas diarias frente a pantallas | Numérica |
+| Social_Media_Hours | Horas_Redes_Sociales | Horas diarias en redes sociales | Numérica |
+| Sleep_Hours | Horas_Sueno | Horas de sueño por noche | Numérica |
+| Sleep_Quality | Calidad_Sueno | Calidad de sueño autopercibida (Poor/Average/Good/Excellent) | Categórica |
+| Work_Life_Balance | Equilibrio_Vida_Trabajo | Equilibrio vida-trabajo autopercibido (1-10) | Numérica |
+| Anxiety_Score | Puntaje_Ansiedad | Puntaje de ansiedad (0-100) | Numérica |
+| Depression_Score | Puntaje_Depresion | Puntaje de depresión (0-100) | Numérica |
+| Burnout_Score | Puntaje_Agotamiento | Puntaje de agotamiento — **variable de interés central** (0-100) | Numérica |
+| Productivity_Score | Puntaje_Productividad | Productividad autopercibida (0-100) | Numérica |
+| Job_Satisfaction | Satisfaccion_Laboral | Satisfacción laboral autopercibida (1-10) | Numérica |
+
+## Extracción y preparación de los datos {#s3-extraccion}
 
 ```{r s3-carga}
-# ExtracciÃ³n y limpieza â€” Data/mental_health_burnout_prediction_dataset.csv
+# Extracción y limpieza — Data/mental_health_burnout_prediction_dataset.csv
+# (mice, corrplot y tidyr ya se cargaron en el setup global)
 
+# 1. Carga del conjunto de datos
+df_burnout_raw <- read.csv("Data/mental_health_burnout_prediction_dataset.csv",
+                            stringsAsFactors = TRUE)
+
+dim(df_burnout_raw)
+
+# Renombrado al español de las variables usadas en el análisis (ver tabla
+# "Variable original -> Variable en este documento" de la sección anterior).
+# Las columnas no usadas en el análisis conservan su nombre original.
+df_burnout_raw <- df_burnout_raw %>%
+  rename(
+    Edad                    = Age,
+    Situacion_Laboral       = Employment_Status,
+    Modalidad_Trabajo       = Remote_Work,
+    Horas_Trabajo_Semana    = Work_Hours_Per_Week,
+    Horas_Pantalla          = Screen_Time_Hours,
+    Horas_Redes_Sociales    = Social_Media_Hours,
+    Horas_Sueno             = Sleep_Hours,
+    Calidad_Sueno           = Sleep_Quality,
+    Equilibrio_Vida_Trabajo = Work_Life_Balance,
+    Puntaje_Ansiedad        = Anxiety_Score,
+    Puntaje_Depresion       = Depression_Score,
+    Puntaje_Agotamiento     = Burnout_Score,
+    Puntaje_Productividad   = Productivity_Score,
+    Satisfaccion_Laboral    = Job_Satisfaction
+  )
+
+str(df_burnout_raw[, c("Edad", "Situacion_Laboral", "Modalidad_Trabajo",
+                        "Horas_Trabajo_Semana", "Calidad_Sueno",
+                        "Puntaje_Agotamiento")])
+summary(df_burnout_raw[, c("Horas_Trabajo_Semana", "Horas_Pantalla",
+                            "Horas_Sueno", "Puntaje_Agotamiento")])
+
+# 2. Duplicados y valores faltantes
+sum(duplicated(df_burnout_raw))
+
+resumen_na <- df_burnout_raw %>%
+  summarise(across(everything(), ~ sum(is.na(.)))) %>%
+  pivot_longer(everything(), names_to = "Variable", values_to = "NA_count") %>%
+  filter(NA_count > 0) %>%
+  arrange(desc(NA_count))
+
+cat("Total de datos faltantes:", sum(is.na(df_burnout_raw)),
+    "(", round(100 * sum(is.na(df_burnout_raw)) / (nrow(df_burnout_raw) * ncol(df_burnout_raw)), 2),
+    "% de las celdas ) en", nrow(resumen_na), "de", ncol(df_burnout_raw), "variables\n")
+resumen_na
+
+# 3. Verificación de los factores categóricos clave
+table(df_burnout_raw$Calidad_Sueno)
+table(df_burnout_raw$Situacion_Laboral)
+
+# 4. Imputación MICE (Predictive Mean Matching)
+set.seed(123)
+imp_model <- mice(df_burnout_raw, m = 1, method = "pmm", printFlag = FALSE)
+df_burnout_clean <- complete(imp_model)
+
+sum(is.na(df_burnout_clean))
 ```
 
-[InterpretaciÃ³n de la limpieza y preparaciÃ³n.]
+Interpretación de la limpieza y preparación: el conjunto tiene 50,000 observaciones, 40 variables y ningún registro duplicado.
 
-## ExploraciÃ³n de los datos (EDA) {#s3-eda}
+Los valores faltantes se concentran de forma dispersa en varias variables numéricas y no superan un pequeño porcentaje del total de celdas, por lo que se optó por imputar en vez
+de eliminar registros.
+
+La imputación se realizó mediante Imputación Múltiple por Ecuaciones Encadenadas (MICE, método PMM — *Predictive Mean Matching*), que reemplaza cada faltante por un valor observado
+"plausible" tomado de registros similares, preservando la distribución original de cada variable (a diferencia de imputar con la media, que la distorsiona). Tras el proceso, `df_burnout_clean` queda sin datos faltantes y es la base para el resto del análisis.
+
+## Exploración de los datos (EDA) {#s3-eda}
 
 ```{r s3-eda}
-# AnÃ¡lisis exploratorio: distribuciones, correlaciones, grÃ¡ficos
+# Distribución de la variable objetivo
+ggplot(df_burnout_clean, aes(x = Puntaje_Agotamiento)) +
+  geom_histogram(bins = 30, fill = col_navy, color = "white") +
+  labs(title = "Distribución del Puntaje_Agotamiento",
+       x = "Puntaje_Agotamiento (0-100)", y = "Frecuencia") +
+  theme_minimal()
+
+# Matriz de correlaciones entre variables numéricas clave
+num_vars_burnout <- df_burnout_clean %>%
+  select(Horas_Trabajo_Semana, Horas_Pantalla, Puntaje_Ansiedad,
+         Puntaje_Depresion, Puntaje_Agotamiento, Equilibrio_Vida_Trabajo, Puntaje_Productividad)
+
+round(cor(num_vars_burnout), 3)
+
+corrplot(cor(num_vars_burnout), method = "color", type = "upper",
+         tl.col = "black", tl.srt = 45, addCoef.col = "black",
+         number.cex = 0.7,
+         title = "Correlaciones entre carga laboral, exposición digital y salud mental",
+         mar = c(0, 0, 2, 0))
+
+# Puntaje_Agotamiento según calidad del sueño (motiva la Técnica 1 - MANOVA)
+ggplot(df_burnout_clean, aes(x = Calidad_Sueno, y = Puntaje_Agotamiento, fill = Calidad_Sueno)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(title = "Puntaje_Agotamiento según calidad del sueño",
+       x = "Calidad del sueño", y = "Puntaje_Agotamiento") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# Relación Puntaje_Ansiedad - Puntaje_Agotamiento (motiva la Técnica 3 - regresión)
+ggplot(df_burnout_clean, aes(x = Puntaje_Ansiedad, y = Puntaje_Agotamiento)) +
+  geom_point(alpha = 0.05, color = col_navy) +
+  geom_smooth(method = "lm", color = "#C9A227", se = FALSE) +
+  labs(title = "Relación entre ansiedad y agotamiento",
+       x = "Puntaje_Ansiedad", y = "Puntaje_Agotamiento") +
+  theme_minimal()
 
 ```
 
-[InterpretaciÃ³n del EDA.]
+Interpretación del EDA: `Puntaje_Agotamiento` se distribuye de forma razonablemente
+simétrica a lo largo de todo el rango 0-100.
+
+La matriz de correlaciones
+confirma que Puntaje_Ansiedad, Puntaje_Depresion y Puntaje_Agotamiento están
+fuertemente intercorrelacionados entre sí (r ≈ 0.91-0.92), lo cual
+justifica tratarlos como un único perfil sintomático multivariado (ver
+MANOVA, Técnica 1).
+
+Horas_Trabajo_Semana (r ≈ 0.61) y, en menor medida,
+Horas_Pantalla (r ≈ 0.35-0.36) muestran una correlación positiva
+moderada con ese perfil, y ambas se correlacionan negativamente con
+Puntaje_Productividad (r ≈ -0.61 y -0.36), evidenciando el costo
+productivo del agotamiento.
+
+El boxplot por calidad de sueño ya deja ver
+un gradiente claro (Excellent \< Good \< Average \< Poor) que se
+confirma estadísticamente más adelante.
+
+Un hallazgo que **contradice la intuición inicial** es que Equilibrio_Vida_Trabajo
+presenta una correlación
+prácticamente nula (r ≈ 0.00) con el resto de variables en este
+conjunto de datos: no se comporta como factor protector aquí, lo que se
+retoma en la regresión (Técnica 3) y en la discusión de limitaciones.
 
 ## Modelos aplicados {#s3-modelos}
 
-### TÃ©cnica 1 â€” [nombre de la tÃ©cnica]
+### Técnica 1 — Análisis Multivariado de Varianza (MANOVA)
 
-::: justificacion
-[JustificaciÃ³n de la TÃ©cnica 1.]
-:::
+<div class="justificacion">
+
+La pregunta de análisis requiere entender el "perfil sintomático" del
+colaborador, formado simultáneamente por ansiedad, depresión y
+agotamiento. Evaluar estas tres variables con ANOVAs separados
+inflaría el error tipo I y, sobre todo, ignoraría que están fuertemente
+correlacionadas entre sí (r ≈ 0.91-0.92, según el EDA), es decir, no
+aportan información independiente. El MANOVA es la técnica apropiada
+porque contrasta el efecto de un factor categórico (`Calidad_Sueno`)
+sobre el **vector conjunto** de las tres variables de salud emocional,
+controlando esa correlación y respondiendo directamente si la calidad
+del sueño diferencia el perfil sintomático completo, no solo una de sus
+componentes.
+
+</div>
 
 ```{r s3-t1}
-# CÃ³digo de la TÃ©cnica 1
+# Matriz multivariada de respuesta y modelo MANOVA
+Y_matriz <- cbind(df_burnout_clean$Puntaje_Agotamiento,
+                   df_burnout_clean$Puntaje_Ansiedad,
+                   df_burnout_clean$Puntaje_Depresion)
+
+modelo_manova <- manova(Y_matriz ~ Calidad_Sueno, data = df_burnout_clean)
+summary(modelo_manova, test = "Pillai")
+
+# Seguimiento univariado: ¿el efecto se sostiene en cada síntoma por separado?
+summary(aov(Puntaje_Agotamiento ~ Calidad_Sueno, data = df_burnout_clean))
+summary(aov(Puntaje_Ansiedad ~ Calidad_Sueno, data = df_burnout_clean))
+summary(aov(Puntaje_Depresion ~ Calidad_Sueno, data = df_burnout_clean))
+
+# Medias del perfil sintomático por categoría de calidad del sueño
+medias_sueno <- df_burnout_clean %>%
+  group_by(Calidad_Sueno) %>%
+  summarise(
+    Puntaje_Agotamiento = mean(Puntaje_Agotamiento),
+    Puntaje_Ansiedad    = mean(Puntaje_Ansiedad),
+    Puntaje_Depresion   = mean(Puntaje_Depresion)
+  ) %>%
+  arrange(Puntaje_Agotamiento)
+medias_sueno
+
+# Visualización del perfil sintomático conjunto por grupo
+medias_sueno %>%
+  pivot_longer(-Calidad_Sueno, names_to = "Indicador", values_to = "Promedio") %>%
+  ggplot(aes(x = Calidad_Sueno, y = Promedio, fill = Indicador)) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = c(col_navy, "#C9A227", col_teal)) +
+  labs(title = "Perfil sintomático promedio según calidad del sueño",
+       x = "Calidad del sueño", y = "Puntaje promedio (0-100)", fill = NULL) +
+  theme_minimal()
 
 ```
 
-::: interpretacion
-[InterpretaciÃ³n de los resultados de la TÃ©cnica 1.]
-:::
+<div class="interpretacion">
 
-### TÃ©cnica 2 â€” [nombre de la tÃ©cnica]
+El estadístico de Pillai resulta significativo (p \< 0.001), por lo que
+se rechaza la hipótesis nula: `Calidad_Sueno` sí tiene un efecto sobre
+el vector conjunto de Puntaje_Agotamiento, Puntaje_Ansiedad y Puntaje_Depresion.
+
+Los tres seguimientos univariados (ANOVA de un factor) confirman que el
+efecto no proviene de una sola variable: las tres son individualmente
+significativas (p \< 0.001 en los tres casos), con estadísticos F en un
+rango similar (≈ 775-815), lo que indica que la calidad del sueño
+afecta de forma pareja a los tres componentes del perfil emocional, no
+solo a uno de ellos.
+
+La tabla de medias y el gráfico de barras muestran un gradiente claro y
+consistente en las cuatro categorías: quienes reportan sueño
+"Excellent" presentan los promedios más bajos en los tres indicadores,
+seguidos por "Good", luego "Average", y finalmente "Poor" con los
+promedios más altos —una diferencia de aproximadamente 15-17 puntos
+entre los extremos "Excellent" y "Poor" en cada variable—.
+
+Esto
+confirma que la calidad del sueño es un buen discriminador del perfil
+de salud emocional y respalda intervenciones centradas en higiene del
+sueño como palanca de bajo costo para reducir el riesgo de burnout.
+
+</div>
+
+### Técnica 2 — Clustering: Segmentación $k$-Means
+
+<div class="justificacion">
+
+La segunda parte de la pregunta de análisis pide "segmentar niveles de
+riesgo laboral" en la población, sin partir de una etiqueta de grupo
+predefinida. $k$-Means es apropiado porque es un método de aprendizaje
+**no supervisado** que descubre agrupaciones naturales a partir de la
+similitud entre observaciones en varias variables continuas
+simultáneamente (carga horaria, exposición a pantallas, equilibrio
+vida-trabajo y agotamiento), permitiendo perfilar colaboradores de
+riesgo bajo, medio y alto sin necesidad de una variable de respuesta
+previa.
+
+</div>
+
+```{r s3-t2-codo}
+# Selección y estandarización de las variables de entrada
+df_cluster_input <- df_burnout_clean %>%
+  select(Horas_Trabajo_Semana, Horas_Pantalla, Equilibrio_Vida_Trabajo, Puntaje_Agotamiento) %>%
+  scale()
+
+# --- Codo de Jambú (Elbow Method) para elegir k ---
+# NOTA: fviz_nbclust() calcula internamente una matriz de distancias completa
+# (dist()) sin importar el método, lo cual es inviable con 50,000 observaciones
+# (~1.25 mil millones de pares) y provoca un error de desbordamiento. Por eso
+# el WSS se calcula manualmente con un loop de kmeans() -que no requiere
+# matriz de distancias- y se grafica con ggplot2.
+set.seed(123)
+k_max <- 10
+wss <- sapply(1:k_max, function(k) {
+  kmeans(df_cluster_input, centers = k, nstart = 10)$tot.withinss
+})
+
+df_codo <- data.frame(k = 1:k_max, wss = wss)
+
+ggplot(df_codo, aes(x = k, y = wss)) +
+  geom_line(color = col_navy, linewidth = 0.9) +
+  geom_point(color = col_navy, size = 2.2) +
+  geom_vline(xintercept = 3, linetype = "dashed", color = col_teal) +
+  scale_x_continuous(breaks = 1:k_max) +
+  labs(title = "Codo de Jambú — selección del número de clústeres (k)",
+       x = "Número de clústeres (k)",
+       y = "Suma de cuadrados intra-clúster (WSS)") +
+  theme_minimal(base_size = 12)
+```
 
 ::: justificacion
-[JustificaciÃ³n de la TÃ©cnica 2.]
+**Elección de $k$:** la curva del codo de Jambú desciende con fuerza
+entre $k=1$ y $k=3$ (reducción de la inercia total de aproximadamente
+42 %) y luego empieza a aplanarse: entre $k=3$ y $k=4$ la mejora ya es
+notablemente menor y, de ahí en adelante, cada clúster adicional agrega
+complejidad sin una ganancia proporcional. Ese "codo" alrededor de
+$k=3$ es el punto de equilibrio entre parsimonia (pocos grupos, fáciles
+de interpretar y de convertir en política institucional) y calidad del
+ajuste, por lo que se selecciona $k=3$ para representar niveles de
+riesgo bajo, medio y alto.
 :::
 
 ```{r s3-t2}
-# CÃ³digo de la TÃ©cnica 2
+# Agrupamiento k-Means con k = 3 grupos (según el codo de Jambú anterior)
+set.seed(123)
+km_fit <- kmeans(df_cluster_input, centers = 3, nstart = 25)
+# Resumen del ajuste SIN imprimir el vector de asignación completo (50,000
+# valores): km_fit por sí solo (o print(km_fit)) sí lo imprimiría, así que
+# se extraen solo los campos de resumen relevantes del objeto kmeans.
+cat("Tamaño de cada clúster:", paste(km_fit$size, collapse = ", "), "\n")
+cat("between_SS / total_SS  :",
+    round(100 * km_fit$betweenss / km_fit$totss, 1), "%\n")
 
+# Muestra ilustrativa del vector de asignación (primeras 20 observaciones),
+# en vez de imprimir las 50,000 filas completas
+# Muestra ilustrativa del vector de asignación de clúster (formato nativo de
+# R: vector indexado que se ajusta solo al ancho de línea), en vez de las
+# 50,000 observaciones completas
+cat("Vector de asignación de clúster (muestra de las primeras 200 observaciones):\n")
+head(km_fit$cluster, 200)
+
+# Centroides por clúster en la escala original
+df_burnout_clean$Cluster <- as.factor(km_fit$cluster)
+df_burnout_clean %>%
+  group_by(Cluster) %>%
+  summarise(
+    n = n(),
+    across(c(Horas_Trabajo_Semana, Horas_Pantalla, Equilibrio_Vida_Trabajo, Puntaje_Agotamiento), mean)
+  ) %>%
+  arrange(Puntaje_Agotamiento)
+
+# Visualización de los clústeres sobre las dos primeras componentes principales
+fviz_cluster(km_fit, data = df_cluster_input, geom = "point", ellipse.type = "norm",
+             palette = c(col_teal, "#C9A227", col_navy),
+             ggtheme = theme_minimal(),
+             main = "Segmentación de colaboradores por nivel de riesgo (k = 3)")
+
+# Validación cruzada contra variables categóricas NO usadas en el clustering
+round(prop.table(table(df_burnout_clean$Cluster, df_burnout_clean$Calidad_Sueno), 1), 2)
+round(prop.table(table(df_burnout_clean$Cluster, df_burnout_clean$Situacion_Laboral), 1), 2)
 ```
 
-::: interpretacion
-[InterpretaciÃ³n de los resultados de la TÃ©cnica 2.]
-:::
+<div class="interpretacion">
 
-### TÃ©cnica 3 â€” [nombre de la tÃ©cnica]
+Los tres clústeres resultantes son razonablemente equilibrados en
+tamaño (entre ~14,000 y ~19,000 colaboradores cada uno), con un
+between_SS/total_SS cercano al 42 % —una separación moderada— y se
+diferencian sobre todo por carga horaria, tiempo de pantalla y
+agotamiento, no por Equilibrio_Vida_Trabajo, cuyo promedio es casi idéntico
+en los tres grupos.
 
-::: justificacion
-[JustificaciÃ³n de la TÃ©cnica 3.]
-:::
+Se observa un **clúster de alto riesgo** con la
+mayor carga horaria semanal (~59 h) y el Puntaje_Agotamiento más alto (~65
+sobre 100); un **clúster de riesgo intermedio** con menor carga horaria
+(~33 h) pero el mayor tiempo de pantalla (~10.7 h) y agotamiento
+moderado (~31); y un **clúster de bajo riesgo**, con carga horaria
+moderada (~40 h), el tiempo de pantalla más bajo (~4.7 h) y el menor
+Puntaje_Agotamiento (~20).
+
+A diferencia del caso de SeoulBikeData —donde los conglomerados
+climáticos "redescubrían" un patrón estacional real—, aquí las tablas
+de validación cruzada muestran que los tres clústeres se distribuyen de
+forma casi idéntica (≈25 % cada categoría) tanto en `Calidad_Sueno`
+como en `Situacion_Laboral`: el riesgo laboral identificado por
+$k$-Means **no** está asociado con esas variables categóricas en este
+conjunto de datos.
+
+Esto es un hallazgo honesto que vale la pena
+señalar como limitación (ver Discusión) más que forzar una narrativa de
+asociación que los datos no respaldan.
+
+</div>
+
+### Técnica 3 — Regresión Lineal Múltiple (lm)
+
+<div class="justificacion">
+
+El MANOVA y el $k$-Means identifican *que* existen diferencias y grupos
+de riesgo, pero no cuantifican el peso relativo de cada predictor sobre
+Puntaje_Agotamiento ni permiten estimar el agotamiento esperado para un
+colaborador con características particulares. La regresión lineal
+múltiple es la técnica apropiada para ese último tramo de la pregunta
+de análisis: modela Puntaje_Agotamiento como función continua de la carga
+horaria, el tiempo de pantalla, las horas de sueño, el equilibrio
+vida-trabajo y la ansiedad, cuantificando la dirección y magnitud
+(coeficientes) de cada relación y evaluando la calidad global del
+ajuste ($R^2$).
+
+</div>
 
 ```{r s3-t3}
-# CÃ³digo de la TÃ©cnica 3
+# Modelo completo
+modelo_reg_completo <- lm(Puntaje_Agotamiento ~ Horas_Trabajo_Semana + Horas_Pantalla +
+                            Horas_Sueno + Equilibrio_Vida_Trabajo + Puntaje_Ansiedad,
+                          data = df_burnout_clean)
+summary(modelo_reg_completo)
+vif(modelo_reg_completo)
+
+# Equilibrio_Vida_Trabajo no resultó significativo (ver interpretación): se compara
+# contra un modelo reducido sin esa variable, igual que se hizo con
+# Punto_Rocio en la pestaña de SeoulBikeData.
+modelo_reg_final <- lm(Puntaje_Agotamiento ~ Horas_Trabajo_Semana + Horas_Pantalla +
+                         Horas_Sueno + Puntaje_Ansiedad,
+                       data = df_burnout_clean)
+summary(modelo_reg_final)
+vif(modelo_reg_final)
+
+AIC(modelo_reg_completo, modelo_reg_final)
+BIC(modelo_reg_completo, modelo_reg_final)
+
+par(mfrow = c(2, 2))
+plot(modelo_reg_final, col = col_navy, pch = 19, cex = 0.4)
+par(mfrow = c(1, 1))
+
+# Ejemplo de predicción: colaborador con jornada larga, alta exposición a
+# pantallas, poco sueño y ansiedad alta
+nuevo_colaborador <- data.frame(Horas_Trabajo_Semana = 55, Horas_Pantalla = 9,
+                                 Horas_Sueno = 5.5, Puntaje_Ansiedad = 70)
+predict(modelo_reg_final, newdata = nuevo_colaborador, interval = "prediction")
 
 ```
 
-::: interpretacion
-[InterpretaciÃ³n de los resultados de la TÃ©cnica 3.]
-:::
+<div class="interpretacion">
+
+El modelo completo explica una proporción muy alta de la varianza de
+Puntaje_Agotamiento ($R^2$ ajustado ≈ 0.858), y todos los VIF se mantienen
+por debajo de 2.5, por lo que no hay evidencia de multicolinealidad
+problemática entre los predictores.
+
+Puntaje_Ansiedad es, con diferencia,
+el predictor más influyente (coeficiente positivo grande y altamente
+significativo), seguido de Horas_Pantalla y Horas_Trabajo_Semana
+(ambos positivos y significativos).
+
+Horas_Sueno presenta un coeficiente
+negativo y significativo, confirmando su rol protector.
+**Equilibrio_Vida_Trabajo resultó no significativo** (p ≈ 0.74), consistente
+con su correlación prácticamente nula observada en el EDA.
+
+Al eliminar Equilibrio_Vida_Trabajo, el modelo reducido prácticamente no
+pierde poder explicativo ($R^2$ ajustado se mantiene en 0.858) y además
+mejora levemente tanto en AIC (347,391.1 → 347,389.2) como en BIC
+(347,443.6 → 347,433.0) a pesar de tener un parámetro menos — confirma
+que esa variable era prescindible frente a las demás, igual que ocurrió
+con Punto_Rocio en la regresión de SeoulBikeData.
+
+Los gráficos de
+diagnóstico del modelo final no muestran patrones severos en los
+residuos que invaliden los supuestos de linealidad y homocedasticidad,
+aunque con una muestra de 50,000 observaciones incluso desviaciones
+pequeñas pueden aparecer como estadísticamente detectables.
+
+El ejemplo
+de predicción (55 h/semana, 9 h de pantalla, 5.5 h de sueño, ansiedad
+70) estima un Puntaje_Agotamiento alto, coherente con el perfil del clúster
+de mayor riesgo identificado en la Técnica 2.
+
+</div>
 
 ## Resultados {#s3-resultados}
 
-[SÃ­ntesis de los resultados de las tres tÃ©cnicas para este conjunto de
-datos.]
+Los tres análisis convergen en una misma historia y se refuerzan entre
+sí. El MANOVA confirmó que la calidad del sueño diferencia
+significativamente ($p < 0.001$) el perfil conjunto de ansiedad,
+depresión y agotamiento, con seguimientos univariados que muestran que
+el efecto es parejo en las tres variables (F ≈ 775-815) y un gradiente
+claro entre "Excellent" y "Poor".
 
-## DiscusiÃ³n {#s3-discusion}
+La regresión múltiple cuantificó ese
+patrón: Puntaje_Ansiedad, Horas_Pantalla y Horas_Trabajo_Semana se
+asocian positivamente con el Puntaje_Agotamiento, Horas_Sueno actúa como
+factor protector, con un ajuste global alto ($R^2$ ajustado ≈ 0.858) que
+prácticamente no cambia al remover Equilibrio_Vida_Trabajo (variable no
+significativa, confirmado por AIC/BIC).
 
-[Significado de los resultados y limitaciones del anÃ¡lisis.]
+La segmentación $k$-Means, con
+$k=3$ elegido mediante el codo de Jambú y una separación moderada
+(between_SS/total_SS ≈ 42 %), aisló un clúster de alto riesgo
+caracterizado por jornadas largas (~59 h/semana) y agotamiento elevado
+(~65/100).
+
+Un hallazgo transversal a los tres análisis —y que contrasta
+con la hipótesis inicial— es que **Equilibrio_Vida_Trabajo no se comportó
+como factor protector** en este conjunto de datos, y las tablas de
+validación cruzada mostraron que los clústeres de riesgo tampoco se
+asocian con `Calidad_Sueno` ni `Situacion_Laboral`.
+
+## Discusión {#s3-discusion}
+
+Significado de los resultados:
+
+Los hallazgos respaldan la necesidad de implementar políticas
+organizacionales de desconexión digital y de control de jornadas: el
+tiempo de pantalla y la sobrecarga horaria se traducen empíricamente en
+un incremento del perfil sintomático, mientras que dormir mejor se
+asocia de forma consistente con menor agotamiento. La falta de efecto
+de Equilibrio_Vida_Trabajo sugiere que, al menos en esta muestra, la forma en
+que se mide el "equilibrio" percibido no está capturando el mismo
+fenómeno que las variables objetivas de carga horaria y exposición
+digital, y que las intervenciones deberían apuntar directamente a estas
+últimas.
+
+Limitaciones del análisis:
+
+El estudio posee un diseño transversal, por lo que no es posible
+establecer causalidad estricta en el tiempo (por ejemplo, no se puede
+descartar que sea el propio agotamiento el que reduce las horas de
+sueño, y no solo al revés). Asimismo, la naturaleza autorreportada de
+variables como Equilibrio_Vida_Trabajo, Satisfaccion_Laboral o Calidad_Sueno
+puede introducir sesgo de percepción. A diferencia de SeoulBikeData,
+donde los conglomerados climáticos coincidían razonablemente con la
+estación real del año, aquí la validación cruzada mostró que los
+clústeres de riesgo no se asocian con `Calidad_Sueno` ni con
+`Situacion_Laboral` —consistente con que Equilibrio_Vida_Trabajo tampoco
+correlaciona con nada más—, lo que sugiere que varias de las variables
+categóricas de este conjunto de datos podrían haberse generado de forma
+independiente entre sí (dataset sintético, construido para fines de
+práctica de modelado). Por lo tanto, las relaciones encontradas deben
+interpretarse como una demostración metodológica y no extrapolarse
+directamente a una población laboral real sin validación adicional.
 
 ```{=html}
 <!-- ============================================================================
- CONCLUSIÃ“N GENERAL
+ CONCLUSIÓN GENERAL
 ============================================================================ -->
 ```
 
-# ConclusiÃ³n general {#conclusion-general}
+# Conclusión general {#conclusion-general}
 
-[ConclusiÃ³n que integra los hallazgos de los tres conjuntos de datos y
-responde, de forma conjunta, a las preguntas de anÃ¡lisis planteadas.
-Conecten los resultados de las tÃ©cnicas aplicadas en cada pestaÃ±a y
+[Conclusión que integra los hallazgos de los tres conjuntos de datos y
+responde, de forma conjunta, a las preguntas de análisis planteadas.
+Conecten los resultados de las técnicas aplicadas en cada pestaña y
 cierren con las principales lecciones del proyecto.]
 
 # Referencias {#referencias .unnumbered}
 
 - Sathishkumar V E, Jangwoo Park y Yongyun Cho (2020). *Seoul Bike
   Sharing Demand* [Dataset]. UCI Machine Learning Repository.
-  <https://doi.org/10.24432/C5F62R> â€” SeoulBikeData
-- [Cita del conjunto de datos 2 â€” ai_student_impact_dataset]
-- [Cita del conjunto de datos 3 â€”
-  mental_health_burnout_prediction_dataset]
-- [Paquetes de R o fuentes teÃ³ricas citadas]
-:::::::::::::::::::::
+  <https://doi.org/10.24432/C5F62R> — SeoulBikeData
+- [Cita del conjunto de datos 2 — ai_student_impact_dataset]
+- Fatima, M. (2026). *Mental Health & Burnout Prediction Dataset*
+  [Dataset]. Kaggle. Licencia Community Data License Agreement (CC BY
+  4.0) — mental_health_burnout_prediction_dataset
+- [Paquetes de R o fuentes teóricas citadas]
 
 <!-- / .main-content -->
 ::::::::::::::::::::::
@@ -872,20 +1335,20 @@ cierren con las principales lecciones del proyecto.]
 ```{=html}
 <script>
 // ============================================================================
-// NavegaciÃ³n por "pÃ¡ginas": cada pestaÃ±a principal (h1: IntroducciÃ³n general,
-// cada dataset, ConclusiÃ³n, Referencias) se muestra de a una, como si fueran
-// pÃ¡ginas independientes â€” igual que el menÃº lateral de rmdformats::material.
-// Dentro de cada dataset, los subtÃ­tulos (IntroducciÃ³n, EDA, Modelos, etc.)
-// ya vienen convertidos en botones tipo pestaÃ±a (pills) por el propio pandoc,
-// gracias a la clase {.tabset .tabset-fade .tabset-pills} en su encabezado â€”
-// no se agregÃ³ ninguna librerÃ­a nueva, solo se usa lo que pandoc/Bootstrap ya
+// Navegación por "páginas": cada pestaña principal (h1: Introducción general,
+// cada dataset, Conclusión, Referencias) se muestra de a una, como si fueran
+// páginas independientes — igual que el menú lateral de rmdformats::material.
+// Dentro de cada dataset, los subtítulos (Introducción, EDA, Modelos, etc.)
+// ya vienen convertidos en botones tipo pestaña (pills) por el propio pandoc,
+// gracias a la clase {.tabset .tabset-fade .tabset-pills} en su encabezado —
+// no se agregó ninguna librería nueva, solo se usa lo que pandoc/Bootstrap ya
 // incluye en el documento.
 // ============================================================================
 (function () {
   var sidebar = document.getElementById('sidebar');
   var appLayout = document.getElementById('appLayout');
 
-  // Todas las "pÃ¡ginas" = secciones de nivel 1 dentro del contenido principal
+  // Todas las "páginas" = secciones de nivel 1 dentro del contenido principal
   var paginas = {};
   var listaIds = [];
   document.querySelectorAll('.main-content > .section.level1, .main-content > section.level1')
@@ -898,19 +1361,19 @@ cierren con las principales lecciones del proyecto.]
     listaIds.forEach(function (pid) {
       paginas[pid].style.display = (pid === id) ? '' : 'none';
     });
-    // Resalta en el menÃº SOLO la pestaÃ±a principal activa (como una "pÃ¡gina")
+    // Resalta en el menú SOLO la pestaña principal activa (como una "página")
     sidebar.querySelectorAll(':scope > ul > li').forEach(function (li) {
       var a = li.querySelector(':scope > a');
       li.classList.toggle('active', !!a && a.getAttribute('href') === '#' + id);
     });
-    // No usar scrollTo(0,0): eso sube hasta la portada, que estÃ¡ ANTES del
-    // menÃº en el documento. En su lugar nos quedamos al tope del propio
-    // layout (menÃº + contenido), justo debajo de la portada.
+    // No usar scrollTo(0,0): eso sube hasta la portada, que está ANTES del
+    // menú en el documento. En su lugar nos quedamos al tope del propio
+    // layout (menú + contenido), justo debajo de la portada.
     var topLayout = appLayout.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({ top: topLayout, left: 0, behavior: 'auto' });
   }
 
-  // Enlaces del menÃº lateral (principales y subtÃ­tulos)
+  // Enlaces del menú lateral (principales y subtítulos)
   var enlaces = sidebar.querySelectorAll('a[href^="#"]');
   enlaces.forEach(function (a) {
     a.addEventListener('click', function (evt) {
@@ -918,11 +1381,11 @@ cierren con las principales lecciones del proyecto.]
       evt.preventDefault();
 
       if (paginas[id]) {
-        // Es una pestaÃ±a principal: cambiar de "pÃ¡gina"
+        // Es una pestaña principal: cambiar de "página"
         mostrarPagina(id);
       } else {
-        // Es un subtÃ­tulo (ahora es una pestaÃ±a/tab dentro de su pÃ¡gina):
-        // 1) mostrar la pÃ¡gina a la que pertenece, 2) activar esa pestaÃ±a
+        // Es un subtítulo (ahora es una pestaña/tab dentro de su página):
+        // 1) mostrar la página a la que pertenece, 2) activar esa pestaña
         var destino = document.getElementById(id);
         if (!destino) return;
         var paginaPadre = destino.closest('.section.level1, section.level1');
@@ -936,12 +1399,12 @@ cierren con las principales lecciones del proyecto.]
         }
       }
 
-      // En pantallas angostas: cerrar el menÃº al elegir una opciÃ³n
+      // En pantallas angostas: cerrar el menú al elegir una opción
       appLayout.classList.remove('sidebar-open');
     });
   });
 
-  // PÃ¡gina inicial: la que indique el hash de la URL, o la primera disponible
+  // Página inicial: la que indique el hash de la URL, o la primera disponible
   var inicial = listaIds[0];
   var hash = window.location.hash.slice(1);
   if (hash && paginas[hash]) inicial = hash;
@@ -952,9 +1415,9 @@ cierren con las principales lecciones del proyecto.]
 
 ```{=html}
 <!--
-Recordatorios de entrega (enunciado, secciÃ³n 5):
-  - Documento tÃ©cnico (15 %): Markdown -> HTML, repo pÃºblico de GitHub, con
-    cÃ³digo y datos (o enlace) â€” viernes 14 de agosto de 2026, 8:00 a.m.
+Recordatorios de entrega (enunciado, sección 5):
+  - Documento técnico (15 %): Markdown -> HTML, repo público de GitHub, con
+    código y datos (o enlace) — viernes 14 de agosto de 2026, 8:00 a.m.
   - Defensa oral grupal (10 %): viernes 14 de agosto de 2026; todos intervienen.
   - Video grupal en YouTube (5 %): viernes 14 de agosto de 2026, 12:00 m. d.
 -->

@@ -9,7 +9,7 @@ output:
     highlight: haddock
     self_contained: true
     code_folding: show
-    df_print: paged
+    df_print: kable
     fig_width: 8
     fig_height: 5
     toc: false
@@ -64,6 +64,7 @@ knitr::opts_chunk$set(
 
 # ---- Paquetes usados en el curso (código base — no borrar) ----
 library(dplyr)
+library(lubridate)     # manejo de fechas — usado en la pestaña SeoulBikeData
 library(ggplot2)
 library(GGally)        # ggpairs() para matrices de dispersión/correlación
 library(psych)         # KMO(), cortest.bartlett(), análisis factorial
@@ -157,97 +158,371 @@ de las técnicas/familias de modelos que se aplicarán en cada pestaña.]
 
 ## Introducción y pregunta de análisis {#s1-intro}
 
-[Contexto del conjunto de datos y la pregunta que se busca responder. Ej.:
-"¿Qué variables climáticas explican mejor la demanda horaria de bicicletas
-compartidas en Seúl, y es posible identificar perfiles de días con demanda
-similar?"]
+Seúl opera un sistema de bicicletas compartidas y registró, durante un año
+completo (diciembre 2017 – noviembre 2018), la cantidad de bicicletas
+rentadas cada hora junto con las condiciones climáticas de ese momento.
+Para la operación del sistema es clave anticipar la demanda con el fin de
+redistribuir la flota entre estaciones y evitar tanto faltantes como
+sobreoferta de bicicletas.
+
+**Pregunta de análisis:** ¿qué variables climáticas explican mejor la
+demanda horaria de bicicletas compartidas en Seúl, es posible identificar
+perfiles de días con demanda similar según el clima, y qué tan bien se
+puede pronosticar la demanda diaria a corto plazo a partir de su
+comportamiento histórico?
 
 ## Descripción de la base de datos {#s1-descripcion}
 
-**Fuente:** [autor(es), repositorio (Kaggle/UCI/otro), año, enlace y cita formal.]
+**Fuente:** Sathishkumar V E, Jangwoo Park y Yongyun Cho (2020). *Seoul
+Bike Sharing Demand* [Dataset]. UCI Machine Learning Repository.
+https://doi.org/10.24432/C5F62R — también disponible en Kaggle como
+`saurabhshahane/seoul-bike-sharing-demand-prediction`.
 
-**Licencia / acceso:** [ej. CC BY 4.0 — de acceso público y libre.]
+Cita de los autores originales (Mendeley Data): V E, Sathishkumar (2020),
+"Seoul Bike Sharing Demand Prediction", Mendeley Data, V2,
+doi: 10.17632/zbdtzxcxvg.2
 
-[Número de observaciones y variables; cuáles son numéricas y cuáles
-categóricas, y qué representa cada una en el contexto del problema.]
+**Licencia / acceso:** CC BY 4.0 — de acceso público y libre, con cita
+obligatoria a los autores.
+
+El conjunto contiene **8,760 observaciones** (una por cada hora de 365
+días) y **14 variables**:
+
+| Variable original | Variable en este documento | Significado | Tipo |
+|---|---|---|---|
+| Date | Fecha | Fecha del registro | Fecha |
+| Rented Bike Count | Bicis_Rentadas | Bicicletas rentadas en esa hora — **variable objetivo** | Numérica |
+| Hour | Hora | Hora del día (0-23) | Numérica |
+| Temperature(°C) | Temperatura | Temperatura | Numérica |
+| Humidity(%) | Humedad | Humedad relativa | Numérica |
+| Wind speed (m/s) | Velocidad_Viento | Velocidad del viento | Numérica |
+| Visibility (10m) | Visibilidad | Visibilidad | Numérica |
+| Dew point temperature(°C) | Punto_Rocio | Punto de rocío | Numérica |
+| Solar Radiation (MJ/m2) | Radiacion_Solar | Radiación solar | Numérica |
+| Rainfall(mm) | Lluvia | Lluvia acumulada | Numérica |
+| Snowfall (cm) | Nieve | Nieve acumulada | Numérica |
+| Seasons | Estacion | Estación del año | Categórica |
+| Holiday | Feriado | Feriado / No feriado | Categórica |
+| Functioning Day | Dia_Funcional | Si el sistema operaba esa hora (Yes/No) | Categórica |
 
 ## Extracción y preparación de los datos {#s1-extraccion}
 
 ```{r s1-carga}
-# Extracción y limpieza — Data/SeoulBikeData.csv
-# (carga, tipos de dato, duplicados, valores faltantes, escalado si aplica)
+# El archivo original trae el símbolo de grados (°) en los encabezados y
+# viene en codificación Latin-1/Windows-1252, no en UTF-8. Si se lee con
+# read.csv() normal, R puede truncar el nombre de columna en el símbolo °
+# o marcar error — por eso se indica fileEncoding = "latin1".
+datos_bici <- read.csv("Data/SeoulBikeData.csv",
+                        fileEncoding = "latin1",
+                        stringsAsFactors = FALSE)
 
+# Los nombres originales traen espacios, unidades y paréntesis
+# (ej. "Temperature(°C)"), lo que obliga a usar backticks todo el tiempo.
+# Se renombran a nombres cortos, en el MISMO ORDEN en que vienen en el csv:
+colnames(datos_bici) <- c("Fecha", "Bicis_Rentadas", "Hora", "Temperatura",
+                           "Humedad", "Velocidad_Viento", "Visibilidad",
+                           "Punto_Rocio", "Radiacion_Solar", "Lluvia",
+                           "Nieve", "Estacion", "Feriado", "Dia_Funcional")
+
+dim(datos_bici)
+str(datos_bici)
+summary(datos_bici)
+
+# Valores faltantes y duplicados
+colSums(is.na(datos_bici))
+sum(duplicated(datos_bici))
+
+# Tipos de dato
+datos_bici$Fecha <- lubridate::dmy(datos_bici$Fecha)  # formato original: dd/mm/aaaa
+datos_bici$Estacion      <- as.factor(datos_bici$Estacion)
+datos_bici$Feriado       <- as.factor(datos_bici$Feriado)
+datos_bici$Dia_Funcional <- as.factor(datos_bici$Dia_Funcional)
+
+table(datos_bici$Dia_Funcional)
+
+# Se descartan las horas en que el sistema estaba cerrado: en esas horas
+# Bicis_Rentadas es 0 por definición (el servicio no operaba), no porque
+# el clima haya sido malo. Dejarlas adentro sesgaría la regresión y el
+# clustering con ceros que no representan demanda real.
+datos_bici_func <- subset(datos_bici, Dia_Funcional == "Yes")
+nrow(datos_bici_func)
 ```
 
-[Interpretación: ¿hubo faltantes/duplicados?, ¿qué se convirtió a factor?,
-¿se estandarizó (scale) antes de alguna técnica?]
+[Interpretación: el conjunto tiene 8,760 observaciones y 14 variables, sin
+valores faltantes ni filas duplicadas. `Estacion`, `Feriado` y
+`Dia_Funcional` se convirtieron a factor por ser categóricas. Se excluyeron
+las horas con `Dia_Funcional == "No"` (sistema cerrado) para que la variable
+objetivo refleje demanda real; el escalado (`scale()`) de las variables
+climáticas se hace más adelante, específicamente para la Técnica 2
+(K-medias), que sí lo requiere.]
 
 ## Exploración de los datos (EDA) {#s1-eda}
 
 ```{r s1-eda}
-# Análisis exploratorio: distribuciones, correlaciones, gráficos
+# Distribución de la variable objetivo
+ggplot(datos_bici_func, aes(x = Bicis_Rentadas)) +
+  geom_histogram(bins = 30, fill = col_navy, color = "white") +
+  labs(title = "Distribución de bicicletas rentadas por hora",
+       x = "Bicicletas rentadas", y = "Frecuencia") +
+  theme_minimal()
 
+# Distribución de la temperatura
+ggplot(datos_bici_func, aes(x = Temperatura)) +
+  geom_histogram(bins = 30, fill = col_teal, color = "white") +
+  labs(title = "Distribución de la temperatura", x = "Temperatura (°C)",
+       y = "Frecuencia") +
+  theme_minimal()
+
+# Matriz de correlaciones entre variables numéricas
+num_vars_bici <- datos_bici_func %>%
+  select(Bicis_Rentadas, Temperatura, Humedad, Velocidad_Viento,
+         Visibilidad, Punto_Rocio, Radiacion_Solar, Lluvia, Nieve)
+
+round(cor(num_vars_bici), 3)
+
+# Demanda por estación del año y por hora del día
+ggplot(datos_bici_func, aes(x = Estacion, y = Bicis_Rentadas, fill = Estacion)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(title = "Demanda de bicicletas por estación del año",
+       x = "Estación", y = "Bicicletas rentadas") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggplot(datos_bici_func, aes(x = factor(Hora), y = Bicis_Rentadas)) +
+  geom_boxplot(fill = col_navy, alpha = 0.6, outlier.size = 0.5) +
+  labs(title = "Demanda de bicicletas por hora del día",
+       x = "Hora", y = "Bicicletas rentadas") +
+  theme_minimal()
 ```
 
-[Interpretación: variables más correlacionadas con la variable de interés,
-señales de multicolinealidad, hallazgos relevantes para elegir las técnicas.]
+[Interpretación: `Bicis_Rentadas` muestra una distribución sesgada a la
+derecha (muchas horas de demanda baja y pocas horas pico), mientras que
+`Temperatura` se ve más simétrica por cubrir un año completo con las
+cuatro estaciones. En la matriz de correlaciones, `Temperatura` y
+`Punto_Rocio` salen muy correlacionadas entre sí (ambas miden condiciones
+térmicas parecidas) — señal de multicolinealidad que se trata en la
+Técnica 1. `Bicis_Rentadas` correlaciona positivo con `Temperatura` y
+negativo con `Humedad`, `Lluvia` y `Nieve`: a mejor clima, más demanda. El
+boxplot por estación muestra mayor demanda en los meses cálidos y menor en
+invierno, y el boxplot por hora deja ver los picos típicos de un patrón de
+transporte (entrada y salida laboral) más que puramente recreativo.]
 
 ## Modelos aplicados {#s1-modelos}
 
-### Técnica 1 — [nombre de la técnica]
+### Técnica 1 — Regresión Lineal Múltiple
 
 <div class="justificacion">
-[¿Por qué esta técnica es apropiada para la pregunta de análisis?]
+La pregunta de análisis requiere **cuantificar** cómo cada variable
+climática (temperatura, humedad, viento, lluvia, etc.) afecta la cantidad
+de bicicletas rentadas por hora — una variable dependiente numérica
+continua. La Regresión Lineal Múltiple permite estimar el efecto
+individual de cada predictor manteniendo los demás constantes e
+identificar cuáles son estadísticamente significativos, igual que se hizo
+en el Laboratorio 3 del curso con las ventas de la cadena minorista.
 </div>
 
 ```{r s1-t1}
-# Código de la Técnica 1
+modelo_bici_completo <- lm(Bicis_Rentadas ~ Temperatura + Humedad +
+                              Velocidad_Viento + Visibilidad + Punto_Rocio +
+                              Radiacion_Solar + Lluvia + Nieve,
+                            data = datos_bici_func)
+summary(modelo_bici_completo)
+car::vif(modelo_bici_completo)
 
+# Temperatura y Punto_Rocio se comportan como variables redundantes entre
+# sí (igual que gasto_publicidad/trafico_web en el Laboratorio 3): se
+# conserva Temperatura, por ser la variable climática de referencia y más
+# fácil de interpretar, y se descarta Punto_Rocio.
+modelo_bici_final <- lm(Bicis_Rentadas ~ Temperatura + Humedad +
+                           Velocidad_Viento + Visibilidad +
+                           Radiacion_Solar + Lluvia + Nieve,
+                         data = datos_bici_func)
+summary(modelo_bici_final)
+car::vif(modelo_bici_final)
+
+AIC(modelo_bici_completo, modelo_bici_final)
+BIC(modelo_bici_completo, modelo_bici_final)
+
+par(mfrow = c(2, 2))
+plot(modelo_bici_final, col = col_navy, pch = 19, cex = 0.5)
+par(mfrow = c(1, 1))
+
+# Ejemplo de predicción: un día templado, soleado y sin lluvia ni nieve
+nueva_hora <- data.frame(Temperatura = 20, Humedad = 50,
+                          Velocidad_Viento = 2, Visibilidad = 1800,
+                          Radiacion_Solar = 1.5, Lluvia = 0, Nieve = 0)
+predict(modelo_bici_final, newdata = nueva_hora, interval = "prediction")
 ```
 
 <div class="interpretacion">
-[Interpretación de los resultados de la Técnica 1.]
+[Completar con los valores reales que arroje la corrida: R² ajustado del
+modelo final, cuáles predictores resultaron significativos (p < 0.05) y
+con qué signo — se espera que `Temperatura` y `Radiacion_Solar` empujen la
+demanda hacia arriba, y `Lluvia`/`Nieve` la reduzcan fuertemente —, si el
+VIF confirmó la multicolinealidad entre `Temperatura` y `Punto_Rocio`, y
+qué tan razonable resulta la predicción de ejemplo frente al rango real de
+`Bicis_Rentadas` observado en el EDA. Revisar también los cuatro gráficos
+de diagnóstico: es esperable algo de heterocedasticidad, porque la
+relación clima-demanda rara vez es perfectamente lineal — mencionarlo
+también en la Discusión de esta pestaña.]
 </div>
 
-### Técnica 2 — [nombre de la técnica]
+### Técnica 2 — K-medias
 
 <div class="justificacion">
-[Justificación de la Técnica 2.]
+Más allá de cuantificar el efecto de cada variable por separado, interesa
+identificar **perfiles completos de día** (combinaciones típicas de
+clima) para apoyar la logística de redistribución de bicicletas. K-medias
+agrupa observaciones según la similitud conjunta de varias variables
+numéricas sin necesitar una variable dependiente, igual que se hizo con
+los jugadores de fútbol y con los usuarios de StreamCR en los
+laboratorios de conglomerados del curso.
 </div>
 
 ```{r s1-t2}
-# Código de la Técnica 2
+# Se agrega la información a nivel de DÍA (no de hora), porque el interés
+# operativo es "qué tipo de día es este", no "qué tipo de hora es esta".
+diario_bici <- datos_bici_func %>%
+  group_by(Fecha) %>%
+  summarise(
+    Total_Bicis       = sum(Bicis_Rentadas),
+    Temp_prom         = mean(Temperatura),
+    Humedad_prom      = mean(Humedad),
+    Viento_prom       = mean(Velocidad_Viento),
+    Visibilidad_prom  = mean(Visibilidad),
+    Radiacion_prom    = mean(Radiacion_Solar),
+    Lluvia_total      = sum(Lluvia),
+    Nieve_total       = sum(Nieve),
+    Estacion          = first(Estacion),
+    .groups = "drop"
+  ) %>%
+  arrange(Fecha)
 
+nrow(diario_bici)  # debería rondar los 350-365 días
+
+vars_clima <- diario_bici %>%
+  select(Temp_prom, Humedad_prom, Viento_prom, Visibilidad_prom,
+         Radiacion_prom, Lluvia_total, Nieve_total)
+
+vars_clima_z <- scale(vars_clima)
+round(colMeans(vars_clima_z), 2)
+round(apply(vars_clima_z, 2, sd), 2)
+
+set.seed(123)
+fviz_nbclust(vars_clima_z, kmeans, method = "wss")
+```
+
+```{r s1-t2b}
+# Ajustar 'centers' al valor de k identificado en el gráfico del codo
+set.seed(123)
+modelo_km_bici <- kmeans(vars_clima_z, centers = 4, nstart = 25)
+modelo_km_bici
+
+diario_bici$Grupo <- factor(modelo_km_bici$cluster)
+table(diario_bici$Grupo)
+
+aggregate(cbind(Total_Bicis, Temp_prom, Humedad_prom, Viento_prom,
+                 Visibilidad_prom, Radiacion_prom, Lluvia_total,
+                 Nieve_total) ~ Grupo, data = diario_bici, FUN = mean)
+
+# Validación cruzada contra la estación real (Estacion NO se usó para
+# formar los grupos, solo clima), igual que en el laboratorio de fútbol
+table(diario_bici$Grupo, diario_bici$Estacion)
+
+fviz_cluster(modelo_km_bici,
+             data = vars_clima_z,
+             palette = c("#1F497D", "#C55A11", "#38761D", "#C0392B"),
+             ellipse.type = "convex",
+             ggtheme = theme_minimal(),
+             main = "Conglomerados de días según perfil climático")
 ```
 
 <div class="interpretacion">
-[Interpretación de los resultados de la Técnica 2.]
+[Completar con las medias reales de cada grupo: nombrar cada uno según su
+perfil (ej. "días cálidos y soleados de alta demanda", "días fríos y secos
+de baja demanda", "días de lluvia/nieve de demanda mínima"), en qué k se
+formó el codo, qué tan bien coincide cada grupo con una estación del año
+real según la tabla de validación cruzada, y qué tan claramente separados
+se ven los grupos en el gráfico de conglomerados.]
 </div>
 
-### Técnica 3 — [nombre de la técnica]
+### Técnica 3 — Series de Tiempo (Holt-Winters)
 
 <div class="justificacion">
-[Justificación de la Técnica 3.]
+La operación también necesita **pronosticar** cuántas bicicletas se van a
+rentar en los próximos días para planificar mantenimiento y
+redistribución, no solo explicar el pasado. La demanda diaria total
+muestra tendencia (crece hacia el verano) y un patrón que se repite cada
+semana (más o menos uso entre semana vs. fin de semana), por lo que un
+modelo de suavización exponencial con componente estacional
+(Holt-Winters) es apropiado, igual que en el laboratorio de series de
+tiempo del curso.
+
+**Nota sobre la frecuencia elegida:** a diferencia del laboratorio de
+ventas mensuales (que usó `frequency = 12` con dos años de datos), aquí
+solo se cuenta con **un año** de datos diarios. Usar `frequency = 12`
+dejaría un solo ciclo completo, insuficiente para que Holt-Winters estime
+esa estacionalidad de forma confiable. En cambio, con datos diarios sí hay
+de sobra — **52 semanas completas** — por lo que se usa `frequency = 7`
+para capturar la estacionalidad **semanal**, que además tiene más sentido
+operativo (patrón entre semana vs. fin de semana).
 </div>
 
 ```{r s1-t3}
-# Código de la Técnica 3
+serie_bici <- ts(diario_bici$Total_Bicis, frequency = 7)
 
+plot(serie_bici,
+     main = "Bicicletas rentadas por día — Seúl",
+     ylab = "Bicicletas rentadas", xlab = "Semana")
+
+desc_bici <- decompose(serie_bici, type = "additive")
+plot(desc_bici)
+
+ajuste_ses_bici  <- ses(serie_bici, h = 14)
+ajuste_holt_bici <- holt(serie_bici, h = 14)
+ajuste_hw_bici   <- hw(serie_bici, seasonal = "additive", h = 14)
+
+autoplot(ajuste_hw_bici) +
+  labs(title = "Pronóstico Holt-Winters — demanda diaria de bicicletas",
+       x = "Semana", y = "Bicicletas rentadas")
+
+cat("Modelo SES\n");          accuracy(ajuste_ses_bici)
+cat("Modelo Holt\n");         accuracy(ajuste_holt_bici)
+cat("Modelo Holt-Winters\n"); accuracy(ajuste_hw_bici)
 ```
 
 <div class="interpretacion">
-[Interpretación de los resultados de la Técnica 3.]
+[Completar con los valores reales de RMSE, MAE y MAPE de los tres modelos
+— se espera que Holt-Winters obtenga el menor error por ser el único que
+incorpora la estacionalidad semanal, igual que ocurrió con Holt-Winters
+frente a SES/Holt en el laboratorio de ventas del curso. Comentar también
+si el panel `trend` de la descomposición muestra el ascenso hacia el
+verano boreal y la caída hacia el invierno, si el panel `seasonal` repite
+el mismo patrón cada 7 días, y qué tan bien el pronóstico capta
+visualmente los picos y valles semanales al compararlo con la serie
+histórica.]
 </div>
 
 ## Resultados {#s1-resultados}
 
-[Síntesis de los resultados de las tres técnicas para este conjunto de datos,
-con gráficos o tablas de apoyo.]
+[Síntesis integrada de las tres técnicas para este conjunto de datos:
+retomar qué variables climáticas resultaron más influyentes en la
+regresión, qué perfiles de día identificó el K-medias y qué tan preciso
+resultó el pronóstico de Holt-Winters. Apoyar con los gráficos o tablas
+más representativos ya generados arriba — no repetir código nuevo aquí.]
 
 ## Discusión {#s1-discusion}
 
-[Significado de los resultados en el contexto del problema y limitaciones del
-análisis (tamaño de muestra, sesgos, supuestos no cumplidos, alcance).]
+[Significado de los resultados en el contexto de la pregunta de análisis
+planteada, y limitaciones propias de este conjunto de datos. Puntos a
+considerar: los datos son de una sola ciudad (Seúl) y un solo año
+(dic. 2017 – nov. 2018), por lo que las conclusiones no necesariamente se
+generalizan a otras ciudades o a años con clima atípico; la regresión
+asume relaciones lineales que probablemente simplifican de más una
+relación clima-demanda que en la realidad tiene umbrales (ej. debajo de
+cierta temperatura casi nadie renta, sin importar cuánto más baje); el
+pronóstico de Holt-Winters solo captura el patrón semanal, no eventos
+puntuales como festivales o cierres por mantenimiento.]
 
 <!-- ============================================================================
  PESTAÑA 3 — Conjunto de datos: ai_student_impact_dataset.csv
@@ -443,7 +718,9 @@ principales lecciones del proyecto.]
 
 # Referencias {.unnumbered #referencias}
 
-- [Cita del conjunto de datos 1 — SeoulBikeData]
+- Sathishkumar V E, Jangwoo Park y Yongyun Cho (2020). *Seoul Bike Sharing
+  Demand* [Dataset]. UCI Machine Learning Repository.
+  https://doi.org/10.24432/C5F62R — SeoulBikeData
 - [Cita del conjunto de datos 2 — ai_student_impact_dataset]
 - [Cita del conjunto de datos 3 — mental_health_burnout_prediction_dataset]
 - [Paquetes de R o fuentes teóricas citadas]

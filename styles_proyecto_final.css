@@ -1,299 +1,600 @@
 /* ============================================================================
    Hoja de estilos institucional — Proyecto Final BD-165
-   Basada en la plantilla rmdformats::material.
-   Paleta: azul marino institucional + gris pizarra + acento dorado sobrio.
+   Colegio Universitario de Cartago · Modelos Estadísticos Avanzados
+   Tema base: rmarkdown::html_document (sin paquetes extra) + menú lateral
+   propio en HTML/CSS/JS puro — no depende de temas de terceros ni de que el
+   equipo tenga instalado un paquete adicional de R.
+   ----------------------------------------------------------------------------
+   Paleta:  azul marino profundo + acero + latón (acento) sobre papel claro.
+   Tipos:   Source Serif 4 (títulos) · Source Sans 3 (texto) · JetBrains Mono.
    ============================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --azul-marino:      #1F3B57;   /* color primario — encabezados, sidebar   */
-  --azul-marino-osc:  #142838;   /* variante oscura — hover, degradados     */
-  --azul-acero:       #3D6690;   /* acento secundario                       */
-  --dorado:           #B08D2B;   /* acento — resaltados, activos            */
-  --gris-texto:       #2B2E33;   /* texto de cuerpo                         */
-  --gris-claro:       #F4F6F8;   /* fondos suaves                           */
-  --gris-borde:       #DDE3E9;   /* bordes de tablas y cajas                */
-  --blanco:           #FFFFFF;
+  /* Marca institucional */
+  --marino:        #16324F;   /* primario — títulos, barra lateral        */
+  --marino-osc:    #0E2438;   /* profundidad — degradado de portada       */
+  --acero:         #3D6690;   /* secundario — enlaces, detalles           */
+  --acero-claro:   #6E93B8;
+  --laton:         #B8862F;   /* acento — activos, filetes, resaltes       */
+  --laton-claro:   #D8B15A;
+
+  /* Neutros */
+  --tinta:         #1E2530;   /* texto de cuerpo                          */
+  --tinta-suave:   #4A566A;   /* texto secundario                         */
+  --papel:         #FFFFFF;
+  --niebla:        #F3F6F9;   /* fondos suaves                            */
+  --niebla-2:      #E9EFF4;
+  --borde:         #D7E0E8;
+
+  /* Layout */
+  --ancho-sidebar: 270px;
+
+  /* Escala tipográfica */
+  --fuente-titulo: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --fuente-texto:  'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  --fuente-mono:   'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+
+  --sombra-s: 0 1px 2px rgba(14, 36, 56, 0.06);
+  --sombra-m: 0 6px 22px rgba(14, 36, 56, 0.08);
+  --radio: 10px;
 }
 
 /* ============================================================================
-   CORRECCIÓN DE CONTRASTE
-   rmdformats::material atenúa (opacity) el texto que no está activo en el
-   scroll-spy como efecto de "profundidad". En la práctica deja casi todo el
-   documento semitransparente y difícil de leer. Se anula ese efecto aquí,
-   forzando opacidad completa en todo el contenido y la barra lateral.
+   0. BASE — reset del layout por defecto de rmarkdown::html_document
    ============================================================================ */
-body, .page-content, .page-inner, .book-body, .book-body .body-inner,
-.pages, .pages *, #sidebar, #sidebar *, .menu, .menu *, #toc, #toc *,
-.dropdown-toggle, .book-summary, p, li, td, th, dd, dt, h1, h2, h3, h4, h5, h6 {
-  opacity: 1 !important;
-  filter: none !important;
-  transition: color 0.15s ease, background-color 0.15s ease !important;
-}
+* { box-sizing: border-box; }
 
-
-/* ---------- Tipografía general ---------- */
 body {
-  font-family: 'Source Sans Pro', 'Segoe UI', Arial, sans-serif;
-  color: var(--gris-texto);
-  line-height: 1.65;
-  font-size: 16px;
-  text-align: justify;
+  font-family: var(--fuente-texto);
+  color: var(--tinta);
+  background: var(--niebla);
+  line-height: 1.72;
+  font-size: 16.5px;
+  letter-spacing: 0.1px;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: 'Merriweather', Georgia, 'Times New Roman', serif;
-  color: var(--azul-marino);
-  font-weight: 700;
+/* rmarkdown::html_document envuelve todo en .main-container centrado con
+   max-width fijo; lo anulamos porque nuestro layout maneja su propio ancho. */
+.main-container {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* El bloque de título/autor/fecha que genera pandoc automáticamente (#header)
+   queda oculto: usamos nuestra propia portada en HTML más abajo. */
+#header { display: none !important; }
+
+/* El botón flotante "Code ▾" que agrega code_folding: se deja, pero se
+   reubica para que no choche con el botón del menú en móvil. */
+.code-folding-btn { z-index: 40; }
+
+p { margin: 0 0 1.05em; color: var(--tinta); }
+.main-content p { text-align: justify; text-justify: inter-word; }
+
+a, a:focus {
+  color: var(--acero);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(61, 102, 144, 0.35);
+  transition: border-color .15s ease, color .15s ease;
+}
+a:hover { color: var(--marino); border-bottom-color: var(--laton); }
+
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--fuente-titulo);
+  color: var(--marino) !important;
+  font-weight: 600;
   text-align: left;
-  letter-spacing: 0.2px;
+  line-height: 1.25;
+  letter-spacing: -0.1px;
 }
 
-.h1, h1 {
+.main-content h1 {
+  font-size: 2.05rem;
   font-weight: 700;
-  border-bottom: 3px solid var(--dorado);
-  padding-bottom: 0.35em;
-  margin-top: 1.6em;
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--laton);
+}
+
+/* Ojal editorial: numera automáticamente los capítulos de nivel 1
+   (la estructura del informe ES una secuencia fija de secciones).         */
+.main-content { counter-reset: cap; }
+.main-content .section.level1:not(.unnumbered),
+.main-content section.level1:not(.unnumbered) { counter-increment: cap; }
+.main-content .section.level1:not(.unnumbered) > h1::before,
+.main-content section.level1:not(.unnumbered) > h1::before {
+  content: counter(cap) " · ";
+  color: var(--laton);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 h2 {
-  border-bottom: 1px solid var(--gris-borde);
-  padding-bottom: 0.25em;
-  margin-top: 1.4em;
+  font-size: 1.42rem;
+  margin: 2.1rem 0 0.8rem;
+  padding-bottom: 0.28rem;
+  border-bottom: 1px solid var(--borde);
 }
+h3 { font-size: 1.15rem; margin: 1.6rem 0 0.6rem; color: var(--acero) !important; }
+h4 { font-size: 1.02rem; color: var(--tinta) !important; }
 
-.h1 > .subtitle,
-h1 > .subtitle {
-  font-family: 'Source Sans Pro', Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--azul-acero);
-  border-bottom: none;
-}
-
-a, a:focus, a:hover {
-  color: var(--azul-acero);
-  text-decoration: none;
-  border-bottom: 1px dotted var(--azul-acero);
-}
-
-/* ---------- Panel de encabezado (título / autor / fecha) ---------- */
-.header-panel {
-  background: linear-gradient(135deg, var(--azul-marino) 0%, var(--azul-marino-osc) 100%);
-  border-bottom: 4px solid var(--dorado);
-}
-
-.header-panel h1,
-.header-panel .title,
-.header-panel .author,
-.header-panel .date {
-  color: var(--blanco) !important;
-  text-align: left;
-}
-
-.header-panel .subtitle {
-  color: #D7DEE6 !important;
-}
-
-/* ---------- Barra lateral / menú de navegación ---------- */
-#sidebar {
-  background-color: var(--azul-marino);
-}
-
-#sidebar h2 {
-  background-color: var(--azul-marino-osc);
-  color: var(--blanco);
-  font-family: 'Source Sans Pro', Arial, sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 13px;
-  letter-spacing: 0.6px;
-}
-
-.menu ul li a {
-  color: #EDF1F5 !important;
-  text-align: left;
-  border-bottom: none;
-  font-weight: 400;
-}
-
-.menu ul li a:hover,
-.menu ul li a:focus {
-  color: var(--blanco);
-  background-color: var(--azul-acero);
-}
-
-.menu ul li.active {
-  background-color: var(--dorado);
+/* ============================================================================
+   1. PORTADA — página propia, separada del menú y del contenido
+   ============================================================================ */
+.portada-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background:
+    radial-gradient(1100px 480px at 50% -10%, rgba(184,134,47,0.10), transparent 60%),
+    linear-gradient(180deg, var(--papel) 0%, var(--niebla) 100%);
+  border-bottom: 3px solid var(--laton);
+  box-shadow: var(--sombra-m);
   position: relative;
 }
-
-.menu ul li.active a {
-  color: var(--azul-marino-osc);
+.portada { text-align: center; padding: 0 1rem; max-width: 720px; }
+.portada .logo-cuc {
+  width: 150px;
+  height: auto;
+  border: none;
+  box-shadow: none;
+  margin: 0 auto 1.1rem;
+  display: block;
+}
+.portada-kicker {
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-size: 12px;
+  color: var(--acero);
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+}
+.portada-titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 2.7rem;
+  font-weight: 700;
+  color: var(--marino) !important;
+  border: none;
+  margin: 0.1rem 0;
+  padding: 0;
+  text-align: center;
+}
+.portada-subtitulo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.18rem;
+  color: var(--tinta);
+  max-width: 640px;
+  margin: 0.3rem auto 0.9rem;
+  text-align: center;
+}
+.portada-rule {
+  width: 84px;
+  height: 3px;
+  background: var(--laton);
+  border: none;
+  margin: 1rem auto 1.1rem;
+}
+.portada-meta {
+  color: var(--tinta-suave);
+  font-size: 0.96rem;
+  line-height: 1.55;
+  text-align: center;
+  margin: 0.2rem 0;
+}
+.portada-grupo {
   font-weight: 600;
+  color: var(--marino);
+  margin-top: 1rem;
+  text-align: center;
+}
+.portada-h {
+  font-family: var(--fuente-titulo);
+  color: var(--marino) !important;
+  text-align: center;
+  font-size: 1.3rem;
+  margin: 1.8rem 0 0.6rem;
+  border: none;
+}
+/* La tabla de integrantes va centrada y más compacta en la portada */
+.portada-integrantes { max-width: 560px; margin: 0.8rem auto 0.5rem; width: 100%; }
+.portada-integrantes th { background: var(--marino) !important; text-align: center; }
+.portada-integrantes td { text-align: center; }
+
+.portada-scroll {
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.4px;
+  color: var(--tinta-suave);
+  text-align: center;
+  animation: portada-flotar 2s ease-in-out infinite;
+}
+@keyframes portada-flotar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
 }
 
-/* ---------- Pestañas (tabset) ---------- */
-.nav-pills > li.active > a,
-.nav-pills > li.active > a:focus,
-.nav-pills > li.active > a:hover {
-  color: var(--blanco);
-  background-color: var(--azul-acero);
+/* ============================================================================
+   2. LAYOUT: MENÚ LATERAL FIJO + CONTENIDO
+   Reemplaza las "pestañas" del tema original por un menú lateral simple en
+   HTML/CSS/JS propio: siempre se genera, sin depender de temas de terceros.
+   ============================================================================ */
+.app-layout {
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+/* position: sticky (no fixed) a propósito: así el menú vive DENTRO del flujo
+   normal, justo después de la portada, y solo se "pega" al tope de la
+   pantalla cuando el usuario baja hasta esa zona. Esto es lo que separa de
+   verdad la portada del menú/contenido (con "fixed" el menú se montaría
+   encima de la portada desde el principio). */
+#sidebar.sidebar-nav {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: var(--ancho-sidebar);
+  flex: 0 0 var(--ancho-sidebar);
+  height: 100vh;
+  overflow-y: auto;
+  background: linear-gradient(180deg, var(--marino) 0%, var(--marino-osc) 100%);
+  color: #DCE7F1 !important;
+  padding: 1.6rem 0 2rem;
+  box-shadow: var(--sombra-m);
+  z-index: 30;
+  -webkit-font-smoothing: auto;
+}
+.sidebar-titulo {
+  color: #FFFFFF !important;
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 0 1.2rem 0.15rem;
+}
+.sidebar-subtitulo {
+  color: #AFC2D4 !important;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin: 0 1.2rem 1.3rem;
+}
+.sidebar-label {
+  color: #FFFFFF !important;
+  font-family: var(--fuente-texto);
   font-weight: 600;
+  text-transform: uppercase;
+  font-size: 15px;
+  letter-spacing: 1.1px;
+  margin: 0 1.2rem 0.6rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
 }
-
-.nav-pills > li > a {
-  color: var(--azul-marino);
-}
-
-/* ---------- Tabla de contenido flotante (#toc) ---------- */
-#toc .nav > li.active > a,
-#toc .nav > li.active > a:focus,
-#toc .nav > li.active > a:hover {
-  background-color: var(--dorado);
-  color: var(--azul-marino-osc);
-  font-weight: 600;
-}
-
-/* ---------- Cuerpo de página ---------- */
-.pages h1, .pages h2 {
-  color: var(--azul-marino) !important;
+#sidebar ul { list-style: none; margin: 0; padding: 0; }
+#sidebar ul li a {
+  display: block;
+  color: #DCE7F1 !important;
   text-align: left;
+  border-bottom: none !important;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.35;
+  padding: 0.6rem 1.2rem;
+  border-left: 3px solid transparent;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+#sidebar ul li a:hover, #sidebar ul li a:focus {
+  color: #FFFFFF !important;
+  background-color: rgba(255,255,255,0.06);
+  border-left-color: var(--acero-claro);
+}
+#sidebar ul li.active > a {
+  color: #FFFFFF !important;
+  font-weight: 600;
+  background-color: rgba(184, 134, 47, 0.16);
+  border-left-color: var(--laton);
 }
 
-p, .p {
-  text-align: justify;
-  color: var(--gris-texto) !important;
+/* Submenú: saltos a cada subtítulo (Introducción, Descripción, EDA, etc.)
+   dentro de una misma pestaña/dataset. Va indentado y en letra más chica. */
+#sidebar ul.sidebar-sub {
+  margin: 0.15rem 0 0.5rem;
+}
+#sidebar ul.sidebar-sub li a {
+  padding: 0.36rem 1.2rem 0.36rem 2.1rem;
+  font-size: 10rem !important; /* *** 0.83rem por 1rem ***** */
+  color: #AFC2D4 !important;
+  border-left-width: 2px;
+  position: relative;
+}
+#sidebar ul.sidebar-sub li a::before {
+  content: "";
+  position: absolute;
+  left: 1.35rem;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+  transform: translateY(-50%);
+}
+#sidebar ul.sidebar-sub li a:hover,
+#sidebar ul.sidebar-sub li a:focus {
+  color: #FFFFFF !important;
+}
+#sidebar ul.sidebar-sub li.active > a {
+  color: #FFFFFF !important;
+  font-weight: 600;
+  background-color: rgba(184, 134, 47, 0.12);
 }
 
-.col-xs-10 {
-  width: 100%;
+/* Botón para mostrar/ocultar el menú en pantallas angostas */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 50;
+  background: var(--marino);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  font-family: var(--fuente-texto);
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: var(--sombra-m);
+  cursor: pointer;
 }
 
-/* ---------- Tablas ---------- */
+.main-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 2.2rem 2.6rem 3rem;
+  max-width: none;
+}
+
+/* ============================================================================
+   3. TARJETAS DE CONTENIDO
+   ============================================================================ */
+.main-content .section.level1,
+.main-content section.level1 {
+  background: var(--papel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-s);
+  padding: 2.1rem 2.4rem 1.6rem;
+  margin: 0 0 1.6rem;
+}
+
+/* ============================================================================
+   4. TABLAS
+   ============================================================================ */
 .table, table {
   width: 100% !important;
-  overflow-x: auto;
-  border-collapse: collapse;
-  margin: 1.4em 0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.5em 0;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra-s);
+  font-size: 0.96em;
 }
-
 .table th, table th {
-  background-color: var(--azul-marino) !important;
-  color: var(--blanco) !important;
-  text-align: left;
-  font-family: 'Source Sans Pro', Arial, sans-serif;
+  background: var(--marino) !important;
+  color: #FFFFFF !important;
+  text-align: right !important;
+  font-family: var(--fuente-texto);
   font-weight: 600;
-  padding: 8px 12px;
+  letter-spacing: 0.2px;
+  padding: 0.7rem 1rem;
+  border: none;
 }
-
-.table td, .table th, table td, table th {
-  border: 1px solid var(--gris-borde);
-  padding: 8px 12px;
-  text-align: left;
-  background-color: var(--blanco);
-  color: var(--gris-texto) !important;
+.table td, table td {
+  border: none;
+  border-top: 1px solid var(--borde);
+  padding: 0.62rem 1rem;
+  background: var(--papel);
+  color: var(--tinta) !important;
 }
-
-/* Franjas alternadas — se aplica a CUALQUIER tabla (kable, paged, manual),
-   no solo a las que traen la clase .table-striped */
 .table tbody tr:nth-of-type(odd) td,
-table tbody tr:nth-of-type(odd) td {
-  background-color: var(--gris-claro);
+table tbody tr:nth-of-type(odd) td { background: var(--niebla); }
+.table tbody tr:hover td, table tbody tr:hover td {
+  background: var(--niebla-2) !important;
+  color: var(--tinta) !important;
 }
 
-/* Estado :hover — antes quedaba oscuro sobre oscuro; ahora se fija texto
-   y fondo explícitos para que nunca pierda contraste */
-.table tbody tr:hover td, .table tbody tr:hover th,
-table tbody tr:hover td, table tbody tr:hover th {
-  background-color: #E3E9F0 !important;
-  color: var(--gris-texto) !important;
-}
-
-td, th {
-  text-align: left;
-}
-
-/* ---------- Bloques de código y salidas de R ---------- */
+/* ============================================================================
+   5. CÓDIGO Y SALIDAS DE R
+   ============================================================================ */
 pre {
-  background-color: var(--gris-claro) !important;
-  border: 1px solid var(--gris-borde);
-  border-left: 4px solid var(--azul-acero);
-  border-radius: 3px;
-  padding: 10px 14px;
+  background: var(--niebla) !important;
+  color: var(--tinta) !important;
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--acero);
+  border-radius: 8px;
+  padding: 0.9rem 1.15rem;
+  font-family: var(--fuente-mono);
   font-size: 13.5px;
+  line-height: 1.6;
+  box-shadow: var(--sombra-s);
+  overflow-x: auto;
 }
+pre code { background: transparent; color: inherit; padding: 0; }
+
+/* Bloques de código fuente de R: filete dorado para distinguirlos */
+pre.sourceCode, pre.r, pre.hljs { border-left-color: var(--laton); }
 
 code {
-  font-family: 'Consolas', 'Courier New', monospace;
-  color: var(--azul-marino-osc);
-  background-color: var(--gris-claro);
-  border-radius: 2px;
+  font-family: var(--fuente-mono);
+  color: var(--marino);
+  background: var(--niebla-2);
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
 }
 
-pre code {
-  background-color: transparent;
-  color: inherit;
+/* Botón de plegado de código */
+.dropdown-toggle, .btn {
+  border-radius: 6px !important;
+  font-family: var(--fuente-texto);
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
-/* ---------- Bloque de "Justificación" (callout institucional) ---------- */
+/* ============================================================================
+   6. LLAMADAS: JUSTIFICACIÓN / INTERPRETACIÓN
+   ============================================================================ */
+.justificacion, .interpretacion {
+  padding: 1rem 1.25rem 1rem 1.4rem;
+  margin: 1.4rem 0;
+  border-radius: 0 8px 8px 0;
+  position: relative;
+}
 .justificacion {
-  background-color: #F0F4F8;
-  border-left: 4px solid var(--dorado);
-  padding: 0.9em 1.2em;
-  margin: 1.2em 0;
-  border-radius: 0 3px 3px 0;
+  background: #FBF6EA;
+  border-left: 4px solid var(--laton);
 }
-
-.justificacion strong:first-child {
-  color: var(--azul-marino);
-  font-family: 'Merriweather', Georgia, serif;
-}
-
-/* ---------- Bloque de "Interpretación" ---------- */
 .interpretacion {
-  background-color: var(--gris-claro);
-  border-left: 4px solid var(--azul-acero);
-  padding: 0.9em 1.2em;
-  margin: 1.2em 0 1.6em 0;
-  border-radius: 0 3px 3px 0;
-  font-style: italic;
+  background: var(--niebla);
+  border-left: 4px solid var(--acero);
 }
+.justificacion::before, .interpretacion::before {
+  display: block;
+  font-family: var(--fuente-texto);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+.justificacion::before { content: "Justificación"; color: var(--laton); }
+.interpretacion::before { content: "Interpretación"; color: var(--acero); }
+.justificacion p:last-child, .interpretacion p:last-child { margin-bottom: 0; }
+.justificacion strong:first-child { color: var(--marino); }
 
-/* ---------- Figuras ---------- */
+/* ============================================================================
+   7. FIGURAS, PIES Y CITAS
+   ============================================================================ */
 img {
-  border: 1px solid var(--gris-borde);
-  border-radius: 3px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  max-width: 100%;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  box-shadow: var(--sombra-s);
 }
+.portada img { border: none; box-shadow: none; }
 
 .caption, p.caption {
   font-style: italic;
-  color: var(--azul-acero);
+  color: var(--tinta-suave);
   text-align: center;
-  font-size: 13.5px;
+  font-size: 0.9em;
+  margin-top: 0.6rem;
 }
 
-/* ---------- Blockquotes ---------- */
 blockquote {
-  border-left: 4px solid var(--azul-marino);
-  color: var(--gris-texto);
-  background-color: var(--gris-claro);
-  padding: 0.6em 1.2em;
-  margin: 1.2em 0;
+  border-left: 4px solid var(--marino);
+  background: var(--niebla);
+  color: var(--tinta-suave);
+  padding: 0.7em 1.2em;
+  margin: 1.3em 0;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
 }
 
-/* ---------- Portada / tabla de integrantes ---------- */
-.portada-integrantes th {
-  background-color: var(--azul-marino);
+/* ============================================================================
+   8. PESTAÑAS (tabset) — subtítulos de cada dataset como botones tipo pastilla
+   Estas .nav-pills / .tab-content las genera automáticamente pandoc a partir
+   de los encabezados marcados con {.tabset .tabset-fade .tabset-pills} en el
+   .Rmd; aquí solo se ajusta su apariencia a la paleta institucional del resto
+   del documento (no requiere ningún paquete ni librería adicional).
+   ============================================================================ */
+.main-content .nav-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0 0 1rem;
+  border-bottom: 1px solid var(--borde);
+}
+.main-content .nav-pills > li { margin: 0; }
+.main-content .nav-pills > li > a {
+  display: inline-block;
+  padding: 0.5rem 1.15rem;
+  border-radius: 999px;
+  background: var(--niebla);
+  color: var(--tinta-suave) !important;
+  font-family: var(--fuente-texto);
+  font-weight: 600;
+  font-size: 2rem;
+  border: 1px solid var(--borde) !important;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.main-content .nav-pills > li > a:hover {
+  background: var(--niebla-2);
+  color: var(--marino) !important;
+}
+.main-content .nav-pills > li.active > a,
+.main-content .nav-pills > li.active > a:hover {
+  background: var(--marino);
+  color: #FFFFFF !important;
+  border-color: var(--marino) !important;
+}
+.main-content .tab-content { padding-top: 0.2rem; }
+
+/* ============================================================================
+   9. RESPONSIVE + IMPRESIÓN
+   ============================================================================ */
+@media (max-width: 900px) {
+  .sidebar-toggle { display: block; }
+
+  /* En móvil el menú pasa a "fixed" fuera de pantalla (panel deslizable),
+     controlado por el botón ☰; en escritorio sigue siendo sticky. */
+  #sidebar.sidebar-nav {
+    position: fixed;
+    top: 0;
+    left: calc(-1 * var(--ancho-sidebar));
+    height: 100vh;
+    transition: left .2s ease;
+  }
+  .app-layout.sidebar-open #sidebar.sidebar-nav { left: 0; }
+  .app-layout { display: block; }
+
+  .main-content {
+    width: 100%;
+    padding: 4.2rem 1.2rem 3rem;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  .main-content .section.level1, .main-content section.level1 { padding: 1.3rem 1.2rem; }
+  .main-content h1 { font-size: 1.7rem; }
+  body { font-size: 15.5px; }
+  .portada-titulo { font-size: 2.1rem; }
 }
 
-/* ---------- Impresión ---------- */
 @media print {
-  #sidebar, .header-panel .navbar { display: none; }
-  body { font-size: 12pt; }
-  a { color: var(--gris-texto); border-bottom: none; }
+  #sidebar, .sidebar-toggle, .dropdown-toggle, .code-folding-btn { display: none !important; }
+  .portada-page { min-height: 0; page-break-after: always; box-shadow: none; }
+  .portada-scroll { display: none; }
+  .main-content { margin-left: 0; width: 100%; max-width: none; }
+  body { font-size: 11.5pt; background: #fff; }
+  .main-content .section.level1, .main-content section.level1 { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  pre { background: #f5f5f5 !important; color: #111 !important; border: 1px solid #ccc; }
+  a { color: var(--tinta); border-bottom: none; }
 }

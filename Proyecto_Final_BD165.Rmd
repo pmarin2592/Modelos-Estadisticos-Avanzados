@@ -2,98 +2,55 @@
 title: "Proyecto Final"
 subtitle: "BD-165 · Modelos Estadísticos Avanzados de Análisis de Datos"
 author: "Grupo [N] — Colegio Universitario de Cartago"
-date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+date: "`r paste(format(Sys.Date(), '%d de'), c('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre')[as.integer(format(Sys.Date(), '%m'))], format(Sys.Date(), 'de %Y'))`"
 output:
-  rmdformats::material:
-    highlight: haddock
+  html_document:
     css: styles_proyecto_final.css
-    thumbnails: false
-    lightbox: true
+    highlight: haddock
     self_contained: true
     code_folding: show
-    df_print: paged
+    df_print: kable
     fig_width: 8
     fig_height: 5
+    toc: false
+lang: es
 ---
-
-<!--
-NOTA DE COMPILACIÓN: este documento usa el paquete `rmdformats` (tema
-`material`). Si RStudio marca error al compilar, instalarlo una sola vez
-con: install.packages("rmdformats")
-El archivo styles_proyecto_final.css debe vivir en la misma carpeta que
-este .Rmd para que el "Knit" lo encuentre.
--->
 
 <!--
 ============================================================================
  GUÍA RÁPIDA PARA EL GRUPO — leer antes de escribir
 ============================================================================
-1. Este .Rmd es la plantilla oficial del proyecto. Todos trabajamos SOBRE
-   este mismo archivo (o sobre ramas del repo) para que el documento final
-   tenga un formato consistente, sin importar quién escribió cada sección.
+1. Esta es la plantilla oficial. Todos trabajamos SOBRE este archivo (o
+   sobre ramas del repo) para que el formato final sea consistente.
 
-2. Estructura obligatoria (según el enunciado del proyecto, sección 5.1):
-     1. Introducción
-     2. Descripción de la base de datos
-     3. Exploración y preparación de los datos
-     4. Modelos aplicados (LAS TRES TÉCNICAS, cada una JUSTIFICADA)
-     5. Resultados
-     6. Discusión
-     7. Conclusiones
-   No borren ni reordenen estos encabezados de nivel 1 (#).
+2. ESTRUCTURA DE ESTE DOCUMENTO:
+     - Portada (con logo, título, integrantes).
+     - Introducción general (contexto del proyecto completo).
+     - Una PESTAÑA (encabezado #) por cada conjunto de datos (CSV), y dentro
+       de cada una: introducción, descripción, extracción, EDA, modelos,
+       resultados y discusión. Cada uno de esos subtítulos también aparece
+       como salto directo en el menú de la izquierda (subpestaña).
+     - Una pestaña final de "Conclusión general" que integra los tres análisis.
+     - Referencias.
 
-3. Reglas de oro:
-   - Cada técnica necesita un párrafo explícito de POR QUÉ es apropiada
-     para la pregunta de análisis (se penaliza en la rúbrica si falta).
-   - Todo bloque de código debe ser reproducible: no usar setwd() con
-     rutas locales; el .csv del dataset debe vivir en /datos dentro del
-     repositorio (o cargarse desde una URL pública).
-   - No dejar bloques de código sin su interpretación en prosa inmediatamente
-     después (así se hizo en todos los laboratorios del curso — sigan ese
-     estilo: salida -> interpretación en 2-4 líneas).
+3. REGLAS DE ORO (rúbrica del enunciado, sección 6):
+   - Cada técnica necesita un párrafo de JUSTIFICACIÓN (por qué es apropiada
+     para la pregunta). Si falta, se penaliza.
+   - Cada salida de código va seguida de su interpretación en 2-4 líneas.
+   - Todo debe ser reproducible: el .csv vive en /Data dentro del repositorio
+     (no usar rutas locales ni setwd()).
 
-4. Flujo de trabajo sugerido en GitHub:
-   - Repositorio PÚBLICO (requisito del punto 5.1 y del criterio de
-     rúbrica "Publicación en GitHub y reproducibilidad").
-   - Estructura de carpetas:
-       /datos              -> csv del dataset (o un README.md con el link
-                               a la fuente si el archivo es muy grande)
-       /Proyecto_Final_BD165.Rmd
-       /styles_proyecto_final.css  -> hoja de estilos institucional
-       /docs/index.html    -> salida de rmarkdown::render(), para GitHub Pages
-   - Cada quien trabaja en una rama (feature/nombre-seccion) y hace PR
-     hacia main. Evitar todos editando el mismo .Rmd al mismo tiempo en
-     main para no pisarse cambios.
-   - Para publicar el HTML con GitHub Pages: Settings -> Pages -> Source:
-     rama main, carpeta /docs.
+4. CÓMO COMPLETAR: reemplacen los [placeholders entre corchetes] y escriban
+   su código R dentro de los bloques ```{r ...}``` que están VACÍOS a
+   propósito. No borren la estructura de encabezados ni los {#id} que
+   acompañan a cada subtítulo (## ...) — esos id son los que usa el menú
+   de la izquierda para saltar directo a esa sección.
 
-5. Para compilar: botón "Knit" en RStudio, o en consola:
-     rmarkdown::render("Proyecto_Final_BD165.Rmd")
-   Requiere el paquete rmdformats (install.packages("rmdformats")) y que
-   styles_proyecto_final.css esté en la misma carpeta que el .Rmd.
-
-6. Reemplacen TODOS los [placeholders entre corchetes] y borren los
-   comentarios HTML (<!-- ... -->) de guía una vez que cada sección esté
-   redactada.
+5. Para compilar: botón "Knit" en RStudio. Solo necesita el paquete
+   "rmarkdown" (ya viene con RStudio, no hay que instalar nada extra) y que
+   estén en la misma carpeta: styles_proyecto_final.css  y  logo.png
 ============================================================================
 -->
-
-## Integrantes del grupo
-
-<!--
-rmdformats::material solo despliega un autor en el panel superior, así
-que la nómina completa del grupo va en esta tabla — es lo que además pide
-la rúbrica de la defensa oral: "todos deben intervenir".
-Completar carné y rol de cada quien.
--->
-
-| Integrante | Carné | Rol principal en el proyecto |
-|---|---|---|
-| [Nombre completo] | [Carné] | [ej. Recolección y limpieza de datos] |
-| [Nombre completo] | [Carné] | [ej. Técnica 1 — Regresión] |
-| [Nombre completo] | [Carné] | [ej. Técnica 2 — K-medias] |
-| [Nombre completo] | [Carné] | [ej. Técnica 3 — Series de tiempo] |
-| [Nombre completo] | [Carné] | [ej. Redacción, discusión y video] |
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -105,120 +62,513 @@ knitr::opts_chunk$set(
   fig.height = 5
 )
 
-# ---- Paquetes usados en el curso (descomentar/agregar según la técnica) ----
+# ---- Paquetes usados en el curso (código base — no borrar) ----
 library(dplyr)
+library(lubridate)     # manejo de fechas — usado en la pestaña SeoulBikeData
 library(ggplot2)
-library(GGally)       # ggpairs() para matrices de dispersión/correlación
+library(GGally)        # ggpairs() para matrices de dispersión/correlación
 library(psych)         # KMO(), cortest.bartlett(), análisis factorial
 library(factoextra)    # fviz_nbclust(), fviz_cluster()
-library(car)            # vif(), leveneTest()
-library(gvlma)          # verificación global de supuestos de regresión
-library(forecast)       # ses(), holt(), hw(), accuracy(), autoplot() [series de tiempo]
+library(car)           # vif(), leveneTest()
+library(gvlma)         # verificación global de supuestos de regresión
+library(forecast)      # ses(), holt(), hw(), accuracy() [series de tiempo]
 
 # Paleta institucional reutilizada de los laboratorios del curso
-col_navy <- "#1F497D"
+col_navy <- "#16324F"
 col_teal <- "#38761D"
 ```
 
-# Introducción
+<!-- ============================================================================
+ PORTADA — página propia, independiente del menú/contenido de abajo
+============================================================================ -->
+<div class="portada-page">
 
-<!--
-Contexto + objetivos + LA PREGUNTA DE ANÁLISIS que el proyecto busca
-responder. 1-2 párrafos. Ejemplo de estructura:
-  - ¿Qué problema u organización motiva el análisis?
-  - ¿Qué se quiere predecir, segmentar o comparar?
-  - ¿Por qué estas variables/este dataset son relevantes para esa pregunta?
--->
-
-[Redactar introducción. Ejemplo de pregunta de análisis: "¿Qué variables
-climáticas explican mejor la demanda horaria de bicicletas compartidas en
-Seúl, y es posible identificar perfiles de días con demanda similar para
-apoyar la planificación de flota?"]
-
-# Descripción de la base de datos
-
-<!--
-Fuente (con cita completa y enlace), número de observaciones, número y
-tipo de variables, unidad de medida de cada variable relevante, y por qué
-el dataset es de acceso libre y legal.
--->
-
-**Fuente:** [Nombre del dataset, autor(es), repositorio (Kaggle/UCI/otro),
-año, enlace, y cita formal — ej. formato UCI: `Autor (Año). Nombre del
-Dataset [Dataset]. UCI Machine Learning Repository. https://doi.org/...`]
-
-**Licencia / acceso:** [ej. CC BY 4.0 — de acceso público y libre]
-
-```{r cargar-datos}
-# Ajustar el nombre de archivo/ruta según lo acordado en /datos del repo
-datos <- read.csv("Data/ai_student_impact_dataset.csv")
-
-dim(datos)      # observaciones x variables
-str(datos)
-summary(datos)
-```
-
-[Describir en prosa: cuántas observaciones y variables tiene, cuáles son
-numéricas y cuáles categóricas, y qué representa cada una en el contexto
-del problema.]
-
-# Exploración y preparación de los datos
-
-<!--
-Limpieza (duplicados, tipos de dato mal cargados), valores faltantes,
-outliers, escalado/estandarización si aplica, matriz de correlaciones.
-Sigan el estilo de los laboratorios: cada salida con su interpretación.
--->
-
-## Valores faltantes y tipos de dato
-
-```{r limpieza}
-colSums(is.na(datos))
-
-# Conversión de variables categóricas a factor, ej.:
-# datos$variable_categorica <- as.factor(datos$variable_categorica)
-```
-
-[Interpretación: ¿hay datos faltantes? ¿qué se hizo con ellos? ¿qué
-columnas se convirtieron a factor y por qué?]
-
-## Análisis exploratorio (distribución y correlaciones)
-
-```{r eda}
-# Histogramas / distribución de las variables numéricas clave
-# (ver Laboratorio 1 como referencia de estilo)
-
-# Matriz de correlaciones
-num_vars <- datos %>% select(where(is.numeric))
-round(cor(num_vars), 3)
-```
-
-[Interpretación: ¿qué variables están más correlacionadas con la variable
-de interés? ¿hay señales de multicolinealidad que deban tratarse más
-adelante? ¿se necesita estandarizar (scale()) antes de aplicar alguna de
-las tres técnicas — por ejemplo si se va a hacer clustering?]
-
-# Modelos aplicados
-
-<!--
-====================================================================
- ESTA ES LA SECCIÓN MÁS IMPORTANTE DE LA RÚBRICA (5/5 puntos).
- Cada técnica va en su propia sub-sección con este orden fijo:
-   1) Justificación (por qué esta técnica y no otra)
-   2) Código y salida
-   3) Interpretación de la salida
- NO se puede aplicar una técnica sin su párrafo de justificación.
-====================================================================
--->
-
-## Técnica 1 — [Nombre de la técnica, ej. Regresión Lineal Múltiple]
-
-<div class="justificacion">
-**Justificación:** [¿Por qué es apropiada para la pregunta de análisis?
-¿Qué tipo de variable dependiente/independientes lo requieren?]
+<div class="portada">
+<img src="logo.png" class="logo-cuc" alt="Colegio Universitario de Cartago">
+<p class="portada-kicker">Colegio Universitario de Cartago</p>
+<p class="portada-titulo">Proyecto Final</p>
+<p class="portada-subtitulo">BD-165 · Modelos Estadísticos Avanzados de Análisis de Datos</p>
+<hr class="portada-rule">
+<p class="portada-meta">Diplomado en Big Data · Escuela de Ciencias de la Computación<br>
+Prof. David Martínez Salazar</p>
 </div>
 
-```{r tecnica-1}
+<p class="portada-h">Integrantes del grupo</p>
+
+<div class="portada-integrantes">
+
+| Integrante | 
+|---|
+| Desmond Bermudez Rodriguez |
+| Nubia Elena Brenes Valerín |
+| Pablo Marin Castillo |
+| Wedell Orozco González |
+| Kendall Solano Solís |
+
+</div>
+
+<p class="portada-scroll">Desplácese para ver el contenido ↓</p>
+
+</div>
+<!-- / .portada-page -->
+
+<!-- ============================================================================
+ A partir de aquí: menú lateral fijo (siempre visible, sin JavaScript de temas
+ externos) + contenido. Cada pestaña principal (dataset) muestra debajo, en el
+ menú, un salto directo a cada uno de sus subtítulos (Introducción, EDA, etc.)
+============================================================================ -->
+<button id="sidebarToggle" class="sidebar-toggle" aria-label="Abrir/cerrar menú" onclick="document.getElementById('appLayout').classList.toggle('sidebar-open')">☰ Contenido</button>
+
+<div class="app-layout" id="appLayout">
+
+<nav id="sidebar" class="sidebar-nav">
+<p class="sidebar-titulo">Proyecto Final</p>
+<p class="sidebar-subtitulo">BD-165 · Modelos Estadísticos Avanzados</p>
+<p class="sidebar-label">Contenido</p>
+<ul>
+<li><a href="#introduccion-general">1 · Introducción general</a></li>
+<li><a href="#seoulbikedata">2 · SeoulBikeData</a></li>
+<li><a href="#ai-student-impact-dataset">3 · ai_student_impact_dataset</a></li>
+<li><a href="#mental-health-burnout-dataset">4 · mental_health_burnout_prediction_dataset</a></li>
+<li><a href="#conclusion-general">5 · Conclusión general</a></li>
+<li><a href="#referencias">Referencias</a></li>
+</ul>
+</nav>
+
+<div class="main-content">
+
+<!-- ============================================================================
+ INTRODUCCIÓN GENERAL — contexto del proyecto completo (los tres datasets)
+============================================================================ -->
+# Introducción general {#introduccion-general}
+
+[Contexto general del proyecto: qué problema(s) se aborda(n), por qué se
+eligieron estos tres conjuntos de datos, y cómo se relacionan entre sí.]
+
+[Objetivo general del proyecto.]
+
+[Breve resumen de cada conjunto de datos (una o dos líneas por cada uno) y
+de las técnicas/familias de modelos que se aplicarán en cada pestaña.]
+
+<!-- ============================================================================
+ PESTAÑA 2 — Conjunto de datos: SeoulBikeData.csv
+ Responsable: [nombre del compañero/a]
+============================================================================ -->
+# SeoulBikeData {#seoulbikedata .tabset .tabset-fade .tabset-pills}
+
+## Introducción y pregunta de análisis {#s1-intro}
+
+Seúl opera un sistema de bicicletas compartidas y registró, durante un año
+completo (diciembre 2017 – noviembre 2018), la cantidad de bicicletas
+rentadas cada hora junto con las condiciones climáticas de ese momento.
+Para la operación del sistema es clave anticipar la demanda con el fin de
+redistribuir la flota entre estaciones y evitar tanto faltantes como
+sobreoferta de bicicletas.
+
+**Pregunta de análisis:** ¿qué variables climáticas explican mejor la
+demanda horaria de bicicletas compartidas en Seúl, es posible identificar
+perfiles de días con demanda similar según el clima, y qué tan bien se
+puede pronosticar la demanda diaria a corto plazo a partir de su
+comportamiento histórico?
+
+## Descripción de la base de datos {#s1-descripcion}
+
+**Fuente:** Sathishkumar V E, Jangwoo Park y Yongyun Cho (2020). *Seoul
+Bike Sharing Demand* [Dataset]. UCI Machine Learning Repository.
+https://doi.org/10.24432/C5F62R — también disponible en Kaggle como
+`saurabhshahane/seoul-bike-sharing-demand-prediction`.
+
+Cita de los autores originales (Mendeley Data): V E, Sathishkumar (2020),
+"Seoul Bike Sharing Demand Prediction", Mendeley Data, V2,
+doi: 10.17632/zbdtzxcxvg.2
+
+**Licencia / acceso:** CC BY 4.0 — de acceso público y libre, con cita
+obligatoria a los autores.
+
+El conjunto contiene **8,760 observaciones** (una por cada hora de 365
+días) y **14 variables**:
+
+| Variable original | Variable en este documento | Significado | Tipo |
+|---|---|---|---|
+| Date | Fecha | Fecha del registro | Fecha |
+| Rented Bike Count | Bicis_Rentadas | Bicicletas rentadas en esa hora — **variable objetivo** | Numérica |
+| Hour | Hora | Hora del día (0-23) | Numérica |
+| Temperature(°C) | Temperatura | Temperatura | Numérica |
+| Humidity(%) | Humedad | Humedad relativa | Numérica |
+| Wind speed (m/s) | Velocidad_Viento | Velocidad del viento | Numérica |
+| Visibility (10m) | Visibilidad | Visibilidad | Numérica |
+| Dew point temperature(°C) | Punto_Rocio | Punto de rocío | Numérica |
+| Solar Radiation (MJ/m2) | Radiacion_Solar | Radiación solar | Numérica |
+| Rainfall(mm) | Lluvia | Lluvia acumulada | Numérica |
+| Snowfall (cm) | Nieve | Nieve acumulada | Numérica |
+| Seasons | Estacion | Estación del año | Categórica |
+| Holiday | Feriado | Feriado / No feriado | Categórica |
+| Functioning Day | Dia_Funcional | Si el sistema operaba esa hora (Yes/No) | Categórica |
+
+## Extracción y preparación de los datos {#s1-extraccion}
+
+```{r s1-carga}
+# El archivo original trae el símbolo de grados (°) en los encabezados y
+# viene en codificación Latin-1/Windows-1252, no en UTF-8. Si se lee con
+# read.csv() normal, R puede truncar el nombre de columna en el símbolo °
+# o marcar error — por eso se indica fileEncoding = "latin1".
+datos_bici <- read.csv("Data/SeoulBikeData.csv",
+                        fileEncoding = "latin1",
+                        stringsAsFactors = FALSE)
+
+# Los nombres originales traen espacios, unidades y paréntesis
+# (ej. "Temperature(°C)"), lo que obliga a usar backticks todo el tiempo.
+# Se renombran a nombres cortos, en el MISMO ORDEN en que vienen en el csv:
+colnames(datos_bici) <- c("Fecha", "Bicis_Rentadas", "Hora", "Temperatura",
+                           "Humedad", "Velocidad_Viento", "Visibilidad",
+                           "Punto_Rocio", "Radiacion_Solar", "Lluvia",
+                           "Nieve", "Estacion", "Feriado", "Dia_Funcional")
+
+dim(datos_bici)
+str(datos_bici)
+summary(datos_bici)
+
+# Valores faltantes y duplicados
+colSums(is.na(datos_bici))
+sum(duplicated(datos_bici))
+
+# Tipos de dato
+datos_bici$Fecha <- lubridate::dmy(datos_bici$Fecha)  # formato original: dd/mm/aaaa
+datos_bici$Estacion      <- as.factor(datos_bici$Estacion)
+datos_bici$Feriado       <- as.factor(datos_bici$Feriado)
+datos_bici$Dia_Funcional <- as.factor(datos_bici$Dia_Funcional)
+
+table(datos_bici$Dia_Funcional)
+
+# Se descartan las horas en que el sistema estaba cerrado: en esas horas
+# Bicis_Rentadas es 0 por definición (el servicio no operaba), no porque
+# el clima haya sido malo. Dejarlas adentro sesgaría la regresión y el
+# clustering con ceros que no representan demanda real.
+datos_bici_func <- subset(datos_bici, Dia_Funcional == "Yes")
+nrow(datos_bici_func)
+```
+
+[Interpretación: el conjunto tiene 8,760 observaciones y 14 variables, sin
+valores faltantes ni filas duplicadas. `Estacion`, `Feriado` y
+`Dia_Funcional` se convirtieron a factor por ser categóricas. Se excluyeron
+las horas con `Dia_Funcional == "No"` (sistema cerrado) para que la variable
+objetivo refleje demanda real; el escalado (`scale()`) de las variables
+climáticas se hace más adelante, específicamente para la Técnica 2
+(K-medias), que sí lo requiere.]
+
+## Exploración de los datos (EDA) {#s1-eda}
+
+```{r s1-eda}
+# Distribución de la variable objetivo
+ggplot(datos_bici_func, aes(x = Bicis_Rentadas)) +
+  geom_histogram(bins = 30, fill = col_navy, color = "white") +
+  labs(title = "Distribución de bicicletas rentadas por hora",
+       x = "Bicicletas rentadas", y = "Frecuencia") +
+  theme_minimal()
+
+# Distribución de la temperatura
+ggplot(datos_bici_func, aes(x = Temperatura)) +
+  geom_histogram(bins = 30, fill = col_teal, color = "white") +
+  labs(title = "Distribución de la temperatura", x = "Temperatura (°C)",
+       y = "Frecuencia") +
+  theme_minimal()
+
+# Matriz de correlaciones entre variables numéricas
+num_vars_bici <- datos_bici_func %>%
+  select(Bicis_Rentadas, Temperatura, Humedad, Velocidad_Viento,
+         Visibilidad, Punto_Rocio, Radiacion_Solar, Lluvia, Nieve)
+
+round(cor(num_vars_bici), 3)
+
+# Demanda por estación del año y por hora del día
+ggplot(datos_bici_func, aes(x = Estacion, y = Bicis_Rentadas, fill = Estacion)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(title = "Demanda de bicicletas por estación del año",
+       x = "Estación", y = "Bicicletas rentadas") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggplot(datos_bici_func, aes(x = factor(Hora), y = Bicis_Rentadas)) +
+  geom_boxplot(fill = col_navy, alpha = 0.6, outlier.size = 0.5) +
+  labs(title = "Demanda de bicicletas por hora del día",
+       x = "Hora", y = "Bicicletas rentadas") +
+  theme_minimal()
+```
+
+[Interpretación: `Bicis_Rentadas` muestra una distribución sesgada a la
+derecha (muchas horas de demanda baja y pocas horas pico), mientras que
+`Temperatura` se ve más simétrica por cubrir un año completo con las
+cuatro estaciones. En la matriz de correlaciones, `Temperatura` y
+`Punto_Rocio` salen muy correlacionadas entre sí (ambas miden condiciones
+térmicas parecidas) — señal de multicolinealidad que se trata en la
+Técnica 1. `Bicis_Rentadas` correlaciona positivo con `Temperatura` y
+negativo con `Humedad`, `Lluvia` y `Nieve`: a mejor clima, más demanda. El
+boxplot por estación muestra mayor demanda en los meses cálidos y menor en
+invierno, y el boxplot por hora deja ver los picos típicos de un patrón de
+transporte (entrada y salida laboral) más que puramente recreativo.]
+
+## Modelos aplicados {#s1-modelos}
+
+### Técnica 1 — Regresión Lineal Múltiple
+
+<div class="justificacion">
+La pregunta de análisis requiere **cuantificar** cómo cada variable
+climática (temperatura, humedad, viento, lluvia, etc.) afecta la cantidad
+de bicicletas rentadas por hora — una variable dependiente numérica
+continua. La Regresión Lineal Múltiple permite estimar el efecto
+individual de cada predictor manteniendo los demás constantes e
+identificar cuáles son estadísticamente significativos, igual que se hizo
+en el Laboratorio 3 del curso con las ventas de la cadena minorista.
+</div>
+
+```{r s1-t1}
+modelo_bici_completo <- lm(Bicis_Rentadas ~ Temperatura + Humedad +
+                              Velocidad_Viento + Visibilidad + Punto_Rocio +
+                              Radiacion_Solar + Lluvia + Nieve,
+                            data = datos_bici_func)
+summary(modelo_bici_completo)
+car::vif(modelo_bici_completo)
+
+# Temperatura y Punto_Rocio se comportan como variables redundantes entre
+# sí (igual que gasto_publicidad/trafico_web en el Laboratorio 3): se
+# conserva Temperatura, por ser la variable climática de referencia y más
+# fácil de interpretar, y se descarta Punto_Rocio.
+modelo_bici_final <- lm(Bicis_Rentadas ~ Temperatura + Humedad +
+                           Velocidad_Viento + Visibilidad +
+                           Radiacion_Solar + Lluvia + Nieve,
+                         data = datos_bici_func)
+summary(modelo_bici_final)
+car::vif(modelo_bici_final)
+
+AIC(modelo_bici_completo, modelo_bici_final)
+BIC(modelo_bici_completo, modelo_bici_final)
+
+par(mfrow = c(2, 2))
+plot(modelo_bici_final, col = col_navy, pch = 19, cex = 0.5)
+par(mfrow = c(1, 1))
+
+# Ejemplo de predicción: un día templado, soleado y sin lluvia ni nieve
+nueva_hora <- data.frame(Temperatura = 20, Humedad = 50,
+                          Velocidad_Viento = 2, Visibilidad = 1800,
+                          Radiacion_Solar = 1.5, Lluvia = 0, Nieve = 0)
+predict(modelo_bici_final, newdata = nueva_hora, interval = "prediction")
+```
+
+<div class="interpretacion">
+[Completar con los valores reales que arroje la corrida: R² ajustado del
+modelo final, cuáles predictores resultaron significativos (p < 0.05) y
+con qué signo — se espera que `Temperatura` y `Radiacion_Solar` empujen la
+demanda hacia arriba, y `Lluvia`/`Nieve` la reduzcan fuertemente —, si el
+VIF confirmó la multicolinealidad entre `Temperatura` y `Punto_Rocio`, y
+qué tan razonable resulta la predicción de ejemplo frente al rango real de
+`Bicis_Rentadas` observado en el EDA. Revisar también los cuatro gráficos
+de diagnóstico: es esperable algo de heterocedasticidad, porque la
+relación clima-demanda rara vez es perfectamente lineal — mencionarlo
+también en la Discusión de esta pestaña.]
+</div>
+
+### Técnica 2 — K-medias
+
+<div class="justificacion">
+Más allá de cuantificar el efecto de cada variable por separado, interesa
+identificar **perfiles completos de día** (combinaciones típicas de
+clima) para apoyar la logística de redistribución de bicicletas. K-medias
+agrupa observaciones según la similitud conjunta de varias variables
+numéricas sin necesitar una variable dependiente, igual que se hizo con
+los jugadores de fútbol y con los usuarios de StreamCR en los
+laboratorios de conglomerados del curso.
+</div>
+
+```{r s1-t2}
+# Se agrega la información a nivel de DÍA (no de hora), porque el interés
+# operativo es "qué tipo de día es este", no "qué tipo de hora es esta".
+diario_bici <- datos_bici_func %>%
+  group_by(Fecha) %>%
+  summarise(
+    Total_Bicis       = sum(Bicis_Rentadas),
+    Temp_prom         = mean(Temperatura),
+    Humedad_prom      = mean(Humedad),
+    Viento_prom       = mean(Velocidad_Viento),
+    Visibilidad_prom  = mean(Visibilidad),
+    Radiacion_prom    = mean(Radiacion_Solar),
+    Lluvia_total      = sum(Lluvia),
+    Nieve_total       = sum(Nieve),
+    Estacion          = first(Estacion),
+    .groups = "drop"
+  ) %>%
+  arrange(Fecha)
+
+nrow(diario_bici)  # debería rondar los 350-365 días
+
+vars_clima <- diario_bici %>%
+  select(Temp_prom, Humedad_prom, Viento_prom, Visibilidad_prom,
+         Radiacion_prom, Lluvia_total, Nieve_total)
+
+vars_clima_z <- scale(vars_clima)
+round(colMeans(vars_clima_z), 2)
+round(apply(vars_clima_z, 2, sd), 2)
+
+set.seed(123)
+fviz_nbclust(vars_clima_z, kmeans, method = "wss")
+```
+
+```{r s1-t2b}
+# Ajustar 'centers' al valor de k identificado en el gráfico del codo
+set.seed(123)
+modelo_km_bici <- kmeans(vars_clima_z, centers = 4, nstart = 25)
+modelo_km_bici
+
+diario_bici$Grupo <- factor(modelo_km_bici$cluster)
+table(diario_bici$Grupo)
+
+aggregate(cbind(Total_Bicis, Temp_prom, Humedad_prom, Viento_prom,
+                 Visibilidad_prom, Radiacion_prom, Lluvia_total,
+                 Nieve_total) ~ Grupo, data = diario_bici, FUN = mean)
+
+# Validación cruzada contra la estación real (Estacion NO se usó para
+# formar los grupos, solo clima), igual que en el laboratorio de fútbol
+table(diario_bici$Grupo, diario_bici$Estacion)
+
+fviz_cluster(modelo_km_bici,
+             data = vars_clima_z,
+             palette = c("#1F497D", "#C55A11", "#38761D", "#C0392B"),
+             ellipse.type = "convex",
+             ggtheme = theme_minimal(),
+             main = "Conglomerados de días según perfil climático")
+```
+
+<div class="interpretacion">
+[Completar con las medias reales de cada grupo: nombrar cada uno según su
+perfil (ej. "días cálidos y soleados de alta demanda", "días fríos y secos
+de baja demanda", "días de lluvia/nieve de demanda mínima"), en qué k se
+formó el codo, qué tan bien coincide cada grupo con una estación del año
+real según la tabla de validación cruzada, y qué tan claramente separados
+se ven los grupos en el gráfico de conglomerados.]
+</div>
+
+### Técnica 3 — Series de Tiempo (Holt-Winters)
+
+<div class="justificacion">
+La operación también necesita **pronosticar** cuántas bicicletas se van a
+rentar en los próximos días para planificar mantenimiento y
+redistribución, no solo explicar el pasado. La demanda diaria total
+muestra tendencia (crece hacia el verano) y un patrón que se repite cada
+semana (más o menos uso entre semana vs. fin de semana), por lo que un
+modelo de suavización exponencial con componente estacional
+(Holt-Winters) es apropiado, igual que en el laboratorio de series de
+tiempo del curso.
+
+**Nota sobre la frecuencia elegida:** a diferencia del laboratorio de
+ventas mensuales (que usó `frequency = 12` con dos años de datos), aquí
+solo se cuenta con **un año** de datos diarios. Usar `frequency = 12`
+dejaría un solo ciclo completo, insuficiente para que Holt-Winters estime
+esa estacionalidad de forma confiable. En cambio, con datos diarios sí hay
+de sobra — **52 semanas completas** — por lo que se usa `frequency = 7`
+para capturar la estacionalidad **semanal**, que además tiene más sentido
+operativo (patrón entre semana vs. fin de semana).
+</div>
+
+```{r s1-t3}
+serie_bici <- ts(diario_bici$Total_Bicis, frequency = 7)
+
+plot(serie_bici,
+     main = "Bicicletas rentadas por día — Seúl",
+     ylab = "Bicicletas rentadas", xlab = "Semana")
+
+desc_bici <- decompose(serie_bici, type = "additive")
+plot(desc_bici)
+
+ajuste_ses_bici  <- ses(serie_bici, h = 14)
+ajuste_holt_bici <- holt(serie_bici, h = 14)
+ajuste_hw_bici   <- hw(serie_bici, seasonal = "additive", h = 14)
+
+autoplot(ajuste_hw_bici) +
+  labs(title = "Pronóstico Holt-Winters — demanda diaria de bicicletas",
+       x = "Semana", y = "Bicicletas rentadas")
+
+cat("Modelo SES\n");          accuracy(ajuste_ses_bici)
+cat("Modelo Holt\n");         accuracy(ajuste_holt_bici)
+cat("Modelo Holt-Winters\n"); accuracy(ajuste_hw_bici)
+```
+
+<div class="interpretacion">
+[Completar con los valores reales de RMSE, MAE y MAPE de los tres modelos
+— se espera que Holt-Winters obtenga el menor error por ser el único que
+incorpora la estacionalidad semanal, igual que ocurrió con Holt-Winters
+frente a SES/Holt en el laboratorio de ventas del curso. Comentar también
+si el panel `trend` de la descomposición muestra el ascenso hacia el
+verano boreal y la caída hacia el invierno, si el panel `seasonal` repite
+el mismo patrón cada 7 días, y qué tan bien el pronóstico capta
+visualmente los picos y valles semanales al compararlo con la serie
+histórica.]
+</div>
+
+## Resultados {#s1-resultados}
+
+[Síntesis integrada de las tres técnicas para este conjunto de datos:
+retomar qué variables climáticas resultaron más influyentes en la
+regresión, qué perfiles de día identificó el K-medias y qué tan preciso
+resultó el pronóstico de Holt-Winters. Apoyar con los gráficos o tablas
+más representativos ya generados arriba — no repetir código nuevo aquí.]
+
+## Discusión {#s1-discusion}
+
+[Significado de los resultados en el contexto de la pregunta de análisis
+planteada, y limitaciones propias de este conjunto de datos. Puntos a
+considerar: los datos son de una sola ciudad (Seúl) y un solo año
+(dic. 2017 – nov. 2018), por lo que las conclusiones no necesariamente se
+generalizan a otras ciudades o a años con clima atípico; la regresión
+asume relaciones lineales que probablemente simplifican de más una
+relación clima-demanda que en la realidad tiene umbrales (ej. debajo de
+cierta temperatura casi nadie renta, sin importar cuánto más baje); el
+pronóstico de Holt-Winters solo captura el patrón semanal, no eventos
+puntuales como festivales o cierres por mantenimiento.]
+
+<!-- ============================================================================
+ PESTAÑA 3 — Conjunto de datos: ai_student_impact_dataset.csv
+ Responsable: [nombre del compañero/a]
+============================================================================ -->
+# ai_student_impact_dataset {#ai-student-impact-dataset .tabset .tabset-fade .tabset-pills}
+
+## Introducción y pregunta de análisis {#s2-intro}
+
+[Contexto del conjunto de datos y la pregunta de análisis.]
+
+## Descripción de la base de datos {#s2-descripcion}
+
+**Fuente:** [autor(es), repositorio, año, enlace y cita formal.]
+
+**Licencia / acceso:** [ej. CC BY 4.0.]
+
+[Número de observaciones y variables; tipo y significado de cada una.]
+
+## Extracción y preparación de los datos {#s2-extraccion}
+
+```{r s2-carga}
+# Extracción y limpieza — Data/ai_student_impact_dataset.csv
+
+```
+
+[Interpretación de la limpieza y preparación.]
+
+## Exploración de los datos (EDA) {#s2-eda}
+
+```{r s2-eda}
+# Análisis exploratorio: distribuciones, correlaciones, gráficos
+
+```
+
+[Interpretación del EDA.]
+
+## Modelos aplicados {#s2-modelos}
+
+### Técnica 1 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 1.]
+</div>
+
+```{r s2-t1}
 # Código de la Técnica 1
 
 ```
@@ -227,13 +577,13 @@ las tres técnicas — por ejemplo si se va a hacer clustering?]
 [Interpretación de los resultados de la Técnica 1.]
 </div>
 
-## Técnica 2 — [Nombre de la técnica, ej. K-medias]
+### Técnica 2 — [nombre de la técnica]
 
 <div class="justificacion">
-**Justificación:** [...]
+[Justificación de la Técnica 2.]
 </div>
 
-```{r tecnica-2}
+```{r s2-t2}
 # Código de la Técnica 2
 
 ```
@@ -242,13 +592,13 @@ las tres técnicas — por ejemplo si se va a hacer clustering?]
 [Interpretación de los resultados de la Técnica 2.]
 </div>
 
-## Técnica 3 — [Nombre de la técnica, ej. Series de Tiempo / Holt-Winters]
+### Técnica 3 — [nombre de la técnica]
 
 <div class="justificacion">
-**Justificación:** [...]
+[Justificación de la Técnica 3.]
 </div>
 
-```{r tecnica-3}
+```{r s2-t3}
 # Código de la Técnica 3
 
 ```
@@ -257,52 +607,213 @@ las tres técnicas — por ejemplo si se va a hacer clustering?]
 [Interpretación de los resultados de la Técnica 3.]
 </div>
 
-# Resultados
+## Resultados {#s2-resultados}
+
+[Síntesis de los resultados de las tres técnicas para este conjunto de datos.]
+
+## Discusión {#s2-discusion}
+
+[Significado de los resultados y limitaciones del análisis.]
+
+<!-- ============================================================================
+ PESTAÑA 4 — Conjunto de datos: mental_health_burnout_prediction_dataset.csv
+ Responsable: [nombre del compañero/a]
+============================================================================ -->
+# mental_health_burnout_prediction_dataset {#mental-health-burnout-dataset .tabset .tabset-fade .tabset-pills}
+
+## Introducción y pregunta de análisis {#s3-intro}
+
+[Contexto del conjunto de datos y la pregunta de análisis.]
+
+## Descripción de la base de datos {#s3-descripcion}
+
+**Fuente:** [autor(es), repositorio, año, enlace y cita formal.]
+
+**Licencia / acceso:** [ej. CC BY 4.0.]
+
+[Número de observaciones y variables; tipo y significado de cada una.]
+
+## Extracción y preparación de los datos {#s3-extraccion}
+
+```{r s3-carga}
+# Extracción y limpieza — Data/mental_health_burnout_prediction_dataset.csv
+
+```
+
+[Interpretación de la limpieza y preparación.]
+
+## Exploración de los datos (EDA) {#s3-eda}
+
+```{r s3-eda}
+# Análisis exploratorio: distribuciones, correlaciones, gráficos
+
+```
+
+[Interpretación del EDA.]
+
+## Modelos aplicados {#s3-modelos}
+
+### Técnica 1 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 1.]
+</div>
+
+```{r s3-t1}
+# Código de la Técnica 1
+
+```
+
+<div class="interpretacion">
+[Interpretación de los resultados de la Técnica 1.]
+</div>
+
+### Técnica 2 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 2.]
+</div>
+
+```{r s3-t2}
+# Código de la Técnica 2
+
+```
+
+<div class="interpretacion">
+[Interpretación de los resultados de la Técnica 2.]
+</div>
+
+### Técnica 3 — [nombre de la técnica]
+
+<div class="justificacion">
+[Justificación de la Técnica 3.]
+</div>
+
+```{r s3-t3}
+# Código de la Técnica 3
+
+```
+
+<div class="interpretacion">
+[Interpretación de los resultados de la Técnica 3.]
+</div>
+
+## Resultados {#s3-resultados}
+
+[Síntesis de los resultados de las tres técnicas para este conjunto de datos.]
+
+## Discusión {#s3-discusion}
+
+[Significado de los resultados y limitaciones del análisis.]
+
+<!-- ============================================================================
+ CONCLUSIÓN GENERAL
+============================================================================ -->
+# Conclusión general {#conclusion-general}
+
+[Conclusión que integra los hallazgos de los tres conjuntos de datos y
+responde, de forma conjunta, a las preguntas de análisis planteadas. Conecten
+los resultados de las técnicas aplicadas en cada pestaña y cierren con las
+principales lecciones del proyecto.]
+
+# Referencias {.unnumbered #referencias}
+
+- Sathishkumar V E, Jangwoo Park y Yongyun Cho (2020). *Seoul Bike Sharing
+  Demand* [Dataset]. UCI Machine Learning Repository.
+  https://doi.org/10.24432/C5F62R — SeoulBikeData
+- [Cita del conjunto de datos 2 — ai_student_impact_dataset]
+- [Cita del conjunto de datos 3 — mental_health_burnout_prediction_dataset]
+- [Paquetes de R o fuentes teóricas citadas]
+
+</div>
+<!-- / .main-content -->
+
+</div>
+<!-- / .app-layout -->
+
+<script>
+// ============================================================================
+// Navegación por "páginas": cada pestaña principal (h1: Introducción general,
+// cada dataset, Conclusión, Referencias) se muestra de a una, como si fueran
+// páginas independientes — igual que el menú lateral de rmdformats::material.
+// Dentro de cada dataset, los subtítulos (Introducción, EDA, Modelos, etc.)
+// ya vienen convertidos en botones tipo pestaña (pills) por el propio pandoc,
+// gracias a la clase {.tabset .tabset-fade .tabset-pills} en su encabezado —
+// no se agregó ninguna librería nueva, solo se usa lo que pandoc/Bootstrap ya
+// incluye en el documento.
+// ============================================================================
+(function () {
+  var sidebar = document.getElementById('sidebar');
+  var appLayout = document.getElementById('appLayout');
+
+  // Todas las "páginas" = secciones de nivel 1 dentro del contenido principal
+  var paginas = {};
+  var listaIds = [];
+  document.querySelectorAll('.main-content > .section.level1, .main-content > section.level1')
+    .forEach(function (sec) {
+      if (sec.id) { paginas[sec.id] = sec; listaIds.push(sec.id); }
+    });
+
+  function mostrarPagina(id) {
+    if (!paginas[id]) return;
+    listaIds.forEach(function (pid) {
+      paginas[pid].style.display = (pid === id) ? '' : 'none';
+    });
+    // Resalta en el menú SOLO la pestaña principal activa (como una "página")
+    sidebar.querySelectorAll(':scope > ul > li').forEach(function (li) {
+      var a = li.querySelector(':scope > a');
+      li.classList.toggle('active', !!a && a.getAttribute('href') === '#' + id);
+    });
+    // No usar scrollTo(0,0): eso sube hasta la portada, que está ANTES del
+    // menú en el documento. En su lugar nos quedamos al tope del propio
+    // layout (menú + contenido), justo debajo de la portada.
+    var topLayout = appLayout.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({ top: topLayout, left: 0, behavior: 'auto' });
+  }
+
+  // Enlaces del menú lateral (principales y subtítulos)
+  var enlaces = sidebar.querySelectorAll('a[href^="#"]');
+  enlaces.forEach(function (a) {
+    a.addEventListener('click', function (evt) {
+      var id = a.getAttribute('href').slice(1);
+      evt.preventDefault();
+
+      if (paginas[id]) {
+        // Es una pestaña principal: cambiar de "página"
+        mostrarPagina(id);
+      } else {
+        // Es un subtítulo (ahora es una pestaña/tab dentro de su página):
+        // 1) mostrar la página a la que pertenece, 2) activar esa pestaña
+        var destino = document.getElementById(id);
+        if (!destino) return;
+        var paginaPadre = destino.closest('.section.level1, section.level1');
+        if (paginaPadre && paginas[paginaPadre.id]) mostrarPagina(paginaPadre.id);
+
+        var botonTab = document.querySelector('a[data-toggle="tab"][href="#' + id + '"]');
+        if (botonTab && window.jQuery) {
+          window.jQuery(botonTab).tab('show');
+        } else if (destino) {
+          destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      // En pantallas angostas: cerrar el menú al elegir una opción
+      appLayout.classList.remove('sidebar-open');
+    });
+  });
+
+  // Página inicial: la que indique el hash de la URL, o la primera disponible
+  var inicial = listaIds[0];
+  var hash = window.location.hash.slice(1);
+  if (hash && paginas[hash]) inicial = hash;
+  if (inicial) mostrarPagina(inicial);
+})();
+</script>
 
 <!--
-Síntesis integrada de las tres técnicas: gráficos finales, tablas
-comparativas, hallazgos principales. No repetir el código ya mostrado
-arriba — esta sección es la lectura conjunta de lo que arrojaron las
-tres técnicas.
--->
-
-[Redactar síntesis de resultados con gráficos/tablas de apoyo si hace
-falta.]
-
-# Discusión
-
-<!--
-Significado de los resultados en el contexto del problema planteado en
-la introducción, y LIMITACIONES del análisis (tamaño de muestra, sesgos
-del dataset, supuestos que no se cumplieron del todo, alcance temporal
-o geográfico de los datos, etc.). Este criterio pesa 3 puntos en la
-rúbrica y penaliza si no hay autocrítica.
--->
-
-[Redactar discusión crítica.]
-
-# Conclusiones
-
-<!--
-3-5 oraciones que respondan directamente la pregunta de análisis de la
-introducción, conectando los tres resultados.
--->
-
-[Redactar conclusiones.]
-
-# Referencias
-
-- [Cita del dataset]
-- [Cualquier paquete de R con función poco común, o fuente teórica citada]
-
----
-
-<!--
-Recordatorios de entrega (no borrar hasta después del 14 de agosto 2026):
-  - Documento técnico (15%): Markdown -> HTML, repo público de GitHub,
-    con código y datos (o enlace a la fuente) — viernes 14 de agosto, 8:00 a.m.
-  - Defensa oral grupal (10%): viernes 14 de agosto, todos deben intervenir.
-  - Video individual en YouTube (5%): viernes 14 de agosto, 12:00 m.d.
-    (si alguien no lo entrega a tiempo, pierde también el derecho a la
-    defensa oral).
+Recordatorios de entrega (enunciado, sección 5):
+  - Documento técnico (15 %): Markdown -> HTML, repo público de GitHub, con
+    código y datos (o enlace) — viernes 14 de agosto de 2026, 8:00 a.m.
+  - Defensa oral grupal (10 %): viernes 14 de agosto de 2026; todos intervienen.
+  - Video grupal en YouTube (5 %): viernes 14 de agosto de 2026, 12:00 m. d.
 -->

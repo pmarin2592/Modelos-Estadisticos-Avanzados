@@ -48,7 +48,6 @@ Este proyecto integra las técnicas de análisis multivariado estudiadas en el c
 - Construir perfiles mixtos de estudiantes combinando variables numéricas y categóricas mediante **K-Prototypes** (distancia de Gower).
 - Evaluar el efecto conjunto de variables laborales y digitales sobre el perfil sintomático de burnout mediante **MANOVA**, complementado con regresión múltiple y **K-Means**.
 - Documentar cada modelo con verificación explícita de supuestos, interpretación conceptual de resultados y reproducibilidad total del pipeline de datos.
-- Definir un framework de *prompting* estructurado para análisis de sentimiento de comentarios de clientes como módulo complementario de NLP.
 
 ---
 
@@ -194,10 +193,6 @@ Data/*.csv (SeoulBikeData · ai_student_impact · mental_health_burnout)
 - **MANOVA** — efecto conjunto de predictores laborales/digitales sobre el perfil sintomático multivariado.
 - **Regresión Lineal Múltiple** — estimación de niveles de agotamiento, comparando modelo completo vs. modelo reducido.
 - **K-Means** — segmentación de perfiles de riesgo de burnout.
-
-### Módulo NLP — Análisis de Sentimiento (SmarTech)
-
-- Framework de *prompting* estructurado (rol · contexto · tarea por etapas · formato de salida) para clasificar comentarios de clientes de la empresa costarricense SmarTech en Positivo, Negativo o Neutral.
 
 ---
 

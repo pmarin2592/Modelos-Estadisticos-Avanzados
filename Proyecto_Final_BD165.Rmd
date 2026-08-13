@@ -187,13 +187,13 @@ Desplácese para ver el contenido ↓
 
 <li><a href="#introduccion-general">1 · Introducción general</a></li>
 
-<li><a href="#seoulbikedata">2 · SeoulBikeData</a></li>
+<li><a href="#seoulbikedata">2 · Sistema de bicicletas compartidas</a></li>
 
 <li><a href="#ai-student-impact-dataset">3 ·
-ai_student_impact_dataset</a></li>
+ Estudiantes en el uso de la IA</a></li>
 
 <li><a href="#mental-health-burnout-dataset">4 ·
-mental_health_burnout_prediction_dataset</a></li>
+Salud Mental burnout</a></li>
 
 <li><a href="#conclusion-general">5 · Conclusión general</a></li>
 
@@ -213,22 +213,20 @@ mental_health_burnout_prediction_dataset</a></li>
 
 # Introducción general {#introduccion-general}
 
-[Contexto general del proyecto: qué problema(s) se aborda(n), por qué se
-eligieron estos tres conjuntos de datos, y cómo se relacionan entre sí.]
+El presente proyecto aplica un conjunto de técnicas estadísticas avanzadas —modelos de regresión, análisis multivariados, métodos de agrupamiento y modelos de series de tiempo— sobre tres conjuntos de datos públicos que documentan fenómenos de comportamiento humano en contextos distintos: la movilidad urbana, el desempeño académico mediado por el uso de inteligencia artificial generativa, y el bienestar laboral frente a la sobrecarga digital. Los tres conjuntos se seleccionaron porque, pese a pertenecer a dominios diferentes, comparten una misma estructura de problema: variables cuantitativas y categóricas que describen el comportamiento o estado de un individuo (usuario, estudiante o colaborador) en un momento o intervalo de tiempo, sobre las cuales interesa identificar relaciones explicativas, perfiles homogéneos de comportamiento y, cuando la naturaleza de los datos lo permite, patrones temporales.
 
-[Objetivo general del proyecto.]
+El objetivo general del proyecto es aplicar de forma justificada al menos tres técnicas estadísticas por conjunto de datos —seleccionadas según la pregunta de análisis y la naturaleza de las variables disponibles—, interpretando cada salida en función del problema real que representa y discutiendo el alcance y las limitaciones de los hallazgos obtenidos.
 
-[Breve resumen de cada conjunto de datos (una o dos líneas por cada uno)
-y de las técnicas/familias de modelos que se aplicarán en cada pestaña.]
+El primer conjunto, **SeoulBikeData**, reúne 8,760 registros horarios sobre la demanda de un sistema de bicicletas compartidas en Seúl junto con variables climáticas; sobre él se aplican regresión lineal múltiple, agrupamiento K-medias y suavización exponencial Holt-Winters para explicar, segmentar y pronosticar la demanda. El segundo, **ai_student_impact_dataset**, describe hábitos de estudio, uso de IA generativa y desempeño de estudiantes; se analiza mediante análisis factorial exploratorio y confirmatorio y agrupamiento k-prototypes, dada la mezcla de variables numéricas y categóricas. El tercero, **mental_health_burnout_prediction_dataset**, contiene 50,000 observaciones sobre carga laboral, exposición a pantallas y síntomas de agotamiento; se aborda con MANOVA, regresión lineal múltiple y K-medias para determinar el efecto conjunto de las variables sobre el perfil sintomático y segmentar niveles de riesgo.
 
 ```{=html}
 <!-- ============================================================================
  PESTAÑA 2 — Conjunto de datos: SeoulBikeData.csv
- Responsable: [nombre del compañero/a]
+ Responsable: Pablo Marin Castillo
 ============================================================================ -->
 ```
 
-# SeoulBikeData {#seoulbikedata .tabset .tabset-fade .tabset-pills}
+# Sistema de bicicletas compartidas {#seoulbikedata .tabset .tabset-fade .tabset-pills}
 
 ## Introducción y pregunta de análisis {#s1-intro}
 
@@ -653,7 +651,7 @@ El hallazgo más relevante es que el clima, aunque significativo, no es suficien
 ```{=html}
 <!-- ============================================================================
  PESTAÑA 3 — Conjunto de datos: ai_student_impact_dataset.csv
- Responsable: [nombre del compañero/a]
+ Responsable: Desmond
 ============================================================================ -->
 ```
 
@@ -732,7 +730,7 @@ variables_categoricas_doc <- c(
 )
 ```
 
-# ai_student_impact_dataset {#ai-student-impact-dataset .tabset .tabset-fade .tabset-pills}
+# Estudiantes en el uso de la IA {#ai-student-impact-dataset .tabset .tabset-fade .tabset-pills}
 
 ## Introducción y pregunta de análisis {#s2-intro}
 
@@ -2864,11 +2862,11 @@ deben considerarse al interpretar diferencias entre perfiles.
 ```{=html}
 <!-- ============================================================================
  PESTAÑA 4 — Conjunto de datos: mental_health_burnout_prediction_dataset.csv
- Responsable: [nombre del compañero/a]
+ Responsable: Nubia
 ============================================================================ -->
 ```
 
-# mental_health_burnout_prediction_dataset {#mental-health-burnout-dataset .tabset .tabset-fade .tabset-pills}
+# Salud Mental burnout {#mental-health-burnout-dataset .tabset .tabset-fade .tabset-pills}
 
 ## Introducción y pregunta de análisis {#s3-intro}
 
@@ -3424,10 +3422,11 @@ directamente a una población laboral real sin validación adicional.
 
 # Conclusión general {#conclusion-general}
 
-[Conclusión que integra los hallazgos de los tres conjuntos de datos y
-responde, de forma conjunta, a las preguntas de análisis planteadas.
-Conecten los resultados de las técnicas aplicadas en cada pestaña y
-cierren con las principales lecciones del proyecto.]
+Los tres análisis, aunque abordan fenómenos distintos, convergen en una misma lección metodológica: los modelos estadísticos aplicados explican una parte real y estadísticamente significativa del comportamiento estudiado, pero ninguno agota por completo la variabilidad observada, lo cual es consistente con la naturaleza multicausal de los fenómenos humanos analizados.
+
+En **SeoulBikeData**, la regresión, el K-medias y Holt-Winters mostraron que el clima —en particular temperatura y lluvia— influye de forma significativa en la demanda de bicicletas, pero deja sin explicar más de la mitad de la varianza horaria (R² ajustado = 0.432) y produce pronósticos con un error considerable (MAPE ≈ 43 %), lo que apunta a que variables de calendario no climáticas (hora, día de la semana, feriados) tienen un peso relevante en la demanda real. En **ai_student_impact_dataset**, el análisis factorial identificó dos dimensiones interpretables —carga psicoacadémica asociada al uso de IA y competencia técnica autopercibida— confirmadas con buen ajuste en el AFC (CFI = 0.991, RMSEA = 0.033), y la segmentación k-prototypes describió seis perfiles de estudiantes, aunque con una separación limitada (silueta = 0.196) que obliga a leerlos como una síntesis exploratoria y no como categorías estables; el diseño observacional impide, además, establecer causalidad entre el uso de IA y los resultados académicos. En **mental_health_burnout_prediction_dataset**, el MANOVA y la regresión coincidieron en que la carga horaria y la exposición a pantallas se asocian con mayor agotamiento y que dormir más actúa como factor protector, con un ajuste alto (R² ajustado ≈ 0.858); sin embargo, tanto el equilibrio vida-trabajo autorreportado como los clústeres de riesgo no correlacionaron con otras variables del estudio, lo que —sumado al carácter transversal y posiblemente sintético del conjunto— matiza los hallazgos como una demostración metodológica más que como evidencia extrapolable a una población laboral real.
+
+En conjunto, las tres pestañas responden a sus respectivas preguntas de análisis: sí es posible identificar variables explicativas relevantes, perfiles de comportamiento diferenciados y, en el caso de la serie de tiempo, un pronóstico de corto plazo, pero en los tres casos con una calidad de ajuste moderada y con la advertencia constante de que la asociación estadística no implica causalidad. La principal lección transversal del proyecto es que la selección de la técnica debe subordinarse a la pregunta de análisis y a la naturaleza de los datos (continuos, categóricos, temporales), y que la interpretación de cualquier salida —por sólida que parezca su significancia estadística— exige contrastarla con las limitaciones del diseño (observacional, transversal, de una sola ciudad o de un solo año) antes de derivar recomendaciones prácticas.
 
 # Referencias {#referencias .unnumbered}
 
@@ -3440,7 +3439,7 @@ cierren con las principales lecciones del proyecto.]
 - Fatima, M. (2026). *Mental Health & Burnout Prediction Dataset*
   [Dataset]. Kaggle. Licencia Community Data License Agreement (CC BY
   4.0) — mental_health_burnout_prediction_dataset
-- [Paquetes de R o fuentes teóricas citadas]
+
 
 <!-- / .main-content -->
 ::::::::::::::::::::::

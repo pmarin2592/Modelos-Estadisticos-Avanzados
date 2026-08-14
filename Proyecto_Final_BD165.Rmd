@@ -1901,7 +1901,7 @@ un único indicador no deben interpretarse como estructuras confirmadas.
 ### Análisis factorial exploratorio final
 
 
-```{r afe-final, echo=FALSE, cache=TRUE, cache.extra=data_signature, dependson='funciones'}
+```{r afe-final, echo=FALSE, cache=FALSE, dependson='funciones'}
 variables_factor_ia <- c(
   "Weekly_GenAI_Hours",
   "Perceived_AI_Dependency",
@@ -2563,6 +2563,15 @@ rasgos_distintivos <- resumen_numerico_final |>
   ) |>
   summarise(Rasgos_distintivos = paste(Rasgo, collapse = "; "), .groups = "drop")
 
+nombres_perfiles_finales <- c(
+  "1" = "Usuarios intensivos de IA con alta habilidad técnica",
+  "2" = "Usuarios moderados de IA con desempeño académico estable",
+  "3" = "Estudiantes con rendimiento y retención superiores y uso moderado de IA",
+  "4" = "Usuarios poco intensivos de IA con habilidad técnica inferior",
+  "5" = "Usuarios intensivos y dependientes con baja habilidad técnica y retención",
+  "6" = "Usuarios moderados-bajos de IA con rendimiento académico inferior"
+)
+
 tabla_perfiles_finales <- tibble(
   Numero_Grupo = seq_len(candidato_seleccionado$k),
   Frecuencia = as.integer(table(factor(
@@ -2574,7 +2583,7 @@ tabla_perfiles_finales <- tibble(
   left_join(rasgos_distintivos, by = "Numero_Grupo") |>
   mutate(
     Etiqueta_Grupo = paste0(
-      tools::toTitleCase(Rasgos_distintivos),
+      unname(nombres_perfiles_finales[as.character(Numero_Grupo)]),
       " (G", Numero_Grupo, ")"
     )
   ) |>
@@ -2764,6 +2773,222 @@ estandarizadas inferiores a 0.10 DE se consideran cercanas al promedio; entre
 moderadas. Esto evita convertir contrastes numéricamente pequeños en perfiles
 aparentemente extremos.
 
+#### Visualizacion de las diferencias estadarizadas de las variables por grupo
+
+
+```{r grafico-conglomerados-3d, echo=FALSE, fig.width=11, fig.height=6.5, out.width="100%"}
+datos_mapa_perfiles <- resumen_numerico_final |>
+  mutate(
+    Grupo = factor(
+      Numero_Grupo,
+      levels = sort(unique(Numero_Grupo)),
+      labels = paste("Grupo", sort(unique(Numero_Grupo)))
+    ),
+    Variable = factor(
+      Variable,
+      levels = rev(variables_numericas_perfil),
+      labels = rev(unname(nombres_variables_perfil[variables_numericas_perfil]))
+    )
+  )
+
+limite_mapa_perfiles <- max(
+  abs(datos_mapa_perfiles$Diferencia_estandarizada),
+  na.rm = TRUE
+)
+
+ggplot(
+  datos_mapa_perfiles,
+  aes(x = Variable, y = Grupo, fill = Diferencia_estandarizada)
+) +
+  geom_tile(color = "white", linewidth = 0.8) +
+  geom_text(
+    aes(label = sprintf("%+.2f DE", Diferencia_estandarizada)),
+    color = "black",
+    size = 3.2
+  ) +
+  scale_x_discrete(
+    labels = function(etiquetas) {
+      vapply(
+        etiquetas,
+        function(etiqueta) paste(strwrap(etiqueta, width = 18), collapse = "\n"),
+        character(1)
+      )
+    }
+  ) +
+  scale_fill_gradient2(
+    low = "#B2182B",
+    mid = "#F7F7F7",
+    high = "#2166AC",
+    midpoint = 0,
+    limits = c(-limite_mapa_perfiles, limite_mapa_perfiles),
+    name = "Diferencia\nrespecto a la\nmedia general"
+  ) +
+  labs(
+    title = "Perfil estandarizado de los conglomerados",
+    subtitle = "Diferencia entre la media de cada grupo y la media general",
+    x = NULL,
+    y = NULL,
+    caption = "Valores expresados en desviaciones estándar (DE)"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(
+      face = "bold",
+      angle = 30,
+      hjust = 1,
+      vjust = 1,
+      size = 9,
+      margin = margin(t = 8)
+    ),
+    axis.text.y = element_text(face = "bold", size = 10),
+    legend.position = "right",
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 9),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(margin = margin(b = 10)),
+    plot.caption = element_text(margin = margin(t = 8)),
+    plot.margin = margin(10, 15, 12, 10)
+  )
+```
+
+
+#### Visualizacion espacial de las estadisticas de las variables por grupo
+```{r grafico-perfiles-3d, echo=FALSE, fig.width=11, fig.height=7}
+nombres_perfiles_grafico <- c(
+  "1" = "Usuarios intensivos de IA con alta habilidad técnica",
+  "2" = "Usuarios moderados de IA con desempeño académico estable",
+  "3" = "Estudiantes con rendimiento y retención superiores y uso moderado de IA",
+  "4" = "Usuarios poco intensivos de IA con habilidad técnica inferior",
+  "5" = "Usuarios intensivos y dependientes con baja habilidad técnica y retención",
+  "6" = "Usuarios moderados-bajos de IA con rendimiento académico inferior"
+)
+
+perfiles_x_grupo <- resumen_numerico_final |>
+  select(
+    Numero_Grupo, Variable, Media, Mediana, Media_general,
+    Diferencia_estandarizada
+  ) |>
+  mutate(
+    Grupo = factor(
+      Numero_Grupo,
+      levels = sort(unique(Numero_Grupo)),
+      labels = paste("Grupo", sort(unique(Numero_Grupo)))
+    ),
+    Nombre_Perfil = unname(nombres_perfiles_grafico[as.character(Numero_Grupo)]),
+    Etiqueta_Variable = unname(nombres_variables_perfil[Variable]),
+    Indice_Variable = match(Variable, variables_numericas_perfil),
+    Texto = paste0(
+      "<b>", Grupo, "</b><br>",
+      "<b>Perfil:</b> ", Nombre_Perfil, "<br>",
+      "<b>Variable:</b> ", Etiqueta_Variable, "<br>",
+      "<b>Media del grupo:</b> ", round(Media, 3), "<br>",
+      "<b>Mediana del grupo:</b> ", round(Mediana, 3), "<br>",
+      "<b>Media general:</b> ", round(Media_general, 3), "<br>",
+      "<b>Diferencia estandarizada:</b> ",
+      sprintf("%+.3f DE", Diferencia_estandarizada)
+    )
+  ) |>
+  arrange(Numero_Grupo, Indice_Variable)
+
+colores_grupos_3d <- c(
+  "#2166AC", "#67A9CF", "#4DAF4A",
+  "#7F7F7F", "#EF8A62", "#B2182B"
+)
+
+grafico_perfiles_3d <- plot_ly(
+  data = perfiles_x_grupo,
+  x = ~Indice_Variable,
+  y = ~Numero_Grupo,
+  z = ~Diferencia_estandarizada,
+  color = ~Grupo,
+  colors = colores_grupos_3d,
+  type = "scatter3d",
+  mode = "lines+markers",
+  line = list(width = 5),
+  marker = list(size = 5),
+  text = ~Texto,
+  hoverinfo = "text"
+) |>
+  layout(
+    title = list(text = "Perfiles estandarizados de los conglomerados"),
+    legend = list(title = list(text = "Conglomerado")),
+    scene = list(
+      xaxis = list(
+        title = "Variable",
+        tickmode = "array",
+        tickvals = seq_along(variables_numericas_perfil),
+        ticktext = unname(nombres_variables_perfil[variables_numericas_perfil]),
+        tickangle = -25
+      ),
+      yaxis = list(
+        title = "Grupo",
+        tickmode = "array",
+        tickvals = sort(unique(perfiles_x_grupo$Numero_Grupo)),
+        ticktext = paste("Grupo", sort(unique(perfiles_x_grupo$Numero_Grupo)))
+      ),
+      zaxis = list(
+        title = "Diferencia respecto a la media general (DE)",
+        zeroline = TRUE,
+        zerolinecolor = "#333333",
+        zerolinewidth = 2
+      ),
+      camera = list(eye = list(x = 1.55, y = 1.55, z = 1.15))
+    ),
+    margin = list(l = 10, r = 10, b = 80, t = 60)
+  )
+
+grafico_perfiles_3d
+```
+
+#### Lectura integrada de los perfiles
+
+El mapa de calor permite identificar la dirección y magnitud de cada contraste,
+mientras que la vista tridimensional muestra la trayectoria conjunta de las seis
+variables dentro de cada conglomerado. A partir de ambos gráficos, los grupos se
+interpretan de la siguiente manera:
+
+- **Grupo 1 — Usuarios intensivos de IA con alta habilidad técnica.** Es el
+  perfil técnicamente más fuerte (+0.54 DE) y combina esa ventaja con mayor
+  estudio dominado por IA (+0.21 DE), más horas semanales de uso (+0.22 DE) y
+  retención superior (+0.18 DE). La etiqueta refleja un uso intenso acompañado
+  por capacidad técnica, no solamente una mayor exposición a herramientas.
+- **Grupo 2 — Usuarios moderados de IA con desempeño académico estable.** El
+  estudio dominado por IA (-0.18 DE), las horas de uso (-0.18 DE) y la
+  dependencia percibida (-0.13 DE) son inferiores al promedio, mientras GPA,
+  retención, habilidad técnica y estudio tradicional permanecen muy cerca de la
+  media. Es un perfil de uso contenido sin una desventaja académica marcada.
+- **Grupo 3 — Estudiantes con rendimiento y retención superiores y uso moderado
+  de IA.** Presenta la mayor retención (+0.19 DE), GPA posterior superior (+0.16
+  DE), habilidad técnica favorable (+0.15 DE) y GPA previo también superior
+  (+0.10 DE), pese a utilizar IA ligeramente menos que el promedio (-0.07 DE).
+  Es el grupo con el patrón académico más favorable y no depende de un uso
+  intensivo para distinguirse.
+- **Grupo 4 — Usuarios poco intensivos de IA con habilidad técnica inferior.**
+  Reúne menor habilidad técnica (-0.23 DE), menor estudio dominado por
+  IA (-0.22 DE), menos horas de uso (-0.23 DE) y menor dependencia percibida
+  (-0.16 DE). La retención (-0.09 DE) y el GPA posterior (-0.06 DE) también se
+  sitúan por debajo del promedio, aunque con diferencias pequeñas.
+- **Grupo 5 — Usuarios intensivos y dependientes con baja habilidad técnica y
+  retención.** Es el contraste más claro: registra la menor habilidad técnica
+  (-0.54 DE) y menor retención (-0.26 DE), pero el mayor estudio dominado por IA
+  (+0.26 DE), más horas semanales (+0.26 DE) y mayor dependencia percibida
+  (+0.20 DE). La combinación describe uso elevado sin una competencia técnica o
+  retención equivalente; no demuestra que la dependencia sea su causa.
+- **Grupo 6 — Usuarios moderados-bajos de IA con rendimiento académico
+  inferior.** Combina menos horas de IA (-0.14 DE), menor dependencia percibida
+  (-0.10 DE), menor estudio dominado por IA y GPA posterior inferior (-0.13 DE).
+  Se diferencia del grupo 4 porque su rasgo principal es el rendimiento
+  académico más bajo, no una caída tan marcada de habilidad técnica.
+
+En conjunto, los perfiles 1 y 5 muestran que una intensidad de uso semejante
+puede coexistir con resultados técnicos y de retención opuestos. Asimismo, los
+grupos 2, 4 y 6 confirman que usar menos IA no define por sí solo un perfil
+académico favorable o desfavorable. Por ello, los nombres resumen combinaciones
+observadas dentro de los conglomerados y no establecen que el uso o la
+dependencia de IA provoquen las calificaciones obtenidas.
+
+
 ## Discusión {#s2-discusion}
 
 ### Síntesis descriptiva y bivariada
@@ -2830,25 +3055,58 @@ estudiantes (`r fmt_pct(min(tabla_perfiles_finales$Proporcion), 1)`) y el mayor
 grupos residuales extremadamente pequeños, aunque el balance no elimina el
 solapamiento señalado por la silueta.
 
-Los contrastes más visibles se concentran en los factores: el grupo
-`r grupo_mayor_habilidad` alcanza el promedio más alto de habilidad técnica,
-mientras el grupo `r grupo_menor_habilidad` presenta el menor; este último
-coincide con el mayor promedio del factor de estudio dominado por IA en el
-grupo `r grupo_mayor_ia`. Esa combinación podría sugerir que una parte del uso
-intensivo ocurre sin una competencia técnica igualmente alta, pero también
-puede reflejar cómo se construyeron los factores y las asignaciones. El grupo
-`r grupo_mayor_retencion` registra la mayor retención media y también el GPA
-posterior más alto en el grupo `r grupo_mayor_gpa_post`; dado que GPA y
-retención participaron directamente en el clustering, esto caracteriza el
-perfil obtenido y no constituye evidencia independiente de superioridad.
+El mapa de calor y la visualización tridimensional permiten interpretar cada
+conglomerado como una trayectoria conjunta de habilidad técnica, estudio
+dominado por IA, retención, GPA y estudio tradicional. Con base en esas
+diferencias respecto a la media general, los seis perfiles se resumen así:
 
-La mayoría de las diferencias contextuales restantes son pequeñas en unidades
-de desviación estándar. Por eso, las etiquetas deben entenderse como atajos
-descriptivos relativos al promedio general, no como categorías estables ni
-como rangos de desempeño. Burnout, ansiedad, GPA y retención participaron de
-forma directa o indirecta en la construcción de los grupos; encontrar
-diferencias posteriores en esas mismas variables es esperable y no valida por
-sí solo la segmentación.
+- **Grupo 1 — Usuarios intensivos de IA con alta habilidad técnica.** Presenta
+  la mayor habilidad técnica (+0.54 DE), junto con estudio dominado por IA
+  (+0.21 DE), más horas semanales de uso (+0.22 DE) y retención superior
+  (+0.18 DE). Este grupo representa un uso intensivo acompañado por capacidad
+  técnica y no únicamente por una mayor exposición a las herramientas.
+- **Grupo 2 — Usuarios moderados de IA con desempeño académico estable.** Las
+  horas de IA (-0.18 DE), el estudio dominado por IA (-0.18 DE) y la dependencia
+  percibida (-0.13 DE) son inferiores al promedio, mientras GPA, retención,
+  habilidad técnica y estudio tradicional permanecen cercanos a la media. Es
+  un perfil de uso contenido sin una desventaja académica marcada.
+- **Grupo 3 — Estudiantes con rendimiento y retención superiores y uso
+  moderado de IA.** Registra la mayor retención (+0.19 DE), GPA posterior
+  superior (+0.16 DE), habilidad técnica favorable (+0.15 DE) y GPA previo
+  también superior (+0.10 DE), aunque sus horas de IA son ligeramente menores
+  al promedio (-0.07 DE). Es el patrón académico más favorable sin depender de
+  un uso intensivo para distinguirse.
+- **Grupo 4 — Usuarios poco intensivos de IA con habilidad técnica inferior.**
+  Combina menor habilidad técnica (-0.23 DE), menor estudio dominado por IA
+  (-0.22 DE), menos horas de uso (-0.23 DE) y menor dependencia percibida
+  (-0.16 DE). La retención (-0.09 DE) y el GPA posterior (-0.06 DE) también son
+  inferiores, aunque estas dos diferencias permanecen cercanas al promedio.
+- **Grupo 5 — Usuarios intensivos y dependientes con baja habilidad técnica y
+  retención.** Constituye el contraste más marcado: presenta la menor habilidad
+  técnica (-0.54 DE) y retención (-0.26 DE), pero el mayor estudio dominado por
+  IA (+0.26 DE), más horas semanales (+0.26 DE) y mayor dependencia percibida
+  (+0.20 DE). El perfil describe un uso elevado sin una competencia técnica o
+  retención equivalente, pero no demuestra que la dependencia produzca esos
+  resultados.
+- **Grupo 6 — Usuarios moderados-bajos de IA con rendimiento académico
+  inferior.** Reúne menos horas de IA (-0.14 DE), menor dependencia percibida
+  (-0.10 DE), menor estudio dominado por IA y GPA posterior inferior (-0.13
+  DE). A diferencia del grupo 4, su rasgo central es el desempeño académico
+  inferior y no una reducción tan marcada de la habilidad técnica.
+
+La comparación entre los grupos 1 y 5 es especialmente relevante: ambos usan
+IA con intensidad superior al promedio, pero exhiben perfiles opuestos de
+habilidad técnica y retención. Del mismo modo, los grupos 2, 4 y 6 muestran que
+un menor uso de IA puede coexistir con resultados académicos estables o
+inferiores. Por tanto, la intensidad de uso no explica por sí sola el desempeño;
+su interpretación depende de la habilidad técnica, la retención y la trayectoria
+académica que acompañan a cada perfil.
+
+Estas etiquetas son síntesis descriptivas relativas al promedio general, no
+categorías estables ni relaciones causales. GPA, retención y los factores de uso
+participaron directa o indirectamente en la construcción de los conglomerados;
+por ello, las diferencias observadas caracterizan la segmentación, pero no la
+validan de manera independiente.
 
 ### Alcance de los hallazgos
 
